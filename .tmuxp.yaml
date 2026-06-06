@@ -1,0 +1,15 @@
+session_name: learning-notebooks
+start_directory: ./ # load session relative to config location (project root).
+shell_command_before:
+- uv sync --quiet > /dev/null 2>&1 && clear
+windows:
+- window_name: learning-notebooks
+  focus: True
+  layout: main-horizontal
+  options:
+    main-pane-height: 67%
+  panes:
+  - focus: true
+  - pane
+  - uv run ty check --watch
+  - uv run ruff check --watch .
