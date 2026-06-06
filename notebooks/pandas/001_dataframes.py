@@ -16,28 +16,24 @@ app = marimo.App(width="medium")
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     # pandas: DataFrames
 
     First contact with the core data structure: how a DataFrame is built,
     what dtypes it infers, how selection works, and a first groupby.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     ## Source reading
 
     - Upstream: <https://github.com/pandas-dev/pandas>
     - Local clone (sibling of this repo): `../pandas`
     - Start at `pandas/core/frame.py` (the `DataFrame` class).
-    """
-    )
+    """)
     return
 
 
@@ -46,7 +42,7 @@ def _():
     import marimo as mo
     import pandas as pd
 
-    return (mo, pd)
+    return mo, pd
 
 
 @app.cell
