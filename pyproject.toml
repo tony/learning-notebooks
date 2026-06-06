@@ -69,3 +69,11 @@ include = ["notebooks", "notes"]
 # Notebook dependencies live in per-notebook sandbox environments (PEP 723),
 # not in this repo's dev env, so imports like pandas/ibis can't resolve here.
 unresolved-import = "ignore"
+
+# Attribute access on those unresolved modules (e.g. ibis.options) can't be
+# checked either — scope the ignore to study content only.
+[[tool.ty.overrides]]
+include = ["notebooks/**", "notes/**"]
+
+[tool.ty.overrides.rules]
+unresolved-attribute = "ignore"
