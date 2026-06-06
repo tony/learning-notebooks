@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+
+      - name: Install dev tooling
+        run: uv sync
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Format check
+        run: uv run ruff format --check .
+
+      - name: Type check
+        run: uv run ty check
+
+      # Each notebook resolves its own PEP 723 deps in an isolated env.
+      # Only lightweight notebooks belong here — no GPU deps, no model
+      # downloads (see AGENTS.md "CI-safety").
+      - name: Smoke-run light notebooks
+        run: |
+          uv run notes/notebook_template.py
+          uv run notebooks/pandas/001_dataframes.py
+          uv run notebooks/ibis/001_duckdb_sql.py
+          uv run notebooks/rich/001_console_rendering.py
