@@ -15,26 +15,22 @@ app = marimo.App(width="medium")
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     # LIBRARY: TOPIC
 
     What this notebook studies, and the questions it answers.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     ## Source reading
 
     - Upstream: <https://github.com/ORG/REPO>
     - Local clone (sibling of this repo): `../REPO`
-    """
-    )
+    """)
     return
 
 

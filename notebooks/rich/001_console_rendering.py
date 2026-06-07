@@ -16,30 +16,26 @@ app = marimo.App(width="medium")
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     # rich: console rendering
 
     rich renderables implement `__rich_console__` and (via `JupyterMixin`)
     `_repr_mimebundle_`, which marimo picks up — so a `Table` or `Panel` as a
     cell's last expression renders directly in the notebook.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     ## Source reading
 
     - Upstream: <https://github.com/Textualize/rich>
     - Local clone (sibling of this repo): `../rich`
     - Start at `rich/console.py` (the render protocol) and `rich/jupyter.py`
       (`JupyterMixin`, which is what makes renderables notebook-aware).
-    """
-    )
+    """)
     return
 
 
@@ -50,7 +46,7 @@ def _():
     from rich.table import Table
     from rich.text import Text
 
-    return (Panel, Table, Text, mo)
+    return Panel, Table, Text, mo
 
 
 @app.cell

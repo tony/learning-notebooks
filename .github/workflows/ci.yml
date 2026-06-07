@@ -27,6 +27,11 @@ jobs:
       - name: Type check
         run: uv run ty check
 
+      # marimo's notebook-aware linter. Scoped to .py notebooks only:
+      # `marimo check` treats prose .md files as markdown notebooks.
+      - name: marimo check
+        run: uv run marimo check --strict notebooks/ notes/notebook_template.py
+
       # Each notebook resolves its own PEP 723 deps in an isolated env.
       # Only lightweight notebooks belong here — no GPU deps, no model
       # downloads (see AGENTS.md "CI-safety").

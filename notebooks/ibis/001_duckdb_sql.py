@@ -16,29 +16,25 @@ app = marimo.App(width="medium")
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     # ibis: expressions on DuckDB
 
     ibis builds a typed expression tree that compiles to SQL. This notebook
     constructs expressions on the in-process DuckDB backend and compares them
     with the equivalent `mo.sql()` query.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     ## Source reading
 
     - Upstream: <https://github.com/ibis-project/ibis>
     - Local clone (sibling of this repo): `../ibis`
     - Start at `ibis/expr/types/relations.py` (the `Table` expression class).
-    """
-    )
+    """)
     return
 
 
@@ -48,7 +44,7 @@ def _():
     import marimo as mo
 
     ibis.options.interactive = True
-    return (ibis, mo)
+    return ibis, mo
 
 
 @app.cell
