@@ -183,9 +183,7 @@ def index() -> tuple[list[Notebook], list[Track]]:
 
 def _notebook_cell(track: Track) -> str:
     """Render one row's Notebook column: links · ✎ siblings (note)."""
-    items = [
-        f"[{nb.get('label', nb['path'])}](../{nb['path']})" for nb in track.notebooks
-    ]
+    items = [f"[{nb.get('label', nb['path'])}](../{nb['path']})" for nb in track.notebooks]
     items.extend(track.sibling_curricula)
     cell = " · ".join(items) if items else "—"
     if track.note:
@@ -260,8 +258,7 @@ def check_drift() -> int:
 
     ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
     warnings.extend(
-        f"{nb.path}: not in the ci.yml smoke step (hand-maintained — add it "
-        "or note why not)"
+        f"{nb.path}: not in the ci.yml smoke step (hand-maintained — add it or note why not)"
         for nb in notebooks
         if nb.path not in ci_text
     )
