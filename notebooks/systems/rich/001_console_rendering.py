@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""rich — console rendering: renderables, tables, and the console protocol (A5, L2)."""
+"""rich — console rendering: renderables, tables, and the console protocol."""
 
 import marimo
 

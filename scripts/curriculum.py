@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Curriculum catalog: parse notebooks + the track manifest, derive the index.
 
-Notebooks own their mechanical metadata (docstring, ``(Track, Rung)`` tag,
-``app_title``, PEP 723 deps, headings, source-reading links). The authored
-overlay — topic prose, mastery, status, architecture pointers, and the M:N
+Notebooks own their mechanical metadata (docstring, ``app_title``, PEP 723
+deps, headings, source-reading links). The authored overlay — topic prose,
+mastery, status, per-notebook rung, the project registry, and the M:N
 track↔notebook links — lives in ``notes/curriculum.toml``. This script merges
 the two grains and renders ``notes/taxonomy.md`` (generated, never
 hand-edited); ``check`` exits nonzero when a committed render is stale or the
@@ -41,17 +41,6 @@ BANNER = (
     " and the notebooks, not this file -->"
 )
 
-#: Docstring tag, anchored to the end of the summary line: ``(B1, L2)``.
-_TAG_RE = re.compile(r"\((?P<track>[A-Za-z0-9]+), (?P<rung>L[1-4])\)\.?\s*$")
-#: Canonical de-coding of the ladder rung. The authored per-notebook ``rung``
-#: in curriculum.toml uses these words; the legacy docstring tag uses the
-#: ``L1`` to ``L4`` codes. Bridges the two while the tags are still present.
-_TAG_RUNG = {
-    "L1": "fundamentals",
-    "L2": "self-sufficiency",
-    "L3": "reproducible",
-    "L4": "production",
-}
 _APP_TITLE_RE = re.compile(r'app_title="(?P<title>[^"]+)"')
 _UPSTREAM_RE = re.compile(r"Upstream: <(?P<url>https://[^>]+)>")
 _HEADING_RE = re.compile(r"^\s*#{1,6} +(?P<text>\S.*)$", re.MULTILINE)
@@ -139,12 +128,7 @@ def parse_notebook(path: Path) -> Notebook:
     source = path.read_text(encoding="utf-8")
     tree = ast.parse(source)
     docstring = ast.get_docstring(tree) or ""
-    summary_line = docstring.splitlines()[0] if docstring else ""
-
-    tag = _TAG_RE.search(summary_line)
-    track = tag.group("track") if tag else None
-    rung = tag.group("rung") if tag else None
-    summary = _TAG_RE.sub("", summary_line).rstrip()
+    summary = docstring.splitlines()[0].rstrip() if docstring else ""
     if summary and not summary.endswith("."):
         summary += "."
 
@@ -167,8 +151,8 @@ def parse_notebook(path: Path) -> Notebook:
         seq=seq,
         title=title,
         summary=summary,
-        track=track,
-        rung=rung,
+        track=None,
+        rung=None,
         packages=sorted({dependency_name(r) for r in pep723_dependencies(path)}),
         requires_python=_requires_python(source),
         headings=headings,
@@ -219,8 +203,21 @@ def notebook_paths() -> list[Path]:
 
 
 def index() -> tuple[list[Notebook], list[Track]]:
-    """Return the merged model: parsed notebooks + the authored track overlay."""
-    return [parse_notebook(p) for p in notebook_paths()], load_tracks()
+    """Return the merged model: notebooks joined to the authored registry.
+
+    A notebook's ``track`` and ``rung`` are not in the notebook anymore — they
+    are sourced here from the registry: ``track`` is its primary claiming
+    track's id, ``rung`` is the per-notebook rung authored on that claim.
+    """
+    notebooks = [parse_notebook(p) for p in notebook_paths()]
+    tracks = load_tracks()
+    claimed = claims(tracks)
+    rungs = notebook_rungs(tracks)
+    for nb in notebooks:
+        primary = _primary_track(nb, claimed.get(nb.path, []))
+        nb.track = primary.id if primary else None
+        nb.rung = rungs.get(nb.path)
+    return notebooks, tracks
 
 
 def _notebook_cell(track: Track) -> str:
@@ -272,11 +269,16 @@ def claims(tracks: list[Track]) -> dict[str, list[Track]]:
 
 
 def _primary_track(notebook: Notebook, owners: list[Track]) -> Track | None:
-    """Pick the notebook's primary track: its docstring tag, else first claimer."""
-    for track in owners:
-        if track.id == notebook.track:
-            return track
-    return owners[0] if owners else None
+    """Pick the notebook's primary track: the lowest-id claiming track.
+
+    Sorted for determinism — a notebook claimed by several tracks (e.g.
+    pyarrow/001 under two) always resolves to the same primary.
+    """
+    if notebook.track is not None:
+        for track in owners:
+            if track.id == notebook.track:
+                return track
+    return min(owners, key=lambda t: t.id) if owners else None
 
 
 def render_catalog() -> str:
@@ -326,9 +328,9 @@ def render_coverage() -> str:
         f"{rung} — {label}": sum(1 for nb in notebooks if nb.rung == rung)
         for rung, label in ladder.items()
     }
-    untagged = sorted(nb.path for nb in notebooks if nb.rung is None)
-    if untagged:
-        rung_counts["untagged"] = len(untagged)
+    rungless = sorted(nb.path for nb in notebooks if nb.rung is None)
+    if rungless:
+        rung_counts["no rung"] = len(rungless)
 
     status_counts: dict[str, int] = {}
     for track in sorted(tracks, key=lambda t: t.status):
@@ -373,8 +375,8 @@ def render_coverage() -> str:
         *gap(no_repo_notebook),
         "- Notebooks without an upstream link:",
         *gap(no_upstream),
-        "- Notebooks without a `(Track, Rung)` docstring tag:",
-        *gap(untagged),
+        "- Notebooks without a rung in the registry:",
+        *gap(rungless),
         "- Notebooks missing from the CI smoke list:",
         *gap(no_smoke),
         "- Notebooks without `test_*` cells (aspirational, not gated):",
@@ -564,23 +566,6 @@ def project_track_errors(tracks: list[Track], projects: list[Project]) -> list[s
     ]
 
 
-def rung_consistency_errors(notebooks: list[Notebook], tracks: list[Track]) -> list[str]:
-    """Check the authored per-notebook rung against the docstring tag's rung.
-
-    Transitional: drops once the tags are gone. The tag carries a code
-    (``L2``); the registry carries the word (``self-sufficiency``); they are
-    compared through the canonical de-coding.
-    """
-    rungs = notebook_rungs(tracks)
-    errors = []
-    for nb in notebooks:
-        authored = rungs.get(nb.path)
-        tagged = _TAG_RUNG.get(nb.rung) if nb.rung else None
-        if authored and tagged and authored != tagged:
-            errors.append(f"{nb.path}: registry rung {authored!r} != docstring tag rung {tagged!r}")
-    return errors
-
-
 def check_drift() -> CheckResult:
     """Compute drift findings: errors (gate-failing) and warnings (advisory)."""
     notebooks, tracks = index()
@@ -597,23 +582,16 @@ def check_drift() -> CheckResult:
     )
 
     # Rename-hazard parity: a `git mv` or an unclaimed new notebook fails here.
-    for nb in notebooks:
-        owners = claimed.get(nb.path, [])
-        if not owners:
-            errors.append(f"unclaimed notebook (no [[track]] lists it): {nb.path}")
-        elif nb.track is not None and nb.track not in [t.id for t in owners]:
-            warnings.append(
-                f"{nb.path}: docstring tag ({nb.track}) is not a claiming track "
-                f"({', '.join(t.id for t in owners)})"
-            )
-        if nb.track is None:
-            warnings.append(f"{nb.path}: no (Track, Rung) docstring tag")
+    errors.extend(
+        f"unclaimed notebook (no [[track]] lists it): {nb.path}"
+        for nb in notebooks
+        if nb.path not in claimed
+    )
 
-    # Project registry: every notebook library resolves to a project, every
-    # project points at real tracks, and per-notebook rung matches the tag.
+    # Project registry: every notebook library resolves to a project, and every
+    # project points at real tracks.
     errors.extend(library_project_errors(notebooks, projects))
     errors.extend(project_track_errors(tracks, projects))
-    errors.extend(rung_consistency_errors(notebooks, tracks))
 
     ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
     warnings.extend(

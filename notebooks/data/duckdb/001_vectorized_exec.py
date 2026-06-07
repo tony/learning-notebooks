@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""duckdb — vectorized execution: relations, EXPLAIN, and the physical plan (B2, L2)."""
+"""duckdb — vectorized execution: relations, EXPLAIN, and the physical plan."""
 
 import marimo
 

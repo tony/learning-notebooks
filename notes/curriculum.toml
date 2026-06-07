@@ -18,16 +18,16 @@
 # judgement. The full mastery-ladder narrative lives in notes/taxonomy.head.md.
 
 [ladder]
-L1 = "fundamentals"
-L2 = "self-sufficiency"
-L3 = "reproducible & synergy"
-L4 = "enterprise"
+fundamentals = "first principles, stdlib-first"
+self-sufficiency = "drive the real library"
+reproducible = "compose tools as one system"
+production = "org-scale patterns"
 
 [[track]]
 id = "Toolchain"
 domain = "0"
 topic = "Reproducible study notebooks"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "existing"
 notebooks = [
   { path = "notebooks/toolchain/marimo/001_basics.py", rung = "self-sufficiency" },
@@ -41,7 +41,7 @@ license_status = "permissive (Apache-2.0 / MIT)"
 id = "A1"
 domain = "A"
 topic = "Languages & runtimes (bytecode → GC → JIT → types)"
-mastery = "L1"
+mastery = "fundamentals"
 status = "seed"
 notebooks = [
   { path = "notebooks/systems/cpython/001_bytecode_dis.py", label = "cpython dis seed", rung = "fundamentals" },
@@ -54,7 +54,7 @@ license_status = "permissive"
 id = "A2"
 domain = "A"
 topic = "Data structures & algorithms"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "existing"
 notebooks = [
   { path = "notebooks/systems/sortedcontainers/001_ordered_structures.py", label = "sortedcontainers seed", rung = "self-sufficiency" },
@@ -68,7 +68,7 @@ license_status = "permissive + ⚑ hypothesis (dev/test only)"
 id = "A3"
 domain = "A"
 topic = "Concurrency & async (event loop → futures → actors)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "existing"
 notebooks = [
   { path = "notebooks/systems/anyio/001_structured_concurrency.py", label = "anyio seed", rung = "self-sufficiency" },
@@ -93,7 +93,7 @@ license_status = "GPL targets never become deps"
 id = "A5"
 domain = "A"
 topic = "Build & dev tooling (packaging → linters → tests → terminals)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "existing"
 notebooks = [
   { path = "notebooks/systems/rich/001_console_rendering.py", rung = "self-sufficiency" },
@@ -107,7 +107,7 @@ license_status = "permissive"
 id = "B1"
 domain = "B"
 topic = "Numeric & dataframe core (ndarray → dataframe → plotting → validation)"
-mastery = "L1–L2"
+mastery = "fundamentals–self-sufficiency"
 status = "existing"
 notebooks = [
   { path = "notebooks/data/pandas/001_dataframes.py", rung = "self-sufficiency" },
@@ -123,7 +123,7 @@ license_status = "permissive"
 id = "B2"
 domain = "B"
 topic = "SQL & query engines (expression IR → plans → vectorized exec)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "existing"
 notebooks = [
   { path = "notebooks/data/ibis/001_duckdb_sql.py", rung = "self-sufficiency" },
@@ -138,7 +138,7 @@ license_status = "permissive"
 id = "B3"
 domain = "B"
 topic = "Distributed data & streaming — analytics (task graphs → shuffle → exactly-once)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "seed"
 notebooks = [
   { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed", rung = "self-sufficiency" },
@@ -152,7 +152,7 @@ license_status = "permissive"
 id = "B4"
 domain = "B"
 topic = "Storage & lakehouse formats (columnar → ACID tables)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "seed"
 notebooks = [
   { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed", rung = "self-sufficiency" },
@@ -165,7 +165,7 @@ license_status = "permissive"
 id = "C1"
 domain = "C"
 topic = "Classical ML & stats (regression → estimators → CV)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "seed"
 notebooks = [
   { path = "notebooks/ml/sklearn/001_estimator_api.py", label = "sklearn seed", rung = "self-sufficiency" },
@@ -179,7 +179,7 @@ license_status = "permissive"
 id = "C2"
 domain = "C"
 topic = "Deep learning core (tensors/autograd → training loop → tiny-GPT)"
-mastery = "L1"
+mastery = "fundamentals"
 status = "seed"
 notebooks = [
   { path = "notebooks/ml/torch/001_autograd.py", label = "torch seed", rung = "fundamentals" },
@@ -193,7 +193,7 @@ license_status = "permissive"
 id = "C3"
 domain = "C"
 topic = "NLP / embeddings / vector search (tokenization → ANN → vector DB)"
-mastery = "L1–L2"
+mastery = "fundamentals–self-sufficiency"
 status = "seed"
 notebooks = [
   { path = "notebooks/ml/tokenizers/001_bpe_from_scratch.py", label = "BPE-scratch seed", rung = "fundamentals" },
@@ -208,7 +208,7 @@ license_status = "permissive"
 id = "D1"
 domain = "D"
 topic = "Data & eval harness (metrics → gates → run store → search)"
-mastery = "L1–L3"
+mastery = "fundamentals–reproducible"
 status = "existing"
 notebooks = []
 sibling_curricula = ["✎ `../learning-ai-tuning/notebooks/eval/` (001–006: harness, sqlite store, FTS5, duckdb, BM25-scratch, tantivy)"]
@@ -220,7 +220,7 @@ license_status = "permissive"
 id = "E1"
 domain = "E"
 topic = "Inference & serving (KV-cache → batching → paged attention)"
-mastery = "L1"
+mastery = "fundamentals"
 status = "seed"
 notebooks = [
   { path = "notebooks/ai_serving/vllm/001_serving_concepts.py", label = "serving-sim seed", rung = "fundamentals" },
@@ -233,7 +233,7 @@ license_status = "permissive"
 id = "E2"
 domain = "E"
 topic = "RAG & agents (retrieval → structured output → multi-agent)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "seed"
 notebooks = []
 sibling_curricula = ["✎ `../learning-ai/notes/lesson_plan.md` (Tiers 10–18)"]
@@ -245,7 +245,7 @@ license_status = "permissive"
 id = "E3"
 domain = "E"
 topic = "Productionizing & observability (API → tracing → cost)"
-mastery = "L2"
+mastery = "self-sufficiency"
 status = "seed"
 notebooks = [
   { path = "notebooks/ai_serving/fastapi/001_model_endpoint.py", label = "fastapi endpoint seed", rung = "self-sufficiency" },
@@ -259,7 +259,7 @@ license_status = "permissive"
 id = "F1"
 domain = "F"
 topic = "Integration & messaging — operational (outbox → pub/sub → CDC)"
-mastery = "L4"
+mastery = "production"
 status = "seed"
 notebooks = [
   { path = "notebooks/enterprise/kafka/001_event_patterns.py", label = "event-patterns seed", rung = "production" },
@@ -272,7 +272,7 @@ license_status = "permissive"
 id = "F2"
 domain = "F"
 topic = "Workflow & orchestration (DAGs → retries → idempotency)"
-mastery = "L1"
+mastery = "fundamentals"
 status = "seed"
 notebooks = [
   { path = "notebooks/enterprise/airflow/001_dag_from_scratch.py", label = "DAG-scratch seed", rung = "fundamentals" },
@@ -285,7 +285,7 @@ license_status = "permissive"
 id = "F3"
 domain = "F"
 topic = "Reliability, load & performance (load models → percentiles → SLOs)"
-mastery = "L4"
+mastery = "production"
 status = "seed"
 notebooks = [
   { path = "notebooks/enterprise/locust/001_load_modeling.py", label = "load-modeling seed", rung = "production" },
@@ -298,7 +298,7 @@ license_status = "permissive"
 id = "F4"
 domain = "F"
 topic = "Security, privacy & governance (PII → redaction → audit)"
-mastery = "L4"
+mastery = "production"
 status = "seed"
 notebooks = [
   { path = "notebooks/enterprise/presidio/001_pii_governance.py", label = "pii-governance seed", rung = "production" },

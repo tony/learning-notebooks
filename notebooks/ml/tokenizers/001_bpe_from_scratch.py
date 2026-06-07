@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""tokenizers — BPE from scratch: the merge loop by hand, then the Rust library (C3, L1)."""
+"""tokenizers — BPE from scratch: the merge loop by hand, then the Rust library."""
 
 import marimo
 

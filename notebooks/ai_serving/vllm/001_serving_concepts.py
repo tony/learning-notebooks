@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""vllm — serving concepts, simulated: KV-cache memory and continuous batching (E1, L1)."""
+"""vllm — serving concepts, simulated: KV-cache memory and continuous batching."""
 
 import marimo
 

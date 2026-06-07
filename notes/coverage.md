@@ -9,10 +9,10 @@ Regenerate with `just sync`; CI fails when this file is stale.
 
 | Rung | Notebooks |
 |---|---|
-| L1 — fundamentals | 6 |
-| L2 — self-sufficiency | 12 |
-| L3 — reproducible & synergy | 2 |
-| L4 — enterprise | 3 |
+| fundamentals — first principles, stdlib-first | 6 |
+| self-sufficiency — drive the real library | 12 |
+| reproducible — compose tools as one system | 2 |
+| production — org-scale patterns | 3 |
 
 ## Tracks by status
 
@@ -41,7 +41,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
   - `E2 (seed)`
 - Notebooks without an upstream link:
   - none
-- Notebooks without a `(Track, Rung)` docstring tag:
+- Notebooks without a rung in the registry:
   - none
 - Notebooks missing from the CI smoke list:
   - none

@@ -71,38 +71,6 @@ class TestProjectTrackErrors:
         assert curriculum.project_track_errors(tracks, projects) == []
 
 
-class TestRungConsistencyErrors:
-    def test_mismatch_between_registry_and_tag_is_an_error(self):
-        # docstring tag says L1 (fundamentals); registry says self-sufficiency.
-        nb = make_notebook("notebooks/data/numpy/001_x.py", library="numpy", rung="L1")
-        track = make_track("B1", notebooks=[{"path": nb.path, "rung": "self-sufficiency"}])
-        errors = curriculum.rung_consistency_errors([nb], [track])
-        assert len(errors) == 1
-
-    def test_agreement_is_clean(self):
-        nb = make_notebook("notebooks/data/numpy/001_x.py", library="numpy", rung="L1")
-        track = make_track("B1", notebooks=[{"path": nb.path, "rung": "fundamentals"}])
-        assert curriculum.rung_consistency_errors([nb], [track]) == []
-
-    def test_untagged_notebook_is_skipped(self):
-        nb = make_notebook("notebooks/data/numpy/001_x.py", library="numpy", rung=None)
-        track = make_track("B1", notebooks=[{"path": nb.path, "rung": "fundamentals"}])
-        assert curriculum.rung_consistency_errors([nb], [track]) == []
-
-
-@pytest.mark.parametrize(
-    ("code", "word"),
-    [
-        ("L1", "fundamentals"),
-        ("L2", "self-sufficiency"),
-        ("L3", "reproducible"),
-        ("L4", "production"),
-    ],
-)
-def test_tag_rung_decoding(code, word):
-    assert curriculum._TAG_RUNG[code] == word
-
-
 def test_claims_resolves_many_to_many():
     nb = "notebooks/data/pyarrow/001_x.py"
     t1 = make_track("B3", notebooks=[{"path": nb}])

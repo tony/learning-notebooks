@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""kafka — event patterns without the broker: outbox, at-least-once, idempotent consumers (F1, L4)."""
+"""kafka — event patterns without the broker: outbox, at-least-once, idempotent consumers."""
 
 import marimo
 

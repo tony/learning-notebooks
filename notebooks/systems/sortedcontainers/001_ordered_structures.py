@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""sortedcontainers — ordered structures: sorted views without trees (A2, L2)."""
+"""sortedcontainers — ordered structures: sorted views without trees."""
 
 import marimo
 

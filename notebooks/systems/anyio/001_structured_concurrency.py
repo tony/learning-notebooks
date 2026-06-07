@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""anyio — structured concurrency: task groups, timeouts, and cancellation scopes (A3, L2)."""
+"""anyio — structured concurrency: task groups, timeouts, and cancellation scopes."""
 
 import marimo
 

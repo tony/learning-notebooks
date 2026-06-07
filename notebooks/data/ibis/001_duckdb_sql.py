@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""ibis — DuckDB backend: expressions, lazy evaluation, and SQL interop (B2, L2)."""
+"""ibis — DuckDB backend: expressions, lazy evaluation, and SQL interop."""
 
 import marimo
 

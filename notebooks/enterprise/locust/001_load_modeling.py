@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""locust — load modeling from first principles: percentiles, Little's law, saturation (F3, L4)."""
+"""locust — load modeling from first principles: percentiles, Little's law, saturation."""
 
 import marimo
 

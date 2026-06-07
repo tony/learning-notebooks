@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""numpy — broadcasting & strides: how ndarray shapes combine and memory is viewed (B1, L1)."""
+"""numpy — broadcasting & strides: how ndarray shapes combine and memory is viewed."""
 
 import marimo
 

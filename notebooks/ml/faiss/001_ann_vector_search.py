@@ -7,7 +7,7 @@
 # ]
 # ///
 
-"""faiss — ANN vector search: exact vs IVF, the recall/speed dial (C3, L2)."""
+"""faiss — ANN vector search: exact vs IVF, the recall/speed dial."""
 
 import marimo
 

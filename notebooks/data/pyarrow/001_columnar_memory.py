@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""pyarrow — columnar memory: tables, chunks, and zero-copy slices (B3, L2)."""
+"""pyarrow — columnar memory: tables, chunks, and zero-copy slices."""
 
 import marimo
 

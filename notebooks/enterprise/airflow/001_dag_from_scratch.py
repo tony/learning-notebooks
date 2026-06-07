@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""airflow — a DAG scheduler from scratch: graphlib, retries, idempotent re-runs (F2, L1)."""
+"""airflow — a DAG scheduler from scratch: graphlib, retries, idempotent re-runs."""
 
 import marimo
 

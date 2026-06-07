@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""polars — lazy frames: build a query plan, inspect it, then collect (B1, L2)."""
+"""polars — lazy frames: build a query plan, inspect it, then collect."""
 
 import marimo
 

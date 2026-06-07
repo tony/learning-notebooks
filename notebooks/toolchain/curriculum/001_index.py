@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""curriculum — the index notebook: FTS5 search and rollups over this repo's catalog (Toolchain, L3)."""
+"""curriculum — the index notebook: FTS5 search and rollups over this repo's catalog."""
 
 import marimo
 
@@ -172,7 +172,7 @@ def _(nbs, tracks):
             mo.stat(value=str(len(tracks)), label="tracks"),
             mo.stat(
                 value=str(sum(1 for _nb in nbs if _nb.rung is not None)),
-                label="tagged (Track, Rung)",
+                label="with a rung",
             ),
             mo.stat(
                 value=str(sum(1 for _nb in nbs if _nb.has_tests)),
@@ -190,7 +190,7 @@ def _(nbs):
     _tree: dict[str, dict[str, list[str]]] = {}
     for _nb in nbs:
         _tree.setdefault(_nb.domain, {}).setdefault(_nb.library, []).append(
-            f"{_nb.path.rsplit('/', 1)[-1]} ({_nb.rung or 'untagged'})"
+            f"{_nb.path.rsplit('/', 1)[-1]} ({_nb.rung or 'no rung'})"
         )
     mo.tree(_tree)
     return

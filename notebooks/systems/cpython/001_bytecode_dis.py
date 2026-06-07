@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""cpython — bytecode & dis: what your functions compile to (A1, L1)."""
+"""cpython — bytecode & dis: what your functions compile to."""
 
 import marimo
 

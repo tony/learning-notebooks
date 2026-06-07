@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""pandas — DataFrames: construction, dtypes, selection, and groupby (B1, L2)."""
+"""pandas — DataFrames: construction, dtypes, selection, and groupby."""
 
 import marimo
 

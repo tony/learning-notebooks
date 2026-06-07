@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""presidio — PII governance from scratch: detect, redact, audit (F4, L4)."""
+"""presidio — PII governance from scratch: detect, redact, audit."""
 
 import marimo
 

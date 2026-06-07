@@ -7,7 +7,7 @@
 # ]
 # ///
 
-"""fastapi — a model endpoint, exercised in-process: schemas, validation, latency (E3, L2)."""
+"""fastapi — a model endpoint, exercised in-process: schemas, validation, latency."""
 
 import marimo
 
