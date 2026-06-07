@@ -53,3 +53,5 @@ jobs:
           uv run notebooks/systems/rich/001_console_rendering.py
           uv run notebooks/systems/anyio/001_structured_concurrency.py
           uv run notebooks/systems/sortedcontainers/001_ordered_structures.py
+          uv run notebooks/ml/sklearn/001_estimator_api.py
+          uv run notebooks/ml/torch/001_autograd.py
