@@ -29,7 +29,7 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/ORG/REPO>
-    - Local clone (sibling of this repo): `../REPO`
+    - In the source: `path/within/the/repo/` (what this notebook studies)
     """)
     return
 

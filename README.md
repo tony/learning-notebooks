@@ -113,10 +113,12 @@ provides dev tooling (marimo CLI, ruff, ty).
 
 ## Curriculum Index
 
-The taxonomy table is derived, not hand-edited: notebooks carry their own
-metadata, `notes/curriculum.toml` holds the editorial overlay (tracks,
-mastery, status), and CI fails when any generated file drifts from its
-sources. After editing either source, regenerate:
+The taxonomy table is derived, not hand-edited: notebooks own their mechanical
+metadata (title, deps, headings, upstream), and `notes/curriculum.toml` holds
+the editorial overlay — readable-named courses (`data/dataframes`, not `B1`),
+the per-notebook rung, and a project registry joining each studied library to
+its upstream and tracks. CI fails when any generated file drifts. After editing
+either source, regenerate:
 
 ```bash
 just sync
@@ -134,6 +136,12 @@ notebook:
 
 ```bash
 jq -r 'select(.status == "seed") | .path' notes/catalog.jsonl
+```
+
+SQL over the registry — e.g. every project that ships Rust in a Python wheel:
+
+```bash
+just q "SELECT name FROM project WHERE rust_in_python = 'compiler-in-python'"
 ```
 
 Rollups and gap lists live in the generated `notes/coverage.md`; the

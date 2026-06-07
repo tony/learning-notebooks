@@ -22,12 +22,13 @@ How to create a new study notebook from `notes/notebook_template.py`.
      `uv add --script notebooks/<domain>/<library>/NNN_<topic>.py <package>` works from the CLI.
 
 3. Replace the placeholders:
-   - Module docstring: `LIBRARY — TOPIC: summary (Track, Rung).` — the trailing
-     tag names the primary taxonomy track and mastery rung, e.g. `(B1, L2)`.
+   - Module docstring: `LIBRARY — TOPIC: one-line summary.` — plain human prose,
+     no codes. The notebook's course and rung are authored in
+     `notes/curriculum.toml`, not in the docstring.
    - Title cell: what the notebook studies and the questions it answers.
-   - Source-reading cell: upstream GitHub URL and the sibling clone path
-     (`../<repo>` — see `notes/study_plan.md` for the mapping). If no local
-     clone exists, omit the `Local clone` line rather than inventing a path.
+   - Source-reading cell: the upstream GitHub URL and, where useful, the in-repo
+     subpath to read (`- In the source: \`src/foo/\``). Never write a
+     machine-relative clone path (`../<repo>`) — it leaks a local layout.
 
 4. Write the study cells. Remember the marimo rules in `AGENTS.md`
    (DAG rule, last expression = output, no magics, cache expensive work).
@@ -43,10 +44,12 @@ How to create a new study notebook from `notes/notebook_template.py`.
    Every `@app.function` / `@app.class_definition` carries a docstring —
    the Documentation panel shows it on hover via jedi.
 
-6. Claim the notebook in `notes/curriculum.toml`: add its path to the
-   `notebooks` list of at least one `[[track]]`, then regenerate the taxonomy
-   with `just sync` and commit both. The drift gate fails on unclaimed
-   notebooks, so this step is enforced, not optional.
+6. Claim the notebook in `notes/curriculum.toml`: add `{ path, rung }` to the
+   `notebooks` list of at least one `[[track]]` (the `rung` is the worded
+   mastery level — fundamentals / self-sufficiency / reproducible / production),
+   and make sure its library has a `[[project]]` (name + upstream + tracks).
+   Then `just sync` and commit both. The drift gate fails on an unclaimed
+   notebook or a library with no project, so this step is enforced.
 
 7. If the notebook is lightweight (no GPU, no model downloads, deps install in
    seconds), add it to the smoke-run list in `.github/workflows/ci.yml`.
