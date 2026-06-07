@@ -54,6 +54,8 @@ def _(mo, np):
     shifted = grid + col_offsets
     mo.md(
         f"""
+    ## Broadcasting
+
     Broadcasting aligns trailing dimensions: `{grid.shape} + {col_offsets.shape}`
     stretches the `(3, 1)` column across 4 columns **without materializing** the
     repeated data:
@@ -72,6 +74,8 @@ def _(grid, mo, np):
     every_other_row = grid[::2]
     mo.md(
         f"""
+    ## Strides and views
+
     Strides are the bytes to step per axis — views reinterpret, never copy:
 
     | array | shape | strides | owns memory? |

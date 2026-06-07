@@ -85,6 +85,14 @@ def _():
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The polars hop
+    """)
+    return
+
+
 @app.cell
 def _(base_alloc, price_addr, readings):
     pl_df = pl.from_arrow(readings)
@@ -119,6 +127,14 @@ def _(base_alloc, price_addr, readings):
     return (pl_df,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The pandas hop
+    """)
+    return
+
+
 @app.cell
 def _(base_alloc, readings):
     pd_arrow = readings.to_pandas(types_mapper=pd.ArrowDtype)
@@ -151,6 +167,14 @@ def _(base_alloc, readings):
         gap=0.5,
     )
     return (pd_arrow,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The duckdb hop
+    """)
+    return
 
 
 @app.cell

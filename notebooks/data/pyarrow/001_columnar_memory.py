@@ -57,6 +57,8 @@ def _(mo, pa):
     )
     mo.md(
         f"""
+    ## Tables and chunked columns
+
     A `pa.Table` is a schema plus chunked columns — each column a sequence of
     immutable Arrow arrays:
 
@@ -77,6 +79,8 @@ def _(mo, pa, pc, readings):
     summed = pc.sum(readings.column("value"))
     mo.md(
         f"""
+    ## Zero-copy slices and compute kernels
+
     `slice(1, 3)` is **zero-copy** — it adjusts offsets into the same buffers
     (`{window.num_rows}` rows, still `{type(window).__name__}`), and compute
     kernels run vectorized over the buffers: `pc.sum(value)` =

@@ -91,6 +91,14 @@ def _(ibis, penguins):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The same aggregation as a marimo SQL cell
+    """)
+    return
+
+
 @app.cell
 def _(mo, penguins_df):
     # The same aggregation as a marimo SQL cell (DuckDB over in-scope dataframes).

@@ -63,6 +63,14 @@ def _(duckdb):
     return con, totals
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Vectorized aggregation
+    """)
+    return
+
+
 @app.cell
 def _(mo, totals):
     mo.ui.table(
@@ -79,6 +87,8 @@ def _(con, mo):
     ).fetchall()
     mo.md(
         f"""
+    ## The physical plan
+
     `EXPLAIN` shows the physical operators that process data in vectors
     (DataChunks of ~2048 rows), not row-at-a-time:
 

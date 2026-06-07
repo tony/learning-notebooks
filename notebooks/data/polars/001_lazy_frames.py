@@ -69,6 +69,8 @@ def _(pl):
 def _(lazy_orders, mo):
     mo.md(
         f"""
+    ## The plan, before any data moves
+
     Nothing has executed yet — `lazy_orders` is a plan. The optimizer's view:
 
     ```
@@ -79,6 +81,14 @@ def _(lazy_orders, mo):
     scan so fewer rows ever flow upward.
     """
     )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Collect: the optimized plan runs
+    """)
     return
 
 
