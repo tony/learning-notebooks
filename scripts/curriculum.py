@@ -543,6 +543,44 @@ class CheckResult:
     projects: int = 0
 
 
+def library_project_errors(notebooks: list[Notebook], projects: list[Project]) -> list[str]:
+    """Every notebook library must resolve to a [[project]] entry."""
+    names = {p.name for p in projects}
+    return [
+        f"{nb.path}: library {nb.library!r} has no [[project]] entry"
+        for nb in notebooks
+        if nb.library not in names
+    ]
+
+
+def project_track_errors(tracks: list[Track], projects: list[Project]) -> list[str]:
+    """Every project's `tracks` must reference an existing track id."""
+    ids = {t.id for t in tracks}
+    return [
+        f"project {p.name!r}: references unknown track {tid!r}"
+        for p in projects
+        for tid in p.tracks
+        if tid not in ids
+    ]
+
+
+def rung_consistency_errors(notebooks: list[Notebook], tracks: list[Track]) -> list[str]:
+    """Check the authored per-notebook rung against the docstring tag's rung.
+
+    Transitional: drops once the tags are gone. The tag carries a code
+    (``L2``); the registry carries the word (``self-sufficiency``); they are
+    compared through the canonical de-coding.
+    """
+    rungs = notebook_rungs(tracks)
+    errors = []
+    for nb in notebooks:
+        authored = rungs.get(nb.path)
+        tagged = _TAG_RUNG.get(nb.rung) if nb.rung else None
+        if authored and tagged and authored != tagged:
+            errors.append(f"{nb.path}: registry rung {authored!r} != docstring tag rung {tagged!r}")
+    return errors
+
+
 def check_drift() -> CheckResult:
     """Compute drift findings: errors (gate-failing) and warnings (advisory)."""
     notebooks, tracks = index()
@@ -571,30 +609,11 @@ def check_drift() -> CheckResult:
         if nb.track is None:
             warnings.append(f"{nb.path}: no (Track, Rung) docstring tag")
 
-    # Project registry: every notebook library resolves to a project, and every
-    # project points at real tracks.
-    project_names = {p.name for p in projects}
-    track_ids = {t.id for t in tracks}
-    errors.extend(
-        f"{nb.path}: library {nb.library!r} has no [[project]] entry"
-        for nb in notebooks
-        if nb.library not in project_names
-    )
-    errors.extend(
-        f"project {p.name!r}: references unknown track {tid!r}"
-        for p in projects
-        for tid in p.tracks
-        if tid not in track_ids
-    )
-
-    # Transitional: the authored per-notebook rung must equal the docstring
-    # tag's rung (mapped through the canonical de-coding). Drops with the tags.
-    rungs = notebook_rungs(tracks)
-    for nb in notebooks:
-        authored = rungs.get(nb.path)
-        tagged = _TAG_RUNG.get(nb.rung) if nb.rung else None
-        if authored and tagged and authored != tagged:
-            errors.append(f"{nb.path}: registry rung {authored!r} != docstring tag rung {tagged!r}")
+    # Project registry: every notebook library resolves to a project, every
+    # project points at real tracks, and per-notebook rung matches the tag.
+    errors.extend(library_project_errors(notebooks, projects))
+    errors.extend(project_track_errors(tracks, projects))
+    errors.extend(rung_consistency_errors(notebooks, tracks))
 
     ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
     warnings.extend(

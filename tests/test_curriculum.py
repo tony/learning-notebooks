@@ -1,0 +1,171 @@
+"""Unit tests for the curriculum engine (scripts/curriculum.py).
+
+Two tiers: pure-function tests on constructed inputs (the new registry/drift
+logic), and integration assertions that the real repo's sources are
+internally consistent — the same invariants the CI drift gate enforces.
+"""
+
+from __future__ import annotations
+
+import curriculum
+import pytest
+
+
+def make_notebook(path: str, *, library: str, track: str | None = None, rung: str | None = None):
+    """Build a minimal Notebook for pure-logic tests."""
+    return curriculum.Notebook(
+        path=path,
+        domain=path.split("/")[1],
+        library=library,
+        seq=1,
+        title="t",
+        summary="s",
+        track=track,
+        rung=rung,
+        packages=[],
+        requires_python=None,
+        headings=[],
+        has_tests=False,
+        upstream_url=None,
+    )
+
+
+def make_track(track_id: str, *, notebooks=(), domain="X"):
+    return curriculum.Track(
+        id=track_id,
+        domain=domain,
+        topic="topic",
+        mastery="L1",
+        status="seed",
+        notebooks=list(notebooks),
+    )
+
+
+# --- pure registry/drift logic -------------------------------------------------
+
+
+class TestLibraryProjectErrors:
+    def test_unregistered_library_is_an_error(self):
+        nbs = [make_notebook("notebooks/data/polars/001_x.py", library="polars")]
+        errors = curriculum.library_project_errors(nbs, projects=[])
+        assert len(errors) == 1
+        assert "polars" in errors[0]
+
+    def test_registered_library_is_clean(self):
+        nbs = [make_notebook("notebooks/data/polars/001_x.py", library="polars")]
+        projects = [curriculum.Project(name="polars", tracks=["B1"])]
+        assert curriculum.library_project_errors(nbs, projects) == []
+
+
+class TestProjectTrackErrors:
+    def test_unknown_track_reference_is_an_error(self):
+        tracks = [make_track("B1")]
+        projects = [curriculum.Project(name="polars", tracks=["B1", "NOPE"])]
+        errors = curriculum.project_track_errors(tracks, projects)
+        assert len(errors) == 1
+        assert "NOPE" in errors[0]
+
+    def test_known_track_reference_is_clean(self):
+        tracks = [make_track("B1"), make_track("B2")]
+        projects = [curriculum.Project(name="duckdb", tracks=["B2"])]
+        assert curriculum.project_track_errors(tracks, projects) == []
+
+
+class TestRungConsistencyErrors:
+    def test_mismatch_between_registry_and_tag_is_an_error(self):
+        # docstring tag says L1 (fundamentals); registry says self-sufficiency.
+        nb = make_notebook("notebooks/data/numpy/001_x.py", library="numpy", rung="L1")
+        track = make_track("B1", notebooks=[{"path": nb.path, "rung": "self-sufficiency"}])
+        errors = curriculum.rung_consistency_errors([nb], [track])
+        assert len(errors) == 1
+
+    def test_agreement_is_clean(self):
+        nb = make_notebook("notebooks/data/numpy/001_x.py", library="numpy", rung="L1")
+        track = make_track("B1", notebooks=[{"path": nb.path, "rung": "fundamentals"}])
+        assert curriculum.rung_consistency_errors([nb], [track]) == []
+
+    def test_untagged_notebook_is_skipped(self):
+        nb = make_notebook("notebooks/data/numpy/001_x.py", library="numpy", rung=None)
+        track = make_track("B1", notebooks=[{"path": nb.path, "rung": "fundamentals"}])
+        assert curriculum.rung_consistency_errors([nb], [track]) == []
+
+
+@pytest.mark.parametrize(
+    ("code", "word"),
+    [
+        ("L1", "fundamentals"),
+        ("L2", "self-sufficiency"),
+        ("L3", "reproducible"),
+        ("L4", "production"),
+    ],
+)
+def test_tag_rung_decoding(code, word):
+    assert curriculum._TAG_RUNG[code] == word
+
+
+def test_claims_resolves_many_to_many():
+    nb = "notebooks/data/pyarrow/001_x.py"
+    t1 = make_track("B3", notebooks=[{"path": nb}])
+    t2 = make_track("B4", notebooks=[{"path": nb}])
+    claimed = curriculum.claims([t1, t2])
+    assert {t.id for t in claimed[nb]} == {"B3", "B4"}
+
+
+def test_notebook_rungs_maps_paths_to_words():
+    track = make_track(
+        "B1",
+        notebooks=[
+            {"path": "notebooks/data/numpy/001_x.py", "rung": "fundamentals"},
+            {"path": "notebooks/data/pandas/001_x.py", "rung": "self-sufficiency"},
+        ],
+    )
+    rungs = curriculum.notebook_rungs([track])
+    assert rungs["notebooks/data/numpy/001_x.py"] == "fundamentals"
+    assert rungs["notebooks/data/pandas/001_x.py"] == "self-sufficiency"
+
+
+# --- the real repo's sources are internally consistent -------------------------
+
+
+@pytest.fixture(scope="module")
+def repo():
+    notebooks, tracks = curriculum.index()
+    return notebooks, tracks, curriculum.load_projects()
+
+
+def test_real_repo_has_no_drift_errors():
+    result = curriculum.check_drift()
+    assert result.errors == []
+
+
+def test_every_notebook_library_has_a_project(repo):
+    notebooks, _, projects = repo
+    assert curriculum.library_project_errors(notebooks, projects) == []
+
+
+def test_every_project_points_at_a_real_track(repo):
+    _, tracks, projects = repo
+    assert curriculum.project_track_errors(tracks, projects) == []
+
+
+def test_registry_counts(repo):
+    notebooks, tracks, projects = repo
+    assert len(notebooks) == 23
+    assert len(tracks) == 21
+    assert len(projects) == 22
+
+
+def test_known_project_fields():
+    projects = {p.name: p for p in curriculum.load_projects()}
+    polars = projects["polars"]
+    assert polars.upstream == "https://github.com/pola-rs/polars"
+    assert polars.tracks == ["B1"]
+
+
+def test_parse_notebook_extracts_library_and_upstream():
+    nb = curriculum.parse_notebook(
+        curriculum.REPO_ROOT / "notebooks/toolchain/marimo/001_basics.py"
+    )
+    assert nb.library == "marimo"
+    assert nb.upstream_url == "https://github.com/marimo-team/marimo"
+    assert not hasattr(nb, "clone_path")

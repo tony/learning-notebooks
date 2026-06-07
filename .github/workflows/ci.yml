@@ -43,6 +43,10 @@ jobs:
       - name: Curriculum drift
         run: uv run scripts/curriculum.py check
 
+      # Unit tests for the curriculum engine (stdlib-only; no notebook sandbox).
+      - name: Unit tests
+        run: uv run --with pytest pytest tests/
+
       # Each notebook resolves its own PEP 723 deps in an isolated env.
       # Only lightweight notebooks belong here — no GPU deps, no model
       # downloads (see AGENTS.md "CI-safety").

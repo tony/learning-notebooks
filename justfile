@@ -69,6 +69,11 @@ q sql:
 find term:
     uv run scripts/curriculum.py find "{{ term }}"
 
+# curriculum engine unit tests
+[group('quality')]
+test:
+    uv run --with pytest pytest tests/
+
 # all quality gates (what CI runs)
 [group('quality')]
 check:
@@ -78,6 +83,7 @@ check:
     uv run marimo check --strict notebooks/ notes/notebook_template.py
     uv run scripts/check_licenses.py
     uv run scripts/curriculum.py check
+    uv run --with pytest pytest tests/
 
 # format the repo
 [group('quality')]

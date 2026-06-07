@@ -61,6 +61,11 @@ convention = "numpy"
   "D",
   "E501",
 ]
+# tests: docstrings on every test add noise; private-symbol access is the point.
+"tests/**/*.py" = [
+  "D", # test names are the documentation
+  "SLF001", # tests legitimately reach into _private helpers
+]
 
 [tool.ty.src]
 include = ["notebooks", "notes", "scripts"]
