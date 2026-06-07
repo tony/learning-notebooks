@@ -16,6 +16,10 @@ dist/
 # marimo per-notebook cache, snapshots, and session state
 __marimo__/
 
+# On-demand curriculum FTS index (scripts/curriculum.py sqlite) — built from
+# sources, never committed
+.marimo-index.db
+
 # Editors
 .idea/
 .vscode/
