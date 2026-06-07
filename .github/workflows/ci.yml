@@ -59,4 +59,5 @@ jobs:
           uv run notebooks/ml/faiss/001_ann_vector_search.py
           uv run notebooks/ai_serving/vllm/001_serving_concepts.py
           uv run notebooks/ai_serving/fastapi/001_model_endpoint.py
+          uv run notebooks/enterprise/kafka/001_event_patterns.py
           uv run notebooks/ml/torch/001_autograd.py
