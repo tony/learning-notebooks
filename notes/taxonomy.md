@@ -53,6 +53,7 @@ never a dependency. License unclear → `study-only` until verified.
 | enterprise | enterprise/orchestration | Workflow & orchestration (DAGs → retries → idempotency) | [DAG-scratch seed](../notebooks/enterprise/airflow/001_dag_from_scratch.py) | `architecture/{airflow,dask,ray}` | airflow [Apache-2.0], prefect [Apache-2.0], stdlib graphlib [PSF] | permissive | fundamentals | seed |
 | enterprise | enterprise/reliability | Reliability, load & performance (load models → percentiles → SLOs) | [load-modeling seed](../notebooks/enterprise/locust/001_load_modeling.py) | `architecture/{locust,jmeter,vegeta,hyperfine}` | locust [MIT], hyperfine [MIT/Apache-2.0], stdlib random/statistics [PSF] | permissive | production | seed |
 | enterprise | enterprise/governance | Security, privacy & governance (PII → redaction → audit) | [pii-governance seed](../notebooks/enterprise/presidio/001_pii_governance.py) | `architecture/{presidio,opensearch}` | presidio [MIT], stdlib re/hashlib [PSF] | permissive | production | seed |
+| systems | systems/rust-in-python | Writing & shipping Rust in Python (pyo3 → maturin → rust-core frontends → CLIs) | — | `architecture/{pyo3,maturin,polars,pydantic-core,ruff}` | pyo3 [Apache-2.0], maturin [MIT/Apache-2.0], polars [MIT], pydantic-core [MIT], ruff [MIT], orjson [Apache-2.0/MIT], tokenizers [Apache-2.0] | permissive | fundamentals–production | seed |
 
 Notes:
 

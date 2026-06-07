@@ -118,15 +118,16 @@ def test_every_project_points_at_a_real_track(repo):
 def test_registry_counts(repo):
     notebooks, tracks, projects = repo
     assert len(notebooks) == 23
-    assert len(tracks) == 21
-    assert len(projects) == 22
+    assert len(tracks) == 22
+    assert len(projects) == 46
 
 
 def test_known_project_fields():
     projects = {p.name: p for p in curriculum.load_projects()}
     polars = projects["polars"]
     assert polars.upstream == "https://github.com/pola-rs/polars"
-    assert polars.tracks == ["data/dataframes"]
+    assert polars.tracks == ["data/dataframes", "systems/rust-in-python"]
+    assert polars.rust_in_python == "rust-core-frontend"
 
 
 def test_parse_notebook_extracts_library_and_upstream():

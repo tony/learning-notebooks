@@ -429,8 +429,14 @@ CREATE TABLE track (
   notebooks   TEXT,  -- JSON array of paths (M:N)
   arch_links  TEXT, arch_missing TEXT, sibling TEXT  -- JSON arrays
 );
+CREATE TABLE project (
+  name        TEXT PRIMARY KEY,
+  upstream    TEXT, rust_in_python TEXT,
+  tracks      TEXT  -- JSON array of track ids (M:N)
+);
 CREATE INDEX track_status ON track(status);
 CREATE INDEX track_domain ON track(domain);
+CREATE INDEX project_variation ON project(rust_in_python);
 CREATE INDEX notebook_rung ON notebook(rung);
 CREATE VIRTUAL TABLE notebook_fts USING fts5(
   path UNINDEXED, body, tokenize='porter unicode61', prefix='2 3'
@@ -456,6 +462,7 @@ def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
     """
     notebooks, tracks = index()
     claimed = claims(tracks)
+    projects = load_projects()
     conn = sqlite3.connect(db_path)
     conn.executescript(_SCHEMA)
     for nb in notebooks:
@@ -500,6 +507,11 @@ def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
                 json.dumps(t.architecture_missing),
                 json.dumps(t.sibling_curricula),
             ),
+        )
+    for proj in projects:
+        conn.execute(
+            "INSERT INTO project VALUES (?,?,?,?)",
+            (proj.name, proj.upstream, proj.rust_in_python, json.dumps(proj.tracks)),
         )
     conn.commit()
     return conn

@@ -286,6 +286,16 @@ architecture = ["presidio", "opensearch"]
 packages = "presidio [MIT], stdlib re/hashlib [PSF]"
 license_status = "permissive"
 
+[[track]]
+id = "systems/rust-in-python"
+topic = "Writing & shipping Rust in Python (pyo3 → maturin → rust-core frontends → CLIs)"
+mastery = "fundamentals–production"
+status = "seed"
+notebooks = []
+architecture = ["pyo3", "maturin", "polars", "pydantic-core", "ruff"]
+packages = "pyo3 [Apache-2.0], maturin [MIT/Apache-2.0], polars [MIT], pydantic-core [MIT], ruff [MIT], orjson [Apache-2.0/MIT], tokenizers [Apache-2.0]"
+license_status = "permissive"
+
 # Projects — one per studied library. `name` matches the notebook library
 # directory so notebook→project derives by path. `upstream` is the portable
 # GitHub URL — the only source pointer committed. Where a clone lives locally
@@ -335,7 +345,8 @@ tracks = ["data/dataframes"]
 [[project]]
 name = "polars"
 upstream = "https://github.com/pola-rs/polars"
-tracks = ["data/dataframes"]
+tracks = ["data/dataframes", "systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
 
 [[project]]
 name = "ibis"
@@ -365,7 +376,8 @@ tracks = ["ml/deep-learning"]
 [[project]]
 name = "tokenizers"
 upstream = "https://github.com/huggingface/tokenizers"
-tracks = ["ml/nlp-embeddings"]
+tracks = ["ml/nlp-embeddings", "systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
 
 [[project]]
 name = "faiss"
@@ -401,3 +413,150 @@ tracks = ["enterprise/reliability"]
 name = "presidio"
 upstream = "https://github.com/microsoft/presidio"
 tracks = ["enterprise/governance"]
+
+# Rust-in-Python study targets (no notebook yet — the course is seeded).
+
+[[project]]
+name = "pyo3"
+upstream = "https://github.com/PyO3/pyo3"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "orjson"
+upstream = "https://github.com/ijl/orjson"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "fastuuid"
+upstream = "https://github.com/fastuuid/fastuuid"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "tantivy-py"
+upstream = "https://github.com/quickwit-oss/tantivy-py"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "bytewax"
+upstream = "https://github.com/bytewax/bytewax"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "pyxel"
+upstream = "https://github.com/kitao/pyxel"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "pyxirr"
+upstream = "https://github.com/Anexen/pyxirr"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "safetensors"
+upstream = "https://github.com/safetensors/safetensors"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "rust-numpy"
+upstream = "https://github.com/PyO3/rust-numpy"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "pyo3-async-runtimes"
+upstream = "https://github.com/PyO3/pyo3-async-runtimes"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "native-modules"
+
+[[project]]
+name = "maturin"
+upstream = "https://github.com/PyO3/maturin"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "maturin"
+
+[[project]]
+name = "maturin-import-hook"
+upstream = "https://github.com/PyO3/maturin-import-hook"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "maturin"
+
+[[project]]
+name = "setuptools-rust"
+upstream = "https://github.com/PyO3/setuptools-rust"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "maturin"
+
+[[project]]
+name = "pydantic-core"
+upstream = "https://github.com/pydantic/pydantic-core"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "pydantic"
+upstream = "https://github.com/pydantic/pydantic"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "datafusion-python"
+upstream = "https://github.com/apache/datafusion-python"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "daft"
+upstream = "https://github.com/Eventual-Inc/Daft"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "lancedb"
+upstream = "https://github.com/lancedb/lancedb"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "pathway"
+upstream = "https://github.com/pathwaycom/pathway"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "chroma"
+upstream = "https://github.com/chroma-core/chroma"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "rust-core-frontend"
+
+[[project]]
+name = "ruff"
+upstream = "https://github.com/astral-sh/ruff"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "compiler-in-python"
+
+[[project]]
+name = "ty"
+upstream = "https://github.com/astral-sh/ty"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "compiler-in-python"
+
+[[project]]
+name = "uv"
+upstream = "https://github.com/astral-sh/uv"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "compiler-in-python"
+
+[[project]]
+name = "delta-rs"
+upstream = "https://github.com/delta-io/delta-rs"
+tracks = ["systems/rust-in-python"]
+rust_in_python = "ctypes-capsules"
+

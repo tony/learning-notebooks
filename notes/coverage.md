@@ -19,7 +19,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
 | Status | Tracks |
 |---|---|
 | existing | 7 |
-| seed | 13 |
+| seed | 14 |
 | study-only | 1 |
 
 ## Notebooks by domain
@@ -39,6 +39,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
   - `ai-serving/rag-agents (seed)`
   - `ai-tuning/eval-harness (existing)`
   - `systems/os-kernels (study-only)`
+  - `systems/rust-in-python (seed)`
 - Notebooks without an upstream link:
   - none
 - Notebooks without a rung in the registry:
