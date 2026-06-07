@@ -24,8 +24,7 @@ reproducible = "compose tools as one system"
 production = "org-scale patterns"
 
 [[track]]
-id = "Toolchain"
-domain = "0"
+id = "toolchain/reproducible-notebooks"
 topic = "Reproducible study notebooks"
 mastery = "self-sufficiency"
 status = "existing"
@@ -38,8 +37,7 @@ packages = "marimo, uv, ruff, ty, pytest, rich"
 license_status = "permissive (Apache-2.0 / MIT)"
 
 [[track]]
-id = "A1"
-domain = "A"
+id = "systems/languages-runtimes"
 topic = "Languages & runtimes (bytecode → GC → JIT → types)"
 mastery = "fundamentals"
 status = "seed"
@@ -51,8 +49,7 @@ packages = "CPython [PSF], ty [MIT], cython [Apache-2.0], V8 [BSD], Node [MIT], 
 license_status = "permissive"
 
 [[track]]
-id = "A2"
-domain = "A"
+id = "systems/data-structures"
 topic = "Data structures & algorithms"
 mastery = "self-sufficiency"
 status = "existing"
@@ -65,8 +62,7 @@ packages = "sortedcontainers [Apache-2.0], networkx [BSD], hypothesis [MPL-2.0 �
 license_status = "permissive + ⚑ hypothesis (dev/test only)"
 
 [[track]]
-id = "A3"
-domain = "A"
+id = "systems/concurrency"
 topic = "Concurrency & async (event loop → futures → actors)"
 mastery = "self-sufficiency"
 status = "existing"
@@ -79,8 +75,7 @@ packages = "anyio [MIT], trio [MIT/Apache-2.0], Tokio [MIT], rayon [MIT/Apache-2
 license_status = "permissive"
 
 [[track]]
-id = "A4"
-domain = "A"
+id = "systems/os-kernels"
 topic = "OS / kernels / systems"
 mastery = "—"
 status = "study-only"
@@ -90,8 +85,7 @@ packages = "study targets only — Linux [GPL], FreeBSD/OpenBSD [BSD], SQLite [p
 license_status = "GPL targets never become deps"
 
 [[track]]
-id = "A5"
-domain = "A"
+id = "systems/dev-tooling"
 topic = "Build & dev tooling (packaging → linters → tests → terminals)"
 mastery = "self-sufficiency"
 status = "existing"
@@ -104,8 +98,7 @@ packages = "uv [MIT/Apache-2.0], ruff [MIT], pytest [MIT], rich/textual [MIT], s
 license_status = "permissive"
 
 [[track]]
-id = "B1"
-domain = "B"
+id = "data/dataframes"
 topic = "Numeric & dataframe core (ndarray → dataframe → plotting → validation)"
 mastery = "fundamentals–self-sufficiency"
 status = "existing"
@@ -120,8 +113,7 @@ packages = "numpy [BSD], pandas [BSD], polars [MIT], matplotlib [PSF-based], plo
 license_status = "permissive"
 
 [[track]]
-id = "B2"
-domain = "B"
+id = "data/query-engines"
 topic = "SQL & query engines (expression IR → plans → vectorized exec)"
 mastery = "self-sufficiency"
 status = "existing"
@@ -135,8 +127,7 @@ packages = "ibis [Apache-2.0], duckdb [MIT], datafusion [Apache-2.0], sqlalchemy
 license_status = "permissive"
 
 [[track]]
-id = "B3"
-domain = "B"
+id = "data/distributed"
 topic = "Distributed data & streaming — analytics (task graphs → shuffle → exactly-once)"
 mastery = "self-sufficiency"
 status = "seed"
@@ -149,8 +140,7 @@ packages = "pyarrow, Spark, Flink, Kafka, Ray, Daft, Pulsar [all Apache-2.0]"
 license_status = "permissive"
 
 [[track]]
-id = "B4"
-domain = "B"
+id = "data/storage-formats"
 topic = "Storage & lakehouse formats (columnar → ACID tables)"
 mastery = "self-sufficiency"
 status = "seed"
@@ -162,8 +152,7 @@ packages = "Arrow, delta-rs, ClickHouse, OpenSearch [all Apache-2.0]"
 license_status = "permissive"
 
 [[track]]
-id = "C1"
-domain = "C"
+id = "ml/classical"
 topic = "Classical ML & stats (regression → estimators → CV)"
 mastery = "self-sufficiency"
 status = "seed"
@@ -176,8 +165,7 @@ packages = "scikit-learn [BSD], scipy [BSD], statsmodels [BSD]"
 license_status = "permissive"
 
 [[track]]
-id = "C2"
-domain = "C"
+id = "ml/deep-learning"
 topic = "Deep learning core (tensors/autograd → training loop → tiny-GPT)"
 mastery = "fundamentals"
 status = "seed"
@@ -190,8 +178,7 @@ packages = "torch [BSD], candle [MIT/Apache-2.0], micrograd/nanoGPT [MIT], onnx 
 license_status = "permissive"
 
 [[track]]
-id = "C3"
-domain = "C"
+id = "ml/nlp-embeddings"
 topic = "NLP / embeddings / vector search (tokenization → ANN → vector DB)"
 mastery = "fundamentals–self-sufficiency"
 status = "seed"
@@ -205,8 +192,7 @@ packages = "tokenizers/tiktoken [Apache-2.0/MIT], sentence-transformers [Apache-
 license_status = "permissive"
 
 [[track]]
-id = "D1"
-domain = "D"
+id = "ai-tuning/eval-harness"
 topic = "Data & eval harness (metrics → gates → run store → search)"
 mastery = "fundamentals–reproducible"
 status = "existing"
@@ -217,8 +203,7 @@ packages = "scikit-learn [BSD], stdlib json/sqlite3 [PSF], duckdb [MIT], tantivy
 license_status = "permissive"
 
 [[track]]
-id = "E1"
-domain = "E"
+id = "ai-serving/inference"
 topic = "Inference & serving (KV-cache → batching → paged attention)"
 mastery = "fundamentals"
 status = "seed"
@@ -230,8 +215,7 @@ packages = "vllm [Apache-2.0], ollama [MIT], llama.cpp [MIT], candle [MIT/Apache
 license_status = "permissive"
 
 [[track]]
-id = "E2"
-domain = "E"
+id = "ai-serving/rag-agents"
 topic = "RAG & agents (retrieval → structured output → multi-agent)"
 mastery = "self-sufficiency"
 status = "seed"
@@ -242,8 +226,7 @@ packages = "llama_index [MIT], langchain/langgraph [MIT], outlines [Apache-2.0],
 license_status = "permissive"
 
 [[track]]
-id = "E3"
-domain = "E"
+id = "ai-serving/observability"
 topic = "Productionizing & observability (API → tracing → cost)"
 mastery = "self-sufficiency"
 status = "seed"
@@ -256,8 +239,7 @@ packages = "fastapi [MIT], litestar [MIT], opentelemetry [Apache-2.0], pydantic 
 license_status = "permissive"
 
 [[track]]
-id = "F1"
-domain = "F"
+id = "enterprise/messaging"
 topic = "Integration & messaging — operational (outbox → pub/sub → CDC)"
 mastery = "production"
 status = "seed"
@@ -269,8 +251,7 @@ packages = "Kafka [Apache-2.0], Pulsar [Apache-2.0], stdlib sqlite3 [PSF]"
 license_status = "permissive"
 
 [[track]]
-id = "F2"
-domain = "F"
+id = "enterprise/orchestration"
 topic = "Workflow & orchestration (DAGs → retries → idempotency)"
 mastery = "fundamentals"
 status = "seed"
@@ -282,8 +263,7 @@ packages = "airflow [Apache-2.0], prefect [Apache-2.0], stdlib graphlib [PSF]"
 license_status = "permissive"
 
 [[track]]
-id = "F3"
-domain = "F"
+id = "enterprise/reliability"
 topic = "Reliability, load & performance (load models → percentiles → SLOs)"
 mastery = "production"
 status = "seed"
@@ -295,8 +275,7 @@ packages = "locust [MIT], hyperfine [MIT/Apache-2.0], stdlib random/statistics [
 license_status = "permissive"
 
 [[track]]
-id = "F4"
-domain = "F"
+id = "enterprise/governance"
 topic = "Security, privacy & governance (PII → redaction → audit)"
 mastery = "production"
 status = "seed"
@@ -316,109 +295,109 @@ license_status = "permissive"
 [[project]]
 name = "marimo"
 upstream = "https://github.com/marimo-team/marimo"
-tracks = ["Toolchain"]
+tracks = ["toolchain/reproducible-notebooks"]
 
 [[project]]
 name = "curriculum"
 upstream = "https://www.sqlite.org/fts5.html"
-tracks = ["Toolchain"]
+tracks = ["toolchain/reproducible-notebooks"]
 
 [[project]]
 name = "cpython"
 upstream = "https://github.com/python/cpython"
-tracks = ["A1"]
+tracks = ["systems/languages-runtimes"]
 
 [[project]]
 name = "sortedcontainers"
 upstream = "https://github.com/grantjenks/python-sortedcontainers"
-tracks = ["A2"]
+tracks = ["systems/data-structures"]
 
 [[project]]
 name = "anyio"
 upstream = "https://github.com/agronholm/anyio"
-tracks = ["A3"]
+tracks = ["systems/concurrency"]
 
 [[project]]
 name = "rich"
 upstream = "https://github.com/Textualize/rich"
-tracks = ["A5"]
+tracks = ["systems/dev-tooling"]
 
 [[project]]
 name = "pandas"
 upstream = "https://github.com/pandas-dev/pandas"
-tracks = ["B1"]
+tracks = ["data/dataframes"]
 
 [[project]]
 name = "numpy"
 upstream = "https://github.com/numpy/numpy"
-tracks = ["B1"]
+tracks = ["data/dataframes"]
 
 [[project]]
 name = "polars"
 upstream = "https://github.com/pola-rs/polars"
-tracks = ["B1"]
+tracks = ["data/dataframes"]
 
 [[project]]
 name = "ibis"
 upstream = "https://github.com/ibis-project/ibis"
-tracks = ["B2"]
+tracks = ["data/query-engines"]
 
 [[project]]
 name = "duckdb"
 upstream = "https://github.com/duckdb/duckdb"
-tracks = ["B2"]
+tracks = ["data/query-engines"]
 
 [[project]]
 name = "pyarrow"
 upstream = "https://github.com/apache/arrow"
-tracks = ["B3", "B4"]
+tracks = ["data/distributed", "data/storage-formats"]
 
 [[project]]
 name = "sklearn"
 upstream = "https://github.com/scikit-learn/scikit-learn"
-tracks = ["C1"]
+tracks = ["ml/classical"]
 
 [[project]]
 name = "torch"
 upstream = "https://github.com/pytorch/pytorch"
-tracks = ["C2"]
+tracks = ["ml/deep-learning"]
 
 [[project]]
 name = "tokenizers"
 upstream = "https://github.com/huggingface/tokenizers"
-tracks = ["C3"]
+tracks = ["ml/nlp-embeddings"]
 
 [[project]]
 name = "faiss"
 upstream = "https://github.com/facebookresearch/faiss"
-tracks = ["C3"]
+tracks = ["ml/nlp-embeddings"]
 
 [[project]]
 name = "vllm"
 upstream = "https://github.com/vllm-project/vllm"
-tracks = ["E1"]
+tracks = ["ai-serving/inference"]
 
 [[project]]
 name = "fastapi"
 upstream = "https://github.com/fastapi/fastapi"
-tracks = ["E3"]
+tracks = ["ai-serving/observability"]
 
 [[project]]
 name = "kafka"
 upstream = "https://github.com/apache/kafka"
-tracks = ["F1"]
+tracks = ["enterprise/messaging"]
 
 [[project]]
 name = "airflow"
 upstream = "https://github.com/apache/airflow"
-tracks = ["F2"]
+tracks = ["enterprise/orchestration"]
 
 [[project]]
 name = "locust"
 upstream = "https://github.com/locustio/locust"
-tracks = ["F3"]
+tracks = ["enterprise/reliability"]
 
 [[project]]
 name = "presidio"
 upstream = "https://github.com/microsoft/presidio"
-tracks = ["F4"]
+tracks = ["enterprise/governance"]

@@ -36,9 +36,9 @@ Regenerate with `just sync`; CI fails when this file is stale.
 ## Gaps
 
 - Tracks with no notebook in this repo (sibling-repo or study-only rows):
-  - `A4 (study-only)`
-  - `D1 (existing)`
-  - `E2 (seed)`
+  - `ai-serving/rag-agents (seed)`
+  - `ai-tuning/eval-harness (existing)`
+  - `systems/os-kernels (study-only)`
 - Notebooks without an upstream link:
   - none
 - Notebooks without a rung in the registry:

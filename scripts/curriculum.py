@@ -44,6 +44,8 @@ BANNER = (
 _APP_TITLE_RE = re.compile(r'app_title="(?P<title>[^"]+)"')
 _UPSTREAM_RE = re.compile(r"Upstream: <(?P<url>https://[^>]+)>")
 _HEADING_RE = re.compile(r"^\s*#{1,6} +(?P<text>\S.*)$", re.MULTILINE)
+#: A track id is a readable ``domain/slug``: lowercase, hyphen-separated.
+_SLUG_RE = re.compile(r"^[a-z][a-z0-9-]*/[a-z0-9-]+$")
 
 
 @dataclass
@@ -67,10 +69,13 @@ class Notebook:
 
 @dataclass
 class Track:
-    """Grain B — one record per taxonomy row, authored in curriculum.toml."""
+    """Grain B — one course per taxonomy row, authored in curriculum.toml.
+
+    ``id`` is a readable ``domain/slug`` (e.g. ``data/dataframes``); the domain
+    is derived from it, never authored separately.
+    """
 
     id: str
-    domain: str
     topic: str
     mastery: str
     status: str
@@ -81,6 +86,11 @@ class Track:
     architecture_missing: list[str] = field(default_factory=list)
     packages: str = ""
     license_status: str = ""
+
+    @property
+    def domain(self) -> str:
+        """The named domain, the slug's first segment (data/dataframes -> data)."""
+        return self.id.split("/", 1)[0]
 
 
 @dataclass
@@ -545,6 +555,15 @@ class CheckResult:
     projects: int = 0
 
 
+def slug_format_errors(tracks: list[Track]) -> list[str]:
+    """Every track id must be a lowercase ``domain/slug`` — no mystery-meat codes."""
+    return [
+        f"track id {t.id!r} is not a domain/slug (lowercase, hyphenated)"
+        for t in tracks
+        if not _SLUG_RE.match(t.id)
+    ]
+
+
 def library_project_errors(notebooks: list[Notebook], projects: list[Project]) -> list[str]:
     """Every notebook library must resolve to a [[project]] entry."""
     names = {p.name for p in projects}
@@ -589,7 +608,8 @@ def check_drift() -> CheckResult:
     )
 
     # Project registry: every notebook library resolves to a project, and every
-    # project points at real tracks.
+    # project points at real tracks. Track ids stay readable slugs.
+    errors.extend(slug_format_errors(tracks))
     errors.extend(library_project_errors(notebooks, projects))
     errors.extend(project_track_errors(tracks, projects))
 

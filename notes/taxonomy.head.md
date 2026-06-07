@@ -10,14 +10,14 @@ The bridge between the two study corpora:
 Each row indexes one taxonomy track. Notebooks for **any** domain are born in this
 repo under `notebooks/<domain>/<library>/`; sibling `learning-<track>` repos are
 optional — a track graduates only if it outgrows this repo (as `learning-ai-tuning`
-did for D1).
+did for the eval-harness track).
 
 **Mastery ladder** (orthogonal to domains — the rung a row's current artifact teaches):
 
-- **L1 fundamentals** — build the concept from first principles, stdlib-first
-- **L2 self-sufficiency** — drive the real library competently
-- **L3 reproducible & synergy** — compose tools; interop, caching, tests as one system
-- **L4 enterprise** — org-scale patterns: orchestration, messaging, load, governance
+- **fundamentals** — build the concept from first principles, stdlib-first
+- **self-sufficiency** — drive the real library competently
+- **reproducible** — compose tools; interop, caching, tests as one system
+- **production** — org-scale patterns: orchestration, messaging, load, governance
 
 **License policy:** notebook PEP 723 dependencies must be permissive
 (MIT/BSD/Apache-2.0/PSF/ISC). MPL-2.0 is dev/test-only and flagged `⚑`.

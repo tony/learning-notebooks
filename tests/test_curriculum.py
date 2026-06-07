@@ -30,12 +30,11 @@ def make_notebook(path: str, *, library: str, track: str | None = None, rung: st
     )
 
 
-def make_track(track_id: str, *, notebooks=(), domain="X"):
+def make_track(track_id: str, *, notebooks=()):
     return curriculum.Track(
         id=track_id,
-        domain=domain,
         topic="topic",
-        mastery="L1",
+        mastery="fundamentals",
         status="seed",
         notebooks=list(notebooks),
     )
@@ -127,7 +126,7 @@ def test_known_project_fields():
     projects = {p.name: p for p in curriculum.load_projects()}
     polars = projects["polars"]
     assert polars.upstream == "https://github.com/pola-rs/polars"
-    assert polars.tracks == ["B1"]
+    assert polars.tracks == ["data/dataframes"]
 
 
 def test_parse_notebook_extracts_library_and_upstream():
