@@ -188,9 +188,9 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - C3 upstream: real embeddings (sentence-transformers — model download,
+    - Next, real embeddings (sentence-transformers — model download,
       so it stays out of CI; see `notes/study_plan.md` backlog)
-    - The retrieval half of RAG (taxonomy E2) is exactly this notebook plus
+    - The retrieval half of RAG is exactly this notebook plus
       an embedding model in front
     """)
     return

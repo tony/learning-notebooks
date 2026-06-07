@@ -214,9 +214,9 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - E3: `ai_serving/fastapi/001_model_endpoint.py` — the API layer in
+    - The serving API: `ai_serving/fastapi/001_model_endpoint.py` — the layer in
       front of any of this
-    - E2 retrieval: `ml/faiss/001_ann_vector_search.py` already covers the
+    - Retrieval: `ml/faiss/001_ann_vector_search.py` already covers the
       vector half; embeddings join in the study-plan backlog
     """)
     return

@@ -41,8 +41,8 @@ def _():
     This repo's knowledge layer is **derived**: notebooks own their mechanical
     metadata, `notes/curriculum.toml` owns the editorial overlay, and
     `notes/taxonomy.md` is generated from both. This notebook is the
-    interactive surface over that catalog — the same SQLite/FTS5 ideas the D1
-    eval series teaches, pointed at the repo's own corpus.
+    interactive surface over that catalog — the same SQLite/FTS5 ideas the
+    eval-harness series teaches, pointed at the repo's own corpus.
 
     Everything below rebuilds from sources on each run. Nothing here can go
     stale, because nothing here is stored. One honest limit: the index sees
@@ -257,7 +257,7 @@ def _():
     ## Where this goes next
 
     The catalog is queryable from three surfaces now: `rg`/`jq` in the shell,
-    `just q`/`just find` over this same index, and this notebook. The D1 eval
+    `just q`/`just find` over this same index, and this notebook. The eval-harness
     series goes deeper on every piece (external-content FTS tables, BM25 from
     scratch, tantivy).
 

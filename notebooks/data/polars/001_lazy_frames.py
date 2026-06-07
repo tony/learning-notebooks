@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # polars: lazy frames
 
-    Seed notebook (taxonomy B1/B2). polars' lazy API builds a **logical plan**
+    Seed notebook. polars' lazy API builds a **logical plan**
     that the optimizer rewrites (predicate pushdown, projection pruning) before
     any data moves — `.explain()` shows the plan, `.collect()` executes it.
     """)

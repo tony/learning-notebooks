@@ -250,7 +250,7 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - C3 · L2: `ml/faiss/001_ann_vector_search.py` — once text is tokens and
+    - Next: `ml/faiss/001_ann_vector_search.py` — once text is tokens and
       tokens become vectors, retrieval needs an index
     - The run-store series in `../learning-ai-tuning` searches *metadata*;
       this rung is about searching *meaning*

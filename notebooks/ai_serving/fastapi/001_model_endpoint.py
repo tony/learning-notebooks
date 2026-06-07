@@ -54,7 +54,7 @@ def _():
     mo.md(r"""
     # The API layer: a model endpoint without a server process
 
-    E3's job is the boundary: typed request in, typed response out,
+    The endpoint's job is the boundary: typed request in, typed response out,
     validation errors for free. FastAPI's `TestClient` drives the ASGI app
     **in-process** — real routing, real pydantic validation, real status
     codes, no port, no subprocess — which is also exactly how you unit-test
@@ -192,8 +192,8 @@ def _():
     The same `api` object serves for real with
     `uvicorn module:api --workers 4`. What changes is everything *around*
     it: a process manager, `enterprise/locust/001_load_modeling.py`'s
-    percentiles measured over a network, tracing (opentelemetry — the E3
-    backlog), and the gateway patterns in domain F.
+    percentiles measured over a network, tracing (opentelemetry — the
+    observability backlog), and the gateway patterns of the enterprise domain.
     """
             ),
             "TODO(you): cost accounting": mo.md(
@@ -227,7 +227,7 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - F3 measures this endpoint under load: `enterprise/locust/001_load_modeling.py`
+    - Under load: `enterprise/locust/001_load_modeling.py` measures this endpoint
     - Swap `stub_score` for a real model behind `@mo.persistent_cache` and the
       contract doesn't change — that's the point
     """)

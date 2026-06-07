@@ -236,7 +236,7 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - F2: who *runs* the relay on a schedule —
+    - Orchestration: who *runs* the relay on a schedule —
       `enterprise/airflow/001_dag_from_scratch.py`
     - The same outbox table pattern appears in `../learning-ai-tuning`'s run
       store: one storage idea, two domains

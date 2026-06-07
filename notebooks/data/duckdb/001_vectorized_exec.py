@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # duckdb: vectorized execution
 
-    Seed notebook (taxonomy B2). The Python API angle — relations and
+    Seed notebook. The Python API angle — relations and
     `EXPLAIN` on the physical plan. (The `mo.sql()` cell angle lives in
     `notebooks/data/ibis/001_duckdb_sql.py`.)
     """)

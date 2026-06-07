@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # sortedcontainers: ordered structures
 
-    Seed notebook (taxonomy A2). Pure-Python sorted collections that beat
+    Seed notebook. Pure-Python sorted collections that beat
     C-implemented trees in practice — built on a **list of sublists** plus a
     maintained index, not a balanced tree.
 

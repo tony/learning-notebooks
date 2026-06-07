@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # pyarrow: columnar memory
 
-    Seed notebook (taxonomy B3/B4). Arrow is the interchange layer under
+    Seed notebook. Arrow is the interchange layer under
     pandas/polars/duckdb/spark — one columnar format, shared without copies.
     """)
     return

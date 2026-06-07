@@ -28,7 +28,7 @@ with app.setup:
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
-    # One buffer, four engines (the L3 notebook)
+    # One buffer, four engines (the synergy notebook)
 
     The reproducibility-and-synergy rung of the mastery ladder, made
     concrete: a single Arrow table is queried by **polars**, **pandas**, and
@@ -255,8 +255,8 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - B4: delta-rs puts these same buffers under ACID table semantics
-    - L3 backlog (`notes/study_plan.md`): an end-to-end pipeline
+    - Storage formats: delta-rs puts these same buffers under ACID table semantics
+    - Backlog (`notes/study_plan.md`): an end-to-end pipeline
       (pyarrow → duckdb → sklearn) with `mo.persistent_cache`
     """)
     return

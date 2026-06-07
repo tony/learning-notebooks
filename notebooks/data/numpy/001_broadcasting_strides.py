@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # numpy: broadcasting & strides
 
-    Seed notebook (taxonomy B1). Two ideas under every numpy expression:
+    Seed notebook. Two ideas under every numpy expression:
     **broadcasting** (how shapes combine without copying) and **strides**
     (how one buffer is viewed many ways).
     """)

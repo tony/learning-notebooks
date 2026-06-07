@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # scikit-learn: the estimator API
 
-    Seed notebook (taxonomy C1). Everything in sklearn is one contract:
+    Seed notebook. Everything in sklearn is one contract:
     `fit(X, y)` learns and returns `self`; learned state lands in
     trailing-underscore attributes; `predict`/`transform` apply it. Pipelines
     compose anything that honors the contract.

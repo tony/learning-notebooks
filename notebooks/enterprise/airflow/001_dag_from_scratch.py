@@ -249,7 +249,7 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - F1's relay (`enterprise/kafka/001_event_patterns.py`) is exactly the
+    - The messaging relay (`enterprise/kafka/001_event_patterns.py`) is exactly the
       kind of task this scheduler should own
     - Backlog: real Airflow against these semantics; dask for the
       compute-DAG sibling

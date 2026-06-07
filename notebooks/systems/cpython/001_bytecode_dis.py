@@ -27,8 +27,8 @@ def _():
     Every `def` compiles to a **code object** executed by a **stack machine**
     (the eval loop in `Python/ceval.c`). The stdlib `dis` module is the
     window: this notebook reads real disassembly, inspects code objects, and
-    traces one expression through the stack — L1 fundamentals for everything
-    in domain A.
+    traces one expression through the stack — the fundamentals under
+    everything in the systems domain.
     """)
     return
 

@@ -19,7 +19,7 @@ def _(mo):
     mo.md(r"""
     # anyio: structured concurrency
 
-    Seed notebook (taxonomy A3). anyio's core idea: concurrency has *scope* —
+    Seed notebook. anyio's core idea: concurrency has *scope* —
     tasks live inside a task group and **cannot outlive it**; cancellation is a
     scope you enter, not a flag you poll. marimo cells can be `async def`, so
     the demos below `await` natively.

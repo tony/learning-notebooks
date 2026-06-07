@@ -18,7 +18,7 @@ def _(mo):
     mo.md(r"""
     # torch: autograd — md-first seed
 
-    Seed notebook (taxonomy C2). **torch is deliberately NOT a dependency
+    Seed notebook. **torch is deliberately NOT a dependency
     here**: its wheels are too heavy for the CI smoke-run, so this seed carries
     the walkthrough as annotated code to run locally. To promote it to a live
     notebook:

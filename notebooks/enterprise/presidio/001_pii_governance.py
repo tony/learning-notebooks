@@ -33,7 +33,7 @@ def _():
     salted-hash **audit trail** that can prove *what* was redacted without
     storing it.
 
-    Meta-note: this repo already practices F4 — the `git grep '/home/'`
+    Meta-note: this repo already practices governance — the `git grep '/home/'`
     quality gate is a PII detector wired into CI.
     """)
     return
@@ -247,7 +247,7 @@ def _():
     - The full taxonomy now has a seed in every domain — see
       `notes/taxonomy.md` for the ladder view and `notes/study_plan.md`
       for what each rung grows into next
-    - F4 backlog: presidio with NER, lineage, and the audit log living in
+    - Backlog: presidio with NER, lineage, and the audit log living in
       something like `../learning-ai-tuning`'s run store
     """)
     return
