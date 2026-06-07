@@ -43,6 +43,15 @@ BANNER = (
 
 #: Docstring tag, anchored to the end of the summary line: ``(B1, L2)``.
 _TAG_RE = re.compile(r"\((?P<track>[A-Za-z0-9]+), (?P<rung>L[1-4])\)\.?\s*$")
+#: Canonical de-coding of the ladder rung. The authored per-notebook ``rung``
+#: in curriculum.toml uses these words; the legacy docstring tag uses the
+#: ``L1`` to ``L4`` codes. Bridges the two while the tags are still present.
+_TAG_RUNG = {
+    "L1": "fundamentals",
+    "L2": "self-sufficiency",
+    "L3": "reproducible",
+    "L4": "production",
+}
 _APP_TITLE_RE = re.compile(r'app_title="(?P<title>[^"]+)"')
 _UPSTREAM_RE = re.compile(r"Upstream: <(?P<url>https://[^>]+)>")
 _CLONE_RE = re.compile(r"Local clone [^:]*: `(?P<path>[^`]+)`")
@@ -85,6 +94,20 @@ class Track:
     architecture_missing: list[str] = field(default_factory=list)
     packages: str = ""
     license_status: str = ""
+
+
+@dataclass
+class Project:
+    """Grain C — one studied library, the join spine across the corpora.
+
+    ``name`` matches the notebook library directory, so a notebook resolves to
+    its project by path (``notebooks/data/polars/…`` → project ``polars``).
+    """
+
+    name: str
+    tracks: list[str]
+    upstream: str | None = None
+    rust_in_python: str | None = None
 
 
 def _string_literals(tree: ast.Module) -> list[str]:
@@ -173,6 +196,25 @@ def load_ladder() -> dict[str, str]:
 
     with MANIFEST.open("rb") as f:
         return dict(tomllib.load(f)["ladder"])
+
+
+def load_projects() -> list[Project]:
+    """Load the authored project registry from notes/curriculum.toml."""
+    import tomllib
+
+    with MANIFEST.open("rb") as f:
+        data = tomllib.load(f)
+    return [Project(**raw) for raw in data.get("project", [])]
+
+
+def notebook_rungs(tracks: list[Track]) -> dict[str, str]:
+    """Map each notebook path to its authored per-notebook rung (word)."""
+    rungs: dict[str, str] = {}
+    for track in tracks:
+        for nb in track.notebooks:
+            if "rung" in nb:
+                rungs[nb["path"]] = nb["rung"]
+    return rungs
 
 
 def notebook_paths() -> list[Path]:
@@ -499,11 +541,23 @@ def write_sqlite(output: str) -> int:
     return 0
 
 
-def check_drift() -> int:
-    """Drift gate: nonzero when sources disagree or a render is stale."""
+@dataclass
+class CheckResult:
+    """The drift gate's findings, separated from output for unit testing."""
+
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    notebooks: int = 0
+    tracks: int = 0
+    projects: int = 0
+
+
+def check_drift() -> CheckResult:
+    """Compute drift findings: errors (gate-failing) and warnings (advisory)."""
     notebooks, tracks = index()
-    errors: list[str] = []
-    warnings: list[str] = []
+    projects = load_projects()
+    result = CheckResult(notebooks=len(notebooks), tracks=len(tracks), projects=len(projects))
+    errors, warnings = result.errors, result.warnings
 
     claimed = claims(tracks)
     errors.extend(
@@ -526,6 +580,31 @@ def check_drift() -> int:
         if nb.track is None:
             warnings.append(f"{nb.path}: no (Track, Rung) docstring tag")
 
+    # Project registry: every notebook library resolves to a project, and every
+    # project points at real tracks.
+    project_names = {p.name for p in projects}
+    track_ids = {t.id for t in tracks}
+    errors.extend(
+        f"{nb.path}: library {nb.library!r} has no [[project]] entry"
+        for nb in notebooks
+        if nb.library not in project_names
+    )
+    errors.extend(
+        f"project {p.name!r}: references unknown track {tid!r}"
+        for p in projects
+        for tid in p.tracks
+        if tid not in track_ids
+    )
+
+    # Transitional: the authored per-notebook rung must equal the docstring
+    # tag's rung (mapped through the canonical de-coding). Drops with the tags.
+    rungs = notebook_rungs(tracks)
+    for nb in notebooks:
+        authored = rungs.get(nb.path)
+        tagged = _TAG_RUNG.get(nb.rung) if nb.rung else None
+        if authored and tagged and authored != tagged:
+            errors.append(f"{nb.path}: registry rung {authored!r} != docstring tag rung {tagged!r}")
+
     ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
     warnings.extend(
         f"{nb.path}: not in the ci.yml smoke step (hand-maintained — add it or note why not)"
@@ -540,16 +619,24 @@ def check_drift() -> int:
         elif path.read_text(encoding="utf-8") != content:
             errors.append(f"{rel}: stale — run `uv run scripts/curriculum.py render`")
 
-    for warning in warnings:
+    return result
+
+
+def report_drift() -> int:
+    """Print drift findings and return the process exit code (0 ok, 1 drift)."""
+    result = check_drift()
+    for warning in result.warnings:
         print(f"WARN  {warning}")
-    for error in errors:
+    for error in result.errors:
         print(f"DRIFT {error}")
-    if errors:
-        print(f"Curriculum drift: {len(errors)} error(s), {len(warnings)} warning(s).")
+    if result.errors:
+        print(
+            f"Curriculum drift: {len(result.errors)} error(s), {len(result.warnings)} warning(s)."
+        )
         return 1
     print(
-        f"Curriculum drift: OK ({len(notebooks)} notebooks, {len(tracks)} tracks, "
-        f"{len(warnings)} warning(s))"
+        f"Curriculum drift: OK ({result.notebooks} notebooks, {result.tracks} tracks, "
+        f"{result.projects} projects, {len(result.warnings)} warning(s))"
     )
     return 0
 
@@ -579,7 +666,7 @@ def main() -> int:
         return run_find(args.term)
     if args.command == "sqlite":
         return write_sqlite(args.output)
-    return check_drift()
+    return report_drift()
 
 
 if __name__ == "__main__":

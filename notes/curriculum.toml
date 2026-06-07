@@ -1,22 +1,21 @@
-# notes/curriculum.toml — AUTHORED. The editorial overlay on the curriculum,
-# keyed at the taxonomy-TRACK grain (one [[track]] per row in notes/taxonomy.md).
+# notes/curriculum.toml — AUTHORED. The editorial overlay on the curriculum.
+#
+# Three authored grains:
+#   [ladder]    — the mastery rungs (legend).
+#   [[track]]   — one course per row in notes/taxonomy.md. Owns topic prose,
+#                 mastery, status, and the M:N notebook links. Each
+#                 `notebooks` entry is { path, label?, rung } — `rung` is the
+#                 per-notebook mastery level (the authoritative home now that
+#                 notebooks carry no docstring tag).
+#   [[project]] — one studied library. The join spine across notebook ↔ source
+#                 clone ↔ architecture study ↔ track. `name` matches the
+#                 notebook library directory, so notebook→project is derived by
+#                 path (notebooks/data/polars/… → project "polars").
 #
 # Mechanical notebook fields (title, summary, packages from PEP 723, headings,
 # upstream URL, clone path) are DERIVED from the notebooks by
-# scripts/curriculum.py — never duplicate them here. This file holds only
-# human judgement: topic prose, mastery rung, status, architecture pointers,
-# sibling-repo curricula, and the M:N track↔notebook links.
-#
-# `notebooks` entries: { path = "...", label = "..." }. Omit `label` to render
-# the path itself as the link text. A track may claim zero notebooks (a
-# sibling-repo curriculum or study-only row) or several; a notebook may be
-# claimed by several tracks (pyarrow/001 sits under B3 and B4).
-#
-# `sibling_curricula` and the `packages` / `license_status` columns are
-# authored markdown fragments rendered verbatim — they describe study targets
-# beyond PEP 723 deps (e.g. A4's GPL study-only row), so they cannot be
-# derived. The full mastery-ladder narrative lives in notes/taxonomy.head.md;
-# the short labels here caption coverage rollups.
+# scripts/curriculum.py — never duplicate them here. This file holds only human
+# judgement. The full mastery-ladder narrative lives in notes/taxonomy.head.md.
 
 [ladder]
 L1 = "fundamentals"
@@ -31,8 +30,8 @@ topic = "Reproducible study notebooks"
 mastery = "L2"
 status = "existing"
 notebooks = [
-  { path = "notebooks/toolchain/marimo/001_basics.py" },
-  { path = "notebooks/toolchain/curriculum/001_index.py", label = "curriculum index" },
+  { path = "notebooks/toolchain/marimo/001_basics.py", rung = "self-sufficiency" },
+  { path = "notebooks/toolchain/curriculum/001_index.py", label = "curriculum index", rung = "reproducible" },
 ]
 architecture = ["marimo", "uv", "ruff", "pytest"]
 packages = "marimo, uv, ruff, ty, pytest, rich"
@@ -45,7 +44,7 @@ topic = "Languages & runtimes (bytecode → GC → JIT → types)"
 mastery = "L1"
 status = "seed"
 notebooks = [
-  { path = "notebooks/systems/cpython/001_bytecode_dis.py", label = "cpython dis seed" },
+  { path = "notebooks/systems/cpython/001_bytecode_dis.py", label = "cpython dis seed", rung = "fundamentals" },
 ]
 architecture = ["cpython", "ty", "cython", "v8", "node", "rust", "pyo3", "maturin"]
 packages = "CPython [PSF], ty [MIT], cython [Apache-2.0], V8 [BSD], Node [MIT], Rust [MIT/Apache-2.0], pyo3/maturin [Apache-2.0]"
@@ -58,7 +57,7 @@ topic = "Data structures & algorithms"
 mastery = "L2"
 status = "existing"
 notebooks = [
-  { path = "notebooks/systems/sortedcontainers/001_ordered_structures.py", label = "sortedcontainers seed" },
+  { path = "notebooks/systems/sortedcontainers/001_ordered_structures.py", label = "sortedcontainers seed", rung = "self-sufficiency" },
 ]
 sibling_curricula = ["✎ `../learning-dsa/notes/progression-algo.md`"]
 architecture = ["cpython"]
@@ -72,7 +71,7 @@ topic = "Concurrency & async (event loop → futures → actors)"
 mastery = "L2"
 status = "existing"
 notebooks = [
-  { path = "notebooks/systems/anyio/001_structured_concurrency.py", label = "anyio seed" },
+  { path = "notebooks/systems/anyio/001_structured_concurrency.py", label = "anyio seed", rung = "self-sufficiency" },
 ]
 sibling_curricula = ["✎ `../learning-asyncio/notes/progression.md`"]
 architecture = ["cpython-asyncio", "tokio", "libuv", "libevent", "futures-rs", "rayon"]
@@ -97,7 +96,7 @@ topic = "Build & dev tooling (packaging → linters → tests → terminals)"
 mastery = "L2"
 status = "existing"
 notebooks = [
-  { path = "notebooks/systems/rich/001_console_rendering.py" },
+  { path = "notebooks/systems/rich/001_console_rendering.py", rung = "self-sufficiency" },
 ]
 sibling_curricula = ["✎ `../learning-pytest-internals/notes/progression.md`"]
 architecture = ["uv", "ruff", "pytest", "bazel", "cmake", "nix", "rich", "textual", "tmux", "setuptools"]
@@ -111,9 +110,9 @@ topic = "Numeric & dataframe core (ndarray → dataframe → plotting → valida
 mastery = "L1–L2"
 status = "existing"
 notebooks = [
-  { path = "notebooks/data/pandas/001_dataframes.py" },
-  { path = "notebooks/data/numpy/001_broadcasting_strides.py", label = "numpy seed" },
-  { path = "notebooks/data/polars/001_lazy_frames.py", label = "polars seed" },
+  { path = "notebooks/data/pandas/001_dataframes.py", rung = "self-sufficiency" },
+  { path = "notebooks/data/numpy/001_broadcasting_strides.py", label = "numpy seed", rung = "fundamentals" },
+  { path = "notebooks/data/polars/001_lazy_frames.py", label = "polars seed", rung = "self-sufficiency" },
 ]
 architecture = ["numpy", "pandas", "polars", "rich"]
 architecture_missing = ["matplotlib", "plotnine", "pydantic"]
@@ -127,8 +126,8 @@ topic = "SQL & query engines (expression IR → plans → vectorized exec)"
 mastery = "L2"
 status = "existing"
 notebooks = [
-  { path = "notebooks/data/ibis/001_duckdb_sql.py" },
-  { path = "notebooks/data/duckdb/001_vectorized_exec.py", label = "duckdb seed" },
+  { path = "notebooks/data/ibis/001_duckdb_sql.py", rung = "self-sufficiency" },
+  { path = "notebooks/data/duckdb/001_vectorized_exec.py", label = "duckdb seed", rung = "self-sufficiency" },
 ]
 architecture = ["duckdb", "datafusion", "dask", "sqlalchemy", "clickhouse"]
 architecture_missing = ["ibis", "modin"]
@@ -142,8 +141,8 @@ topic = "Distributed data & streaming — analytics (task graphs → shuffle →
 mastery = "L2"
 status = "seed"
 notebooks = [
-  { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed" },
-  { path = "notebooks/data/pyarrow/002_zero_copy_synergy.py", label = "arrow zero-copy synergy" },
+  { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed", rung = "self-sufficiency" },
+  { path = "notebooks/data/pyarrow/002_zero_copy_synergy.py", label = "arrow zero-copy synergy", rung = "reproducible" },
 ]
 architecture = ["arrow", "spark", "flink", "kafka", "ray", "daft", "pulsar", "hadoop", "pig"]
 packages = "pyarrow, Spark, Flink, Kafka, Ray, Daft, Pulsar [all Apache-2.0]"
@@ -156,7 +155,7 @@ topic = "Storage & lakehouse formats (columnar → ACID tables)"
 mastery = "L2"
 status = "seed"
 notebooks = [
-  { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed" },
+  { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed", rung = "self-sufficiency" },
 ]
 architecture = ["arrow", "delta-rs", "delta-kernel-rs", "clickhouse", "opensearch"]
 packages = "Arrow, delta-rs, ClickHouse, OpenSearch [all Apache-2.0]"
@@ -169,7 +168,7 @@ topic = "Classical ML & stats (regression → estimators → CV)"
 mastery = "L2"
 status = "seed"
 notebooks = [
-  { path = "notebooks/ml/sklearn/001_estimator_api.py", label = "sklearn seed" },
+  { path = "notebooks/ml/sklearn/001_estimator_api.py", label = "sklearn seed", rung = "self-sufficiency" },
 ]
 architecture = ["scikit-learn", "scipy"]
 architecture_missing = ["statsmodels"]
@@ -183,7 +182,7 @@ topic = "Deep learning core (tensors/autograd → training loop → tiny-GPT)"
 mastery = "L1"
 status = "seed"
 notebooks = [
-  { path = "notebooks/ml/torch/001_autograd.py", label = "torch seed" },
+  { path = "notebooks/ml/torch/001_autograd.py", label = "torch seed", rung = "fundamentals" },
 ]
 note = "md-first seed — torch dep intentionally undeclared; CI smoke-runs it cheaply"
 architecture = ["pytorch", "candle", "tensorflow", "onnx"]
@@ -197,8 +196,8 @@ topic = "NLP / embeddings / vector search (tokenization → ANN → vector DB)"
 mastery = "L1–L2"
 status = "seed"
 notebooks = [
-  { path = "notebooks/ml/tokenizers/001_bpe_from_scratch.py", label = "BPE-scratch seed" },
-  { path = "notebooks/ml/faiss/001_ann_vector_search.py", label = "faiss ANN seed" },
+  { path = "notebooks/ml/tokenizers/001_bpe_from_scratch.py", label = "BPE-scratch seed", rung = "fundamentals" },
+  { path = "notebooks/ml/faiss/001_ann_vector_search.py", label = "faiss ANN seed", rung = "self-sufficiency" },
 ]
 architecture = ["sentence-transformers", "faiss", "chroma"]
 architecture_missing = ["transformers", "tokenizers"]
@@ -224,7 +223,7 @@ topic = "Inference & serving (KV-cache → batching → paged attention)"
 mastery = "L1"
 status = "seed"
 notebooks = [
-  { path = "notebooks/ai_serving/vllm/001_serving_concepts.py", label = "serving-sim seed" },
+  { path = "notebooks/ai_serving/vllm/001_serving_concepts.py", label = "serving-sim seed", rung = "fundamentals" },
 ]
 architecture = ["vllm", "ollama", "optimum", "onnx"]
 packages = "vllm [Apache-2.0], ollama [MIT], llama.cpp [MIT], candle [MIT/Apache-2.0]"
@@ -249,7 +248,7 @@ topic = "Productionizing & observability (API → tracing → cost)"
 mastery = "L2"
 status = "seed"
 notebooks = [
-  { path = "notebooks/ai_serving/fastapi/001_model_endpoint.py", label = "fastapi endpoint seed" },
+  { path = "notebooks/ai_serving/fastapi/001_model_endpoint.py", label = "fastapi endpoint seed", rung = "self-sufficiency" },
 ]
 architecture = []
 architecture_missing = ["fastapi"]
@@ -263,7 +262,7 @@ topic = "Integration & messaging — operational (outbox → pub/sub → CDC)"
 mastery = "L4"
 status = "seed"
 notebooks = [
-  { path = "notebooks/enterprise/kafka/001_event_patterns.py", label = "event-patterns seed" },
+  { path = "notebooks/enterprise/kafka/001_event_patterns.py", label = "event-patterns seed", rung = "production" },
 ]
 architecture = ["kafka", "pulsar", "sqlalchemy"]
 packages = "Kafka [Apache-2.0], Pulsar [Apache-2.0], stdlib sqlite3 [PSF]"
@@ -276,7 +275,7 @@ topic = "Workflow & orchestration (DAGs → retries → idempotency)"
 mastery = "L1"
 status = "seed"
 notebooks = [
-  { path = "notebooks/enterprise/airflow/001_dag_from_scratch.py", label = "DAG-scratch seed" },
+  { path = "notebooks/enterprise/airflow/001_dag_from_scratch.py", label = "DAG-scratch seed", rung = "fundamentals" },
 ]
 architecture = ["airflow", "dask", "ray"]
 packages = "airflow [Apache-2.0], prefect [Apache-2.0], stdlib graphlib [PSF]"
@@ -289,7 +288,7 @@ topic = "Reliability, load & performance (load models → percentiles → SLOs)"
 mastery = "L4"
 status = "seed"
 notebooks = [
-  { path = "notebooks/enterprise/locust/001_load_modeling.py", label = "load-modeling seed" },
+  { path = "notebooks/enterprise/locust/001_load_modeling.py", label = "load-modeling seed", rung = "production" },
 ]
 architecture = ["locust", "jmeter", "vegeta", "hyperfine"]
 packages = "locust [MIT], hyperfine [MIT/Apache-2.0], stdlib random/statistics [PSF]"
@@ -302,8 +301,124 @@ topic = "Security, privacy & governance (PII → redaction → audit)"
 mastery = "L4"
 status = "seed"
 notebooks = [
-  { path = "notebooks/enterprise/presidio/001_pii_governance.py", label = "pii-governance seed" },
+  { path = "notebooks/enterprise/presidio/001_pii_governance.py", label = "pii-governance seed", rung = "production" },
 ]
 architecture = ["presidio", "opensearch"]
 packages = "presidio [MIT], stdlib re/hashlib [PSF]"
 license_status = "permissive"
+
+# Projects — one per studied library. `name` matches the notebook library
+# directory so notebook→project derives by path. `upstream` is the portable
+# GitHub URL — the only source pointer committed. Where a clone lives locally
+# is per-machine (resolved at runtime via $STUDY_ROOT or vcspull), never
+# committed. Slice 1 catalogues the 22 notebook-backed libraries.
+
+[[project]]
+name = "marimo"
+upstream = "https://github.com/marimo-team/marimo"
+tracks = ["Toolchain"]
+
+[[project]]
+name = "curriculum"
+upstream = "https://www.sqlite.org/fts5.html"
+tracks = ["Toolchain"]
+
+[[project]]
+name = "cpython"
+upstream = "https://github.com/python/cpython"
+tracks = ["A1"]
+
+[[project]]
+name = "sortedcontainers"
+upstream = "https://github.com/grantjenks/python-sortedcontainers"
+tracks = ["A2"]
+
+[[project]]
+name = "anyio"
+upstream = "https://github.com/agronholm/anyio"
+tracks = ["A3"]
+
+[[project]]
+name = "rich"
+upstream = "https://github.com/Textualize/rich"
+tracks = ["A5"]
+
+[[project]]
+name = "pandas"
+upstream = "https://github.com/pandas-dev/pandas"
+tracks = ["B1"]
+
+[[project]]
+name = "numpy"
+upstream = "https://github.com/numpy/numpy"
+tracks = ["B1"]
+
+[[project]]
+name = "polars"
+upstream = "https://github.com/pola-rs/polars"
+tracks = ["B1"]
+
+[[project]]
+name = "ibis"
+upstream = "https://github.com/ibis-project/ibis"
+tracks = ["B2"]
+
+[[project]]
+name = "duckdb"
+upstream = "https://github.com/duckdb/duckdb"
+tracks = ["B2"]
+
+[[project]]
+name = "pyarrow"
+upstream = "https://github.com/apache/arrow"
+tracks = ["B3", "B4"]
+
+[[project]]
+name = "sklearn"
+upstream = "https://github.com/scikit-learn/scikit-learn"
+tracks = ["C1"]
+
+[[project]]
+name = "torch"
+upstream = "https://github.com/pytorch/pytorch"
+tracks = ["C2"]
+
+[[project]]
+name = "tokenizers"
+upstream = "https://github.com/huggingface/tokenizers"
+tracks = ["C3"]
+
+[[project]]
+name = "faiss"
+upstream = "https://github.com/facebookresearch/faiss"
+tracks = ["C3"]
+
+[[project]]
+name = "vllm"
+upstream = "https://github.com/vllm-project/vllm"
+tracks = ["E1"]
+
+[[project]]
+name = "fastapi"
+upstream = "https://github.com/fastapi/fastapi"
+tracks = ["E3"]
+
+[[project]]
+name = "kafka"
+upstream = "https://github.com/apache/kafka"
+tracks = ["F1"]
+
+[[project]]
+name = "airflow"
+upstream = "https://github.com/apache/airflow"
+tracks = ["F2"]
+
+[[project]]
+name = "locust"
+upstream = "https://github.com/locustio/locust"
+tracks = ["F3"]
+
+[[project]]
+name = "presidio"
+upstream = "https://github.com/microsoft/presidio"
+tracks = ["F4"]
