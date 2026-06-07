@@ -35,6 +35,7 @@ never a dependency. License unclear → `study-only` until verified.
 | C | C1 | Classical ML & stats (regression → estimators → CV) | — | `architecture/{scikit-learn,scipy}` (missing: statsmodels) | scikit-learn [BSD], scipy [BSD], statsmodels [BSD] | permissive | needs notebook |
 | C | C2 | Deep learning core (tensors/autograd → training loop → tiny-GPT) | — | `architecture/{pytorch,candle,tensorflow,onnx}` | torch [BSD], candle [MIT/Apache-2.0], micrograd/nanoGPT [MIT], onnx [Apache-2.0] | permissive | needs notebook |
 | C | C3 | NLP / embeddings / vector search (tokenization → ANN → vector DB) | — | `architecture/{sentence-transformers,faiss,chroma}` (missing: transformers, tokenizers) | tokenizers/tiktoken [Apache-2.0/MIT], sentence-transformers [Apache-2.0], faiss [MIT], chroma [Apache-2.0], qdrant [Apache-2.0] | permissive | needs notebook |
+| D | D1 | Data & eval harness (metrics → regression gates → experiment logs) | ✎ `../learning-ai-tuning/notebooks/eval/001_eval_harness.py` | `architecture/{axolotl,accelerate,optimum}` (D2 systems this gates) | scikit-learn [BSD], stdlib json/sqlite3 [PSF]; next: datasets/evaluate [Apache-2.0], lm-eval-harness [MIT] | permissive | existing |
 
 Notes:
 
