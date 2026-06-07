@@ -11,15 +11,32 @@ git-friendly, and each one self-contained.
 
 ## Quick Start
 
-With [just](https://github.com/casey/just) (recipes are thin wrappers — the
-plain commands below always work too):
+Browse every notebook in marimo's directory gallery — zero install, prints a
+URL instead of hijacking your browser:
 
 ```bash
-just                                            # list all recipes
-just list                                       # list notebooks by domain
+uvx marimo edit --headless notebooks/
+```
+
+Open a single notebook in its own isolated environment, or run it headlessly:
+
+```bash
+uvx marimo edit --sandbox --headless notebooks/data/pandas/001_dataframes.py
+uv run notebooks/data/pandas/001_dataframes.py
+```
+
+(With dev tooling installed — `uv sync` — swap `uvx marimo` for `uv run marimo`.)
+
+### Optional: just
+
+[just](https://github.com/casey/just) is an optional convenience — every recipe
+is a thin wrapper over the plain commands above. Type `just` by itself to list
+the quick commands:
+
+```bash
+just gallery                                    # the gallery, as above
 just edit notebooks/data/polars/001_lazy_frames.py   # editor; prints URL, NO browser
 just open notebooks/data/polars/001_lazy_frames.py   # editor + browser
-just run  notebooks/data/polars/001_lazy_frames.py   # headless script run
 just pick                                       # fuzzy-pick a notebook (fzf)
 just new ml statsmodels linear_models           # scaffold from the template
 just check                                      # all quality gates
@@ -28,20 +45,6 @@ just check                                      # all quality gates
 Notebook arguments are real paths, so your shell tab-completes them by domain
 (`just edit notebooks/data/<TAB>`) with zero setup. Optional recipe-name
 completion: `eval "$(just --completions zsh)"` (also bash/fish/powershell/…).
-
-Without just:
-
-```bash
-# Open any notebook in its own isolated environment (zero install)
-uvx marimo edit --sandbox --headless notebooks/data/pandas/001_dataframes.py
-
-# Or, with dev tooling installed:
-uv sync
-uv run marimo edit --sandbox notebooks/data/pandas/001_dataframes.py
-
-# Run a notebook headlessly as a script
-uv run notebooks/data/pandas/001_dataframes.py
-```
 
 ## How It Works
 
