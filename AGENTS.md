@@ -71,11 +71,12 @@ uv run marimo check --strict notebooks/ notes/notebook_template.py
   taxonomy domain are born in this repo; a track graduates to a `learning-<track>` sibling repo
   only if it outgrows this one (the index is `notes/taxonomy.md`).
 - `notes/`: templates, planning, and the curriculum manifest. `notebook_template.py`,
-  `NOTEBOOK_TEMPLATE.md`, `study_plan.md`, and `curriculum.toml` (the authored track
-  overlay: topic prose, mastery, status, track↔notebook links) are hand-edited;
-  `taxonomy.md` is **generated** from the manifest + notebooks by
-  `scripts/curriculum.py` — edit the sources, then `just sync`. The narrative around
-  its table is authored in `taxonomy.head.md` / `taxonomy.foot.md`. **Not** study
+  `NOTEBOOK_TEMPLATE.md`, `study_plan.md`, and `curriculum.toml` (the authored overlay:
+  the `[ladder]` rungs, `[[track]]` courses with per-notebook rung, and the `[[project]]`
+  registry that joins each studied library to its upstream + tracks) are hand-edited;
+  `taxonomy.md`, `catalog.jsonl`, and `coverage.md` are **generated** from the manifest +
+  notebooks by `scripts/curriculum.py` — edit the sources, then `just sync`. The narrative
+  around the table is authored in `taxonomy.head.md` / `taxonomy.foot.md`. **Not** study
   content — do not put notebooks here.
 - `.github/workflows/ci.yml`: lint, format, type check, and headless smoke-runs of light
   notebooks.
@@ -93,15 +94,16 @@ uv run marimo check --strict notebooks/ notes/notebook_template.py
   the taxonomy (`toolchain/`, `systems/`, `data/`, `ml/`, …), leaf directories are library
   names (`pandas/`, `ibis/`), and every path segment is a valid module name (underscores,
   no dashes).
-- **Source-reading cell**: each notebook includes a markdown cell linking the upstream GitHub
-  repository and the local sibling clone as a *relative* path (e.g. `../pandas`,
-  `../rich` — clones live as siblings of this repo). Never commit absolute home paths or any
-  PII. No local clone? Omit the `Local clone` line — the coverage report flags the gap;
-  never point at a directory that doesn't exist.
-- **Claim every notebook in a track**: the module docstring ends with a `(Track, Rung)` tag
-  (e.g. `(B1, L2)`), and `notes/curriculum.toml` lists the notebook under at least one
-  `[[track]]` — the drift gate fails on unclaimed notebooks. A notebook may serve several
-  tracks; the docstring tag names the primary one.
+- **Source-reading cell**: each notebook includes a markdown cell with the **upstream GitHub
+  URL** and, where useful, the in-repo subpath to read (`- In the source: \`src/execution/\``).
+  Never author a machine-relative clone path (`../../rust-python/polars`) — it leaks a local
+  layout and means nothing downstream; where a clone lives locally is resolved at runtime
+  (`$STUDY_ROOT` / vcspull), never committed. No absolute home paths or PII.
+- **Plain docstrings, no codes**: the module docstring is human prose — **no `(Track, Rung)`
+  tag**. A notebook's course and rung live in `notes/curriculum.toml`: list its path under at
+  least one `[[track]].notebooks` entry with a worded `rung`, and ensure its library has a
+  `[[project]]`. The drift gate fails on a notebook no track claims or a library with no
+  project. Track ids are readable slugs (`data/dataframes`), never coded (`B1`).
 - **CI-safety**: notebooks with heavy deps (torch, transformers, vllm, diffusers, …) or model
   downloads are *not* added to the CI smoke-run list in `.github/workflows/ci.yml`. Only
   lightweight notebooks go there.
