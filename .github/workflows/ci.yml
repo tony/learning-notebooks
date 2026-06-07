@@ -56,4 +56,5 @@ jobs:
           uv run notebooks/systems/sortedcontainers/001_ordered_structures.py
           uv run notebooks/ml/sklearn/001_estimator_api.py
           uv run notebooks/ml/tokenizers/001_bpe_from_scratch.py
+          uv run notebooks/ml/faiss/001_ann_vector_search.py
           uv run notebooks/ml/torch/001_autograd.py
