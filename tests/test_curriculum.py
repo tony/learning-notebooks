@@ -52,35 +52,35 @@ class TestLibraryProjectErrors:
 
     def test_registered_library_is_clean(self):
         nbs = [make_notebook("notebooks/data/polars/001_x.py", library="polars")]
-        projects = [curriculum.Project(name="polars", tracks=["B1"])]
+        projects = [curriculum.Project(name="polars", tracks=["data/dataframes"])]
         assert curriculum.library_project_errors(nbs, projects) == []
 
 
 class TestProjectTrackErrors:
     def test_unknown_track_reference_is_an_error(self):
-        tracks = [make_track("B1")]
-        projects = [curriculum.Project(name="polars", tracks=["B1", "NOPE"])]
+        tracks = [make_track("data/dataframes")]
+        projects = [curriculum.Project(name="polars", tracks=["data/dataframes", "nope/missing"])]
         errors = curriculum.project_track_errors(tracks, projects)
         assert len(errors) == 1
-        assert "NOPE" in errors[0]
+        assert "nope/missing" in errors[0]
 
     def test_known_track_reference_is_clean(self):
-        tracks = [make_track("B1"), make_track("B2")]
-        projects = [curriculum.Project(name="duckdb", tracks=["B2"])]
+        tracks = [make_track("data/dataframes"), make_track("data/query-engines")]
+        projects = [curriculum.Project(name="duckdb", tracks=["data/query-engines"])]
         assert curriculum.project_track_errors(tracks, projects) == []
 
 
 def test_claims_resolves_many_to_many():
     nb = "notebooks/data/pyarrow/001_x.py"
-    t1 = make_track("B3", notebooks=[{"path": nb}])
-    t2 = make_track("B4", notebooks=[{"path": nb}])
+    t1 = make_track("data/distributed", notebooks=[{"path": nb}])
+    t2 = make_track("data/storage-formats", notebooks=[{"path": nb}])
     claimed = curriculum.claims([t1, t2])
-    assert {t.id for t in claimed[nb]} == {"B3", "B4"}
+    assert {t.id for t in claimed[nb]} == {"data/distributed", "data/storage-formats"}
 
 
 def test_notebook_rungs_maps_paths_to_words():
     track = make_track(
-        "B1",
+        "data/dataframes",
         notebooks=[
             {"path": "notebooks/data/numpy/001_x.py", "rung": "fundamentals"},
             {"path": "notebooks/data/pandas/001_x.py", "rung": "self-sufficiency"},

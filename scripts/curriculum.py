@@ -181,7 +181,7 @@ def load_tracks() -> list[Track]:
 
 
 def load_ladder() -> dict[str, str]:
-    """Return the short rung labels (L1..L4) used to caption rollups."""
+    """Return the worded rung ladder (fundamentals..production) and descriptions."""
     import tomllib
 
     with MANIFEST.open("rb") as f:
