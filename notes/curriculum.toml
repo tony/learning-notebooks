@@ -1,0 +1,308 @@
+# notes/curriculum.toml — AUTHORED. The editorial overlay on the curriculum,
+# keyed at the taxonomy-TRACK grain (one [[track]] per row in notes/taxonomy.md).
+#
+# Mechanical notebook fields (title, summary, packages from PEP 723, headings,
+# upstream URL, clone path) are DERIVED from the notebooks by
+# scripts/curriculum.py — never duplicate them here. This file holds only
+# human judgement: topic prose, mastery rung, status, architecture pointers,
+# sibling-repo curricula, and the M:N track↔notebook links.
+#
+# `notebooks` entries: { path = "...", label = "..." }. Omit `label` to render
+# the path itself as the link text. A track may claim zero notebooks (a
+# sibling-repo curriculum or study-only row) or several; a notebook may be
+# claimed by several tracks (pyarrow/001 sits under B3 and B4).
+#
+# `sibling_curricula` and the `packages` / `license_status` columns are
+# authored markdown fragments rendered verbatim — they describe study targets
+# beyond PEP 723 deps (e.g. A4's GPL study-only row), so they cannot be
+# derived. The full mastery-ladder narrative lives in notes/taxonomy.head.md;
+# the short labels here caption coverage rollups.
+
+[ladder]
+L1 = "fundamentals"
+L2 = "self-sufficiency"
+L3 = "reproducible & synergy"
+L4 = "enterprise"
+
+[[track]]
+id = "Toolchain"
+domain = "0"
+topic = "Reproducible study notebooks"
+mastery = "L2"
+status = "existing"
+notebooks = [
+  { path = "notebooks/toolchain/marimo/001_basics.py" },
+]
+architecture = ["marimo", "uv", "ruff", "pytest"]
+packages = "marimo, uv, ruff, ty, pytest, rich"
+license_status = "permissive (Apache-2.0 / MIT)"
+
+[[track]]
+id = "A1"
+domain = "A"
+topic = "Languages & runtimes (bytecode → GC → JIT → types)"
+mastery = "L1"
+status = "seed"
+notebooks = [
+  { path = "notebooks/systems/cpython/001_bytecode_dis.py", label = "cpython dis seed" },
+]
+architecture = ["cpython", "ty", "cython", "v8", "node", "rust", "pyo3", "maturin"]
+packages = "CPython [PSF], ty [MIT], cython [Apache-2.0], V8 [BSD], Node [MIT], Rust [MIT/Apache-2.0], pyo3/maturin [Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "A2"
+domain = "A"
+topic = "Data structures & algorithms"
+mastery = "L2"
+status = "existing"
+notebooks = [
+  { path = "notebooks/systems/sortedcontainers/001_ordered_structures.py", label = "sortedcontainers seed" },
+]
+sibling_curricula = ["✎ `../learning-dsa/notes/progression-algo.md`"]
+architecture = ["cpython"]
+packages = "sortedcontainers [Apache-2.0], networkx [BSD], hypothesis [MPL-2.0 ⚑]"
+license_status = "permissive + ⚑ hypothesis (dev/test only)"
+
+[[track]]
+id = "A3"
+domain = "A"
+topic = "Concurrency & async (event loop → futures → actors)"
+mastery = "L2"
+status = "existing"
+notebooks = [
+  { path = "notebooks/systems/anyio/001_structured_concurrency.py", label = "anyio seed" },
+]
+sibling_curricula = ["✎ `../learning-asyncio/notes/progression.md`"]
+architecture = ["cpython-asyncio", "tokio", "libuv", "libevent", "futures-rs", "rayon"]
+packages = "anyio [MIT], trio [MIT/Apache-2.0], Tokio [MIT], rayon [MIT/Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "A4"
+domain = "A"
+topic = "OS / kernels / systems"
+mastery = "—"
+status = "study-only"
+notebooks = []
+architecture = ["linux", "freebsd", "openbsd", "fuchsia", "reactos", "haiku", "sqlite", "osquery"]
+packages = "study targets only — Linux [GPL], FreeBSD/OpenBSD [BSD], SQLite [public domain]"
+license_status = "GPL targets never become deps"
+
+[[track]]
+id = "A5"
+domain = "A"
+topic = "Build & dev tooling (packaging → linters → tests → terminals)"
+mastery = "L2"
+status = "existing"
+notebooks = [
+  { path = "notebooks/systems/rich/001_console_rendering.py" },
+]
+sibling_curricula = ["✎ `../learning-pytest-internals/notes/progression.md`"]
+architecture = ["uv", "ruff", "pytest", "bazel", "cmake", "nix", "rich", "textual", "tmux", "setuptools"]
+packages = "uv [MIT/Apache-2.0], ruff [MIT], pytest [MIT], rich/textual [MIT], setuptools [MIT]"
+license_status = "permissive"
+
+[[track]]
+id = "B1"
+domain = "B"
+topic = "Numeric & dataframe core (ndarray → dataframe → plotting → validation)"
+mastery = "L1–L2"
+status = "existing"
+notebooks = [
+  { path = "notebooks/data/pandas/001_dataframes.py" },
+  { path = "notebooks/data/numpy/001_broadcasting_strides.py", label = "numpy seed" },
+  { path = "notebooks/data/polars/001_lazy_frames.py", label = "polars seed" },
+]
+architecture = ["numpy", "pandas", "polars", "rich"]
+architecture_missing = ["matplotlib", "plotnine", "pydantic"]
+packages = "numpy [BSD], pandas [BSD], polars [MIT], matplotlib [PSF-based], plotnine [MIT], pydantic [MIT]"
+license_status = "permissive"
+
+[[track]]
+id = "B2"
+domain = "B"
+topic = "SQL & query engines (expression IR → plans → vectorized exec)"
+mastery = "L2"
+status = "existing"
+notebooks = [
+  { path = "notebooks/data/ibis/001_duckdb_sql.py" },
+  { path = "notebooks/data/duckdb/001_vectorized_exec.py", label = "duckdb seed" },
+]
+architecture = ["duckdb", "datafusion", "dask", "sqlalchemy", "clickhouse"]
+architecture_missing = ["ibis", "modin"]
+packages = "ibis [Apache-2.0], duckdb [MIT], datafusion [Apache-2.0], sqlalchemy [MIT], dask [BSD], modin [Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "B3"
+domain = "B"
+topic = "Distributed data & streaming — analytics (task graphs → shuffle → exactly-once)"
+mastery = "L2"
+status = "seed"
+notebooks = [
+  { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed" },
+  { path = "notebooks/data/pyarrow/002_zero_copy_synergy.py", label = "arrow zero-copy synergy" },
+]
+architecture = ["arrow", "spark", "flink", "kafka", "ray", "daft", "pulsar", "hadoop", "pig"]
+packages = "pyarrow, Spark, Flink, Kafka, Ray, Daft, Pulsar [all Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "B4"
+domain = "B"
+topic = "Storage & lakehouse formats (columnar → ACID tables)"
+mastery = "L2"
+status = "seed"
+notebooks = [
+  { path = "notebooks/data/pyarrow/001_columnar_memory.py", label = "pyarrow seed" },
+]
+architecture = ["arrow", "delta-rs", "delta-kernel-rs", "clickhouse", "opensearch"]
+packages = "Arrow, delta-rs, ClickHouse, OpenSearch [all Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "C1"
+domain = "C"
+topic = "Classical ML & stats (regression → estimators → CV)"
+mastery = "L2"
+status = "seed"
+notebooks = [
+  { path = "notebooks/ml/sklearn/001_estimator_api.py", label = "sklearn seed" },
+]
+architecture = ["scikit-learn", "scipy"]
+architecture_missing = ["statsmodels"]
+packages = "scikit-learn [BSD], scipy [BSD], statsmodels [BSD]"
+license_status = "permissive"
+
+[[track]]
+id = "C2"
+domain = "C"
+topic = "Deep learning core (tensors/autograd → training loop → tiny-GPT)"
+mastery = "L1"
+status = "seed"
+notebooks = [
+  { path = "notebooks/ml/torch/001_autograd.py", label = "torch seed" },
+]
+note = "md-first seed — torch dep intentionally undeclared; CI smoke-runs it cheaply"
+architecture = ["pytorch", "candle", "tensorflow", "onnx"]
+packages = "torch [BSD], candle [MIT/Apache-2.0], micrograd/nanoGPT [MIT], onnx [Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "C3"
+domain = "C"
+topic = "NLP / embeddings / vector search (tokenization → ANN → vector DB)"
+mastery = "L1–L2"
+status = "seed"
+notebooks = [
+  { path = "notebooks/ml/tokenizers/001_bpe_from_scratch.py", label = "BPE-scratch seed" },
+  { path = "notebooks/ml/faiss/001_ann_vector_search.py", label = "faiss ANN seed" },
+]
+architecture = ["sentence-transformers", "faiss", "chroma"]
+architecture_missing = ["transformers", "tokenizers"]
+packages = "tokenizers/tiktoken [Apache-2.0/MIT], sentence-transformers [Apache-2.0], faiss [MIT], chroma [Apache-2.0], qdrant [Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "D1"
+domain = "D"
+topic = "Data & eval harness (metrics → gates → run store → search)"
+mastery = "L1–L3"
+status = "existing"
+notebooks = []
+sibling_curricula = ["✎ `../learning-ai-tuning/notebooks/eval/` (001–006: harness, sqlite store, FTS5, duckdb, BM25-scratch, tantivy)"]
+architecture = ["axolotl", "accelerate", "optimum", "sqlite", "tantivy", "lucene"]
+packages = "scikit-learn [BSD], stdlib json/sqlite3 [PSF], duckdb [MIT], tantivy [MIT]"
+license_status = "permissive"
+
+[[track]]
+id = "E1"
+domain = "E"
+topic = "Inference & serving (KV-cache → batching → paged attention)"
+mastery = "L1"
+status = "seed"
+notebooks = [
+  { path = "notebooks/ai_serving/vllm/001_serving_concepts.py", label = "serving-sim seed" },
+]
+architecture = ["vllm", "ollama", "optimum", "onnx"]
+packages = "vllm [Apache-2.0], ollama [MIT], llama.cpp [MIT], candle [MIT/Apache-2.0]"
+license_status = "permissive"
+
+[[track]]
+id = "E2"
+domain = "E"
+topic = "RAG & agents (retrieval → structured output → multi-agent)"
+mastery = "L2"
+status = "seed"
+notebooks = []
+sibling_curricula = ["✎ `../learning-ai/notes/lesson_plan.md` (Tiers 10–18)"]
+architecture = ["llama_index", "langchain", "langgraph", "deepagents", "chroma", "faiss"]
+packages = "llama_index [MIT], langchain/langgraph [MIT], outlines [Apache-2.0], instructor [MIT]"
+license_status = "permissive"
+
+[[track]]
+id = "E3"
+domain = "E"
+topic = "Productionizing & observability (API → tracing → cost)"
+mastery = "L2"
+status = "seed"
+notebooks = [
+  { path = "notebooks/ai_serving/fastapi/001_model_endpoint.py", label = "fastapi endpoint seed" },
+]
+architecture = []
+architecture_missing = ["fastapi"]
+packages = "fastapi [MIT], litestar [MIT], opentelemetry [Apache-2.0], pydantic [MIT]"
+license_status = "permissive"
+
+[[track]]
+id = "F1"
+domain = "F"
+topic = "Integration & messaging — operational (outbox → pub/sub → CDC)"
+mastery = "L4"
+status = "seed"
+notebooks = [
+  { path = "notebooks/enterprise/kafka/001_event_patterns.py", label = "event-patterns seed" },
+]
+architecture = ["kafka", "pulsar", "sqlalchemy"]
+packages = "Kafka [Apache-2.0], Pulsar [Apache-2.0], stdlib sqlite3 [PSF]"
+license_status = "permissive"
+
+[[track]]
+id = "F2"
+domain = "F"
+topic = "Workflow & orchestration (DAGs → retries → idempotency)"
+mastery = "L1"
+status = "seed"
+notebooks = [
+  { path = "notebooks/enterprise/airflow/001_dag_from_scratch.py", label = "DAG-scratch seed" },
+]
+architecture = ["airflow", "dask", "ray"]
+packages = "airflow [Apache-2.0], prefect [Apache-2.0], stdlib graphlib [PSF]"
+license_status = "permissive"
+
+[[track]]
+id = "F3"
+domain = "F"
+topic = "Reliability, load & performance (load models → percentiles → SLOs)"
+mastery = "L4"
+status = "seed"
+notebooks = [
+  { path = "notebooks/enterprise/locust/001_load_modeling.py", label = "load-modeling seed" },
+]
+architecture = ["locust", "jmeter", "vegeta", "hyperfine"]
+packages = "locust [MIT], hyperfine [MIT/Apache-2.0], stdlib random/statistics [PSF]"
+license_status = "permissive"
+
+[[track]]
+id = "F4"
+domain = "F"
+topic = "Security, privacy & governance (PII → redaction → audit)"
+mastery = "L4"
+status = "seed"
+notebooks = [
+  { path = "notebooks/enterprise/presidio/001_pii_governance.py", label = "pii-governance seed" },
+]
+architecture = ["presidio", "opensearch"]
+packages = "presidio [MIT], stdlib re/hashlib [PSF]"
+license_status = "permissive"
