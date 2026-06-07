@@ -49,6 +49,16 @@ new domain library topic:
     cp notes/notebook_template.py notebooks/{{ domain }}/{{ library }}/001_{{ topic }}.py
     @echo "created notebooks/{{ domain }}/{{ library }}/001_{{ topic }}.py — now: just edit notebooks/{{ domain }}/{{ library }}/001_{{ topic }}.py"
 
+# regenerate notes/taxonomy.md from notebooks + notes/curriculum.toml
+[group('curriculum')]
+sync:
+    uv run scripts/curriculum.py render
+
+# drift gate: fail when generated files or curriculum metadata are stale
+[group('curriculum')]
+drift:
+    uv run scripts/curriculum.py check
+
 # all quality gates (what CI runs)
 [group('quality')]
 check:
@@ -57,6 +67,7 @@ check:
     uv run ty check
     uv run marimo check --strict notebooks/ notes/notebook_template.py
     uv run scripts/check_licenses.py
+    uv run scripts/curriculum.py check
 
 # format the repo
 [group('quality')]

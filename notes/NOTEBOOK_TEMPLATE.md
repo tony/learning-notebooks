@@ -22,10 +22,12 @@ How to create a new study notebook from `notes/notebook_template.py`.
      `uv add --script notebooks/<domain>/<library>/NNN_<topic>.py <package>` works from the CLI.
 
 3. Replace the placeholders:
-   - Module docstring: `LIBRARY — TOPIC: summary`.
+   - Module docstring: `LIBRARY — TOPIC: summary (Track, Rung).` — the trailing
+     tag names the primary taxonomy track and mastery rung, e.g. `(B1, L2)`.
    - Title cell: what the notebook studies and the questions it answers.
    - Source-reading cell: upstream GitHub URL and the sibling clone path
-     (`../<repo>` — see `notes/study_plan.md` for the mapping).
+     (`../<repo>` — see `notes/study_plan.md` for the mapping). If no local
+     clone exists, omit the `Local clone` line rather than inventing a path.
 
 4. Write the study cells. Remember the marimo rules in `AGENTS.md`
    (DAG rule, last expression = output, no magics, cache expensive work).
@@ -41,7 +43,12 @@ How to create a new study notebook from `notes/notebook_template.py`.
    Every `@app.function` / `@app.class_definition` carries a docstring —
    the Documentation panel shows it on hover via jedi.
 
-6. If the notebook is lightweight (no GPU, no model downloads, deps install in
+6. Claim the notebook in `notes/curriculum.toml`: add its path to the
+   `notebooks` list of at least one `[[track]]`, then regenerate the taxonomy
+   with `just sync` and commit both. The drift gate fails on unclaimed
+   notebooks, so this step is enforced, not optional.
+
+7. If the notebook is lightweight (no GPU, no model downloads, deps install in
    seconds), add it to the smoke-run list in `.github/workflows/ci.yml`.
 
 ## Recipes
@@ -69,8 +76,9 @@ Before committing (gates 2–5 are also one command: `just check`):
 2. `uv run ruff check .`
 3. `uv run ruff format .`
 4. `uv run ty check`
-5. `uv run marimo check --strict notebooks/ notes/notebook_template.py` and
-   `uv run scripts/check_licenses.py`
+5. `uv run marimo check --strict notebooks/ notes/notebook_template.py`,
+   `uv run scripts/check_licenses.py`, and `uv run scripts/curriculum.py check`
+   (regenerate with `just sync` if the drift gate complains)
 6. No local paths or PII — must print nothing: `git grep '/home/' -- notebooks/`
 
 (`marimo check --fix` is handy but only point it at `.py` notebooks, with the

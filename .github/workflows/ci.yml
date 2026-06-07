@@ -37,6 +37,12 @@ jobs:
       - name: License deny-list
         run: uv run scripts/check_licenses.py
 
+      # notes/taxonomy.md is generated from notebooks + notes/curriculum.toml.
+      # Fails when a render is stale, a manifest path is gone, or a notebook
+      # is unclaimed by every track (see AGENTS.md "Quality Gates").
+      - name: Curriculum drift
+        run: uv run scripts/curriculum.py check
+
       # Each notebook resolves its own PEP 723 deps in an isolated env.
       # Only lightweight notebooks belong here — no GPU deps, no model
       # downloads (see AGENTS.md "CI-safety").
@@ -51,6 +57,7 @@ jobs:
           uv run notebooks/data/polars/001_lazy_frames.py
           uv run notebooks/data/duckdb/001_vectorized_exec.py
           uv run notebooks/data/pyarrow/001_columnar_memory.py
+          uv run notebooks/data/pyarrow/002_zero_copy_synergy.py
           uv run notebooks/systems/rich/001_console_rendering.py
           uv run notebooks/systems/anyio/001_structured_concurrency.py
           uv run notebooks/systems/sortedcontainers/001_ordered_structures.py
