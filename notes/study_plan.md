@@ -1,55 +1,42 @@
 # Study Plan
 
-A living document: which libraries to study, in what order, and where their
-sources live. Clones are siblings of this repo (`../<clone dir>`).
+A living document: the forward roadmap for filling `notes/taxonomy.md`, ordered by
+the **mastery ladder** (L1 fundamentals → L2 self-sufficiency → L3 reproducible &
+synergy → L4 enterprise). Clones live as siblings of this repo's parent
+(`../<repo>` or `../../<lang>/<repo>` relative to this repo).
 
-## Tracks
+## Current wave — complete the ladder
 
-### Track 1 — Data stack (start here; light deps, instant sandboxes)
+| Notebook | Track · Rung | Deps | Teaches |
+|---|---|---|---|
+| `systems/cpython/001_bytecode_dis.py` | A1 · L1 | marimo | `dis`, code objects, the stack machine |
+| `data/pyarrow/002_zero_copy_synergy.py` | B3/B4 · L3 | +pandas, polars, duckdb | one Arrow table, three engines, zero copies |
+| `ml/tokenizers/001_bpe_from_scratch.py` | C3 · L1 | +tokenizers | BPE merges by hand vs the Rust library |
+| `ml/faiss/001_ann_vector_search.py` | C3 · L2 | +faiss-cpu, numpy | exact vs IVF ANN; recall/speed tradeoff |
+| `ai_serving/vllm/001_serving_concepts.py` | E1 · L1 | marimo | KV-cache memory + batching, simulated |
+| `ai_serving/fastapi/001_model_endpoint.py` | E3 · L2 | +fastapi | model endpoint exercised via TestClient |
+| `enterprise/kafka/001_event_patterns.py` | F1 · L4 | marimo | outbox + idempotent consumer, no broker |
+| `enterprise/airflow/001_dag_from_scratch.py` | F2 · L1 | marimo | a scheduler on `graphlib`; retries, idempotency |
+| `enterprise/locust/001_load_modeling.py` | F3 · L4 | marimo | percentiles, Little's law, saturation |
+| `enterprise/presidio/001_pii_governance.py` | F4 · L4 | marimo | PII scanning, redaction, audit hashing |
 
-| Topic dir | Clone | Upstream | Focus |
-| --- | --- | --- | --- |
-| `pandas/` | `../pandas` | <https://github.com/pandas-dev/pandas> | indexing, dtypes, groupby internals |
-| `numpy/` | `../numpy` | <https://github.com/numpy/numpy> | broadcasting, strides, ufuncs |
-| `matplotlib/` | `../matplotlib` | <https://github.com/matplotlib/matplotlib> | figure/axes model, artists |
-| `plotnine/` | `../plotnine` | <https://github.com/has2k1/plotnine> | grammar of graphics on matplotlib |
-| `rich/` | `../rich` | <https://github.com/Textualize/rich> | console protocol, renderables |
-| `pydantic/` | `../pydantic` | <https://github.com/pydantic/pydantic> | validation core, type adapters |
+## Backlog (rows that stay `needs notebook` / `seed` after this wave)
 
-### Track 2 — SQL & dataframes (marimo's `mo.sql()` shines here)
-
-| Topic dir | Clone | Upstream | Focus |
-| --- | --- | --- | --- |
-| `ibis/` | `../ibis` | <https://github.com/ibis-project/ibis> | expression IR, duckdb backend |
-| `dask/` | `../dask` | <https://github.com/dask/dask> | task graphs, lazy collections |
-| `modin/` | `../modin` | <https://github.com/modin-project/modin> | pandas API on parallel engines |
-
-### Track 3 — Statistics & ML (medium deps)
-
-| Topic dir | Clone | Upstream | Focus |
-| --- | --- | --- | --- |
-| `scikit-learn/` | `../scikit-learn` | <https://github.com/scikit-learn/scikit-learn> | estimator API, pipelines |
-| `statsmodels/` | `../statsmodels` | <https://github.com/statsmodels/statsmodels> | formula API, results objects |
-| `scipy/` | `../scipy` | <https://github.com/scipy/scipy> | optimize, sparse, stats |
-
-### Track 4 — Deep learning (heavy deps; never in CI; use `@mo.persistent_cache`)
-
-| Topic dir | Clone | Upstream | Focus |
-| --- | --- | --- | --- |
-| `torch/` | `../pytorch` | <https://github.com/pytorch/pytorch> | tensors, autograd, modules |
-| `transformers/` | `../transformers` | <https://github.com/huggingface/transformers> | pipelines, tokenizers, model loading |
-| `datasets/` | `../datasets` | <https://github.com/huggingface/datasets> | arrow-backed datasets, streaming |
-| `sentence-transformers/` | `../sentence-transformers` | <https://github.com/UKPLab/sentence-transformers> | embeddings, similarity |
-| `diffusers/` | `../diffusers` | <https://github.com/huggingface/diffusers> | pipelines, schedulers |
-
-### Track 5 — The notebook itself
-
-| Topic dir | Clone | Upstream | Focus |
-| --- | --- | --- | --- |
-| `marimo/` | `../marimo` | <https://github.com/marimo-team/marimo> | reactivity/DAG, codegen, sandbox |
+- **L1**: micrograd-style autograd (promote `ml/torch/001` from md-first);
+  B-tree/page layout walk (`../../c/sqlite` `src/btree.c`)
+- **L2**: matplotlib (figure/axes model), plotnine, pydantic (validation core),
+  dask (task graphs), modin, statsmodels, scipy.optimize, datasets, qdrant/chroma
+- **L3**: ibis-to-many-backends (same expression, duckdb vs polars); a
+  cross-notebook pipeline (pyarrow → duckdb → sklearn) with `mo.persistent_cache`;
+  notebook-as-module reuse across the repo
+- **L4**: opentelemetry tracing of the fastapi endpoint; delta-rs ACID tables;
+  real locust run against a served notebook; presidio promotion (spacy models —
+  heavy, never in CI)
+- **Heavy track** (lives in `../learning-ai-tuning`): D2 PEFT/LoRA, D3 alignment
 
 ## Conventions
 
-- Note: the topic dir is the *import name* where it differs from the clone dir
-  (e.g. `torch/` studies the clone at `../pytorch`).
-- Add new rows as new libraries enter the rotation; reorder tracks freely.
+- Topic dir = import name where it differs from the clone dir (`torch/` studies
+  `../pytorch`; `cpython/` studies `../../c/cpython`).
+- Add rows as libraries enter the rotation; flip taxonomy statuses as artifacts
+  land; heavy deps never join the CI smoke list (`AGENTS.md` CI-safety).
