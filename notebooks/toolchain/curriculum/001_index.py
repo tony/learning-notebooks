@@ -58,12 +58,12 @@ def _():
     ## Source reading
 
     - Upstream: <https://www.sqlite.org/fts5.html>
-    - Local clone (relative): `../../c/sqlite` — `ext/fts5/` (the tokenizer,
-      bm25, and snippet machinery this notebook drives)
+    - In the source: `ext/fts5/` (the tokenizer, bm25, and snippet machinery
+      this notebook drives)
     - The engine under this UI: `scripts/curriculum.py` (parser, renderer,
       index builder) over `notes/curriculum.toml` (the authored overlay).
     - Sibling labs: `../learning-ai-tuning/notebooks/eval/` builds the same
-      FTS5 + BM25 stack from first principles (D1 in `notes/taxonomy.md`).
+      FTS5 + BM25 stack from first principles (the eval-harness track in `notes/taxonomy.md`).
     """)
     return
 

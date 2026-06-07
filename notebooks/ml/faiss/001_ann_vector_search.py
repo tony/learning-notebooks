@@ -43,11 +43,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/facebookresearch/faiss>
-    - Local clone (relative): `../../c++/faiss` — `faiss/IndexFlat.cpp`
+    - In the source: `faiss/IndexFlat.cpp`
       (brute force) vs `faiss/IndexIVFFlat.cpp` (inverted lists);
       `faiss/Clustering.cpp` trains the coarse quantizer
     - Architecture corpus: the `faiss` study (115 files).
-    - Taxonomy row: C3 · mastery L2 in `notes/taxonomy.md`.
     """)
     return
 

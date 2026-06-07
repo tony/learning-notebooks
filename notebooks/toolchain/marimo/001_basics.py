@@ -60,9 +60,8 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/marimo-team/marimo>
-    - Local clone (sibling of this repo): `../marimo`
-    - Official tutorials: `../marimo/marimo/_tutorials/` (or `uvx marimo tutorial intro`)
-    - Stdlib-only examples: `../marimo/examples/misc/`
+    - In the source: `marimo/_tutorials/` (or `uvx marimo tutorial intro`)
+    - Stdlib-only examples: `examples/misc/`
     """)
     return
 
@@ -441,7 +440,7 @@ def _():
 def _():
     mo.md(r"""
     App-chrome layouts not demoed here (they restructure the whole page):
-    `mo.sidebar`, `mo.nav_menu`, `mo.routes` — see `../marimo/docs/api/layouts/`.
+    `mo.sidebar`, `mo.nav_menu`, `mo.routes` — see `docs/api/layouts/`.
     """)
     return
 
@@ -892,11 +891,11 @@ def _():
     mo.md(r"""
     ## 14. Further reading
 
-    - Best practices: `../marimo/docs/guides/best_practices.md`
-    - Reactivity model: `../marimo/docs/guides/reactivity.md`
-    - Expensive notebooks: `../marimo/docs/guides/expensive_notebooks.md`
-    - Reusing functions: `../marimo/docs/guides/reusing_functions.md`
-    - Testing: `../marimo/docs/guides/testing/`
+    - Best practices: `docs/guides/best_practices.md`
+    - Reactivity model: `docs/guides/reactivity.md`
+    - Expensive notebooks: `docs/guides/expensive_notebooks.md`
+    - Reusing functions: `docs/guides/reusing_functions.md`
+    - Testing: `docs/guides/testing/`
     - Online docs: <https://docs.marimo.io>
     """)
     return

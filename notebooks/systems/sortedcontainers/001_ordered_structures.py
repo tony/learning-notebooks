@@ -40,7 +40,6 @@ def _(mo):
       <https://grantjenks.com/docs/sortedcontainers/implementation.html>
     - Companion curriculum: `../learning-dsa/notes/` (BST/AVL progressions show
       what this library deliberately avoids).
-    - Taxonomy row: A2 in `notes/taxonomy.md`.
     """)
     return
 

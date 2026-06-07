@@ -32,7 +32,6 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/ibis-project/ibis>
-    - Local clone (sibling of this repo): `../ibis`
     - Start at `ibis/expr/types/relations.py` (the `Table` expression class).
     """)
     return

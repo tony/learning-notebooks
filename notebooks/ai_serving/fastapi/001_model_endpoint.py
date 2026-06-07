@@ -69,10 +69,9 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/fastapi/fastapi>
-    - Local clone (relative): `../fastapi` — `fastapi/routing.py` (how a
+    - In the source: `fastapi/routing.py` (how a
       function becomes an endpoint), `fastapi/dependencies/` (the DI graph)
     - Sibling curriculum: `../learning-fastapi/` (repo exists; notes pending)
-    - Taxonomy row: E3 · mastery L2 in `notes/taxonomy.md`.
     """)
     return
 

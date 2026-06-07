@@ -39,9 +39,6 @@ Regenerate with `just sync`; CI fails when this file is stale.
   - `A4 (study-only)`
   - `D1 (existing)`
   - `E2 (seed)`
-- Notebooks without a `Local clone` pointer (no local clone exists):
-  - `notebooks/systems/anyio/001_structured_concurrency.py`
-  - `notebooks/systems/sortedcontainers/001_ordered_structures.py`
 - Notebooks without an upstream link:
   - none
 - Notebooks without a `(Track, Rung)` docstring tag:

@@ -42,12 +42,11 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/apache/airflow>
-    - Local clone (relative): `../airflow` — the scheduler loop in
+    - In the source: the scheduler loop in
       `airflow-core/src/airflow/jobs/scheduler_job_runner.py` (or
       `airflow/jobs/` in older layouts) is this notebook at production scale
     - Architecture corpus: the `airflow` study (77 files); `dask`/`ray`
       studies cover task graphs for *compute* rather than *workflows*.
-    - Taxonomy row: F2 · mastery L1 in `notes/taxonomy.md`.
     """)
     return
 

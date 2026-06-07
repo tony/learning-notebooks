@@ -32,7 +32,6 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/Textualize/rich>
-    - Local clone (sibling of this repo): `../rich`
     - Start at `rich/console.py` (the render protocol) and `rich/jupyter.py`
       (`JupyterMixin`, which is what makes renderables notebook-aware).
     """)

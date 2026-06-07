@@ -41,12 +41,11 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/huggingface/tokenizers>
-    - Local clone (relative): `../../rust-python/tokenizers` —
+    - In the source:
       `tokenizers/src/models/bpe/trainer.rs` is this notebook's loop, in Rust
       with word-level parallelism
     - The 1994/2016 lineage: Gage's compression BPE → Sennrich et al.'s
       subword NMT (whose worked example this corpus is)
-    - Taxonomy row: C3 · mastery L1 in `notes/taxonomy.md`.
     """)
     return
 

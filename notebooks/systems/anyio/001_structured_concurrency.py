@@ -36,7 +36,6 @@ def _(mo):
     - Deep dives live in `../learning-asyncio/notes/progression.md` (event loop
       fundamentals) and the `tokio`/`libuv` architecture studies (the same
       ideas in Rust/C).
-    - Taxonomy row: A3 in `notes/taxonomy.md`.
     """)
     return
 

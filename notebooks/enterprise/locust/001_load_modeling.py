@@ -42,11 +42,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/locustio/locust>
-    - Local clone (relative): `../locust` — `locust/stats.py` (these same
+    - In the source: `locust/stats.py` (these same
       percentiles, harvested from real requests), `locust/runners.py`
     - Architecture corpus: `locust` (181 files), `jmeter`, `vegeta`,
       `hyperfine` — four harnesses, one queueing theory.
-    - Taxonomy row: F3 · mastery L4 in `notes/taxonomy.md`.
     """)
     return
 

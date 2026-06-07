@@ -46,11 +46,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/apache/arrow>
-    - Local clone (relative): `../../c++/arrow` — `cpp/src/arrow/array/` (the
+    - In the source: `cpp/src/arrow/array/` (the
       buffer layout every engine here agrees on)
     - Architecture corpus: the `arrow` study (120 files); `duckdb` and
       `polars` studies cover the consuming engines.
-    - Taxonomy rows: B3/B4 · mastery L3 in `notes/taxonomy.md`.
     """)
     return
 

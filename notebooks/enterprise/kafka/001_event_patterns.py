@@ -46,11 +46,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/apache/kafka>
-    - Local clone (relative): `../../java/kafka` — `core/src/main/scala/kafka/log/`
+    - In the source: `core/src/main/scala/kafka/log/`
       (the commit log these patterns assume)
     - Architecture corpus: the `kafka` study (185 files) and `pulsar` (the
       same contracts, different log).
-    - Taxonomy row: F1 · mastery L4 in `notes/taxonomy.md`.
     """)
     return
 

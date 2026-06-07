@@ -31,7 +31,6 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/pandas-dev/pandas>
-    - Local clone (sibling of this repo): `../pandas`
     - Start at `pandas/core/frame.py` (the `DataFrame` class).
     """)
     return

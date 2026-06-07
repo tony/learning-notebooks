@@ -32,10 +32,9 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/pola-rs/polars>
-    - Local clone (relative): `../../rust-python/polars` — `crates/polars-plan/`
+    - In the source: `crates/polars-plan/`
       (the logical plan this notebook prints)
     - Architecture corpus: the `polars` study maps the Rust query engine.
-    - Taxonomy row: B1/B2 in `notes/taxonomy.md`.
     """)
     return
 

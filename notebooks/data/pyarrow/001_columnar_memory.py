@@ -31,11 +31,10 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/apache/arrow>
-    - Local clone (relative): `../../c++/arrow` — `cpp/src/arrow/array/` (the
+    - In the source: `cpp/src/arrow/array/` (the
       buffer layouts this notebook slices)
     - Architecture corpus: the `arrow` study (120 files) maps the columnar
       format, IPC, and compute kernels.
-    - Taxonomy rows: B3/B4 in `notes/taxonomy.md`.
     """)
     return
 

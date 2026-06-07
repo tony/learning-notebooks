@@ -33,10 +33,9 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/scikit-learn/scikit-learn>
-    - Local clone (sibling of this repo): `../scikit-learn` — start at
+    - In the source: start at
       `sklearn/base.py` (`BaseEstimator`, the mixins).
     - Architecture corpus: the `scikit-learn` study (157 files).
-    - Taxonomy row: C1 in `notes/taxonomy.md`.
     """)
     return
 

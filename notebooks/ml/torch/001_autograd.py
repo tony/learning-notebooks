@@ -40,11 +40,10 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/pytorch/pytorch>
-    - Local clone (sibling of this repo): `../pytorch` — start at
+    - In the source: start at
       `torch/autograd/` and `torch/csrc/autograd/` (the tape).
     - Architecture corpus: the `pytorch` study (117 files); `candle` (94) shows
       the same machinery in Rust.
-    - Taxonomy row: C2 in `notes/taxonomy.md`.
     """)
     return
 

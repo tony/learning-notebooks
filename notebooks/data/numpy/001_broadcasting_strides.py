@@ -32,9 +32,7 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/numpy/numpy>
-    - Local clone (sibling of this repo): `../numpy`
     - Architecture corpus: the `numpy` study (144 files) maps the C core.
-    - Taxonomy row: B1 in `notes/taxonomy.md`.
     """)
     return
 

@@ -54,7 +54,6 @@ _TAG_RUNG = {
 }
 _APP_TITLE_RE = re.compile(r'app_title="(?P<title>[^"]+)"')
 _UPSTREAM_RE = re.compile(r"Upstream: <(?P<url>https://[^>]+)>")
-_CLONE_RE = re.compile(r"Local clone [^:]*: `(?P<path>[^`]+)`")
 _HEADING_RE = re.compile(r"^\s*#{1,6} +(?P<text>\S.*)$", re.MULTILINE)
 
 
@@ -75,7 +74,6 @@ class Notebook:
     headings: list[str]
     has_tests: bool
     upstream_url: str | None
-    clone_path: str | None
 
 
 @dataclass
@@ -161,7 +159,6 @@ def parse_notebook(path: Path) -> Notebook:
         for m in _HEADING_RE.finditer(text)
     ]
     upstream = next((m.group("url") for s in literals for m in [_UPSTREAM_RE.search(s)] if m), None)
-    clone = next((m.group("path") for s in literals for m in [_CLONE_RE.search(s)] if m), None)
 
     return Notebook(
         path=rel,
@@ -177,7 +174,6 @@ def parse_notebook(path: Path) -> Notebook:
         headings=headings,
         has_tests=bool(re.search(r"^def test_", source, re.MULTILINE)),
         upstream_url=upstream,
-        clone_path=clone,
     )
 
 
@@ -308,7 +304,6 @@ def render_catalog() -> str:
             "headings": nb.headings,
             "has_tests": nb.has_tests,
             "upstream_url": nb.upstream_url,
-            "clone_path": nb.clone_path,
         }
         lines.append(json.dumps(record, ensure_ascii=False))
     return "\n".join(lines) + "\n"
@@ -348,7 +343,6 @@ def render_coverage() -> str:
         return [f"  - `{item}`" for item in items] if items else ["  - none"]
 
     no_repo_notebook = sorted(f"{t.id} ({t.status})" for t in tracks if not t.notebooks)
-    no_clone = sorted(nb.path for nb in notebooks if nb.clone_path is None)
     no_upstream = sorted(nb.path for nb in notebooks if nb.upstream_url is None)
     no_smoke = sorted(nb.path for nb in notebooks if nb.path not in ci_text)
     no_tests = sorted(nb.path for nb in notebooks if not nb.has_tests)
@@ -377,8 +371,6 @@ def render_coverage() -> str:
         "",
         "- Tracks with no notebook in this repo (sibling-repo or study-only rows):",
         *gap(no_repo_notebook),
-        "- Notebooks without a `Local clone` pointer (no local clone exists):",
-        *gap(no_clone),
         "- Notebooks without an upstream link:",
         *gap(no_upstream),
         "- Notebooks without a `(Track, Rung)` docstring tag:",
@@ -413,7 +405,7 @@ CREATE TABLE notebook (
   title       TEXT, summary TEXT,
   track       TEXT, rung TEXT,
   status      TEXT, mastery TEXT,
-  upstream_url TEXT, clone_path TEXT,
+  upstream_url TEXT,
   packages    TEXT,  -- JSON array, PEP 503-normalized
   tracks      TEXT,  -- JSON array: every claiming track id (M:N)
   headings    TEXT,  -- JSON array
@@ -458,7 +450,7 @@ def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
         owners = claimed.get(nb.path, [])
         primary = _primary_track(nb, owners)
         conn.execute(
-            "INSERT INTO notebook VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO notebook VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 nb.path,
                 nb.domain,
@@ -471,7 +463,6 @@ def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
                 primary.status if primary else None,
                 primary.mastery if primary else None,
                 nb.upstream_url,
-                nb.clone_path,
                 json.dumps(nb.packages),
                 json.dumps([t.id for t in owners]),
                 json.dumps(nb.headings),

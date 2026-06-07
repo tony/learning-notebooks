@@ -39,11 +39,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/python/cpython>
-    - Local clone (relative): `../../c/cpython` — `Python/ceval.c` (the
-      switch at the heart of the interpreter), `Python/compile.c`
-      (AST → bytecode), `Include/opcode_ids.h`
+    - In the source: `Python/ceval.c` (the switch at the heart of the
+      interpreter), `Python/compile.c` (AST → bytecode),
+      `Include/opcode_ids.h`
     - Architecture corpus: the `cpython` study (103 files) maps the runtime.
-    - Taxonomy row: A1 in `notes/taxonomy.md`.
     """)
     return
 
@@ -193,7 +192,7 @@ def _():
                 """
     Disassemble a stdlib function you use daily (`dis.dis(json.dumps)`)
     and find one opcode you can't explain. Chase it through
-    `../../c/cpython/Python/ceval.c` — the handler is a `TARGET(...)`
+    `Python/ceval.c` — the handler is a `TARGET(...)`
     block. Write down what it does.
     """
             ),
@@ -224,9 +223,9 @@ def _():
     mo.md(r"""
     ## Where this goes next
 
-    - A1 deeper: GC and refcounting (`../../c/cpython/Python/gc.c`), then the
+    - Go deeper: GC and refcounting (`Python/gc.c`), then the
       specializing adaptive interpreter (PEP 659)
-    - Sibling rungs: `notes/taxonomy.md` — this was L1; the A-domain L2 seeds
+    - Sibling notebooks: `notes/taxonomy.md` — this was a fundamentals notebook; the self-sufficiency seeds
       (anyio, sortedcontainers, rich) drive real libraries
     """)
     return

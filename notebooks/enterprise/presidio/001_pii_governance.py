@@ -45,11 +45,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/microsoft/presidio>
-    - Local clone (relative): `../presidio` — `presidio-analyzer/` (recognizer
+    - In the source: `presidio-analyzer/` (recognizer
       registry: the productionized version of this notebook's detector list)
     - Architecture corpus: the `presidio` study; `opensearch` covers the
       audit-log side at scale.
-    - Taxonomy row: F4 · mastery L4 in `notes/taxonomy.md`.
     """)
     return
 

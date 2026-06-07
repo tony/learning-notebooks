@@ -40,11 +40,10 @@ def _():
     ## Source reading
 
     - Upstream: <https://github.com/vllm-project/vllm>
-    - Local clone (relative): `../vllm` — `vllm/core/` (the scheduler and
+    - In the source: `vllm/core/` (the scheduler and
       block manager that make paged attention real), `vllm/attention/`
     - Architecture corpus: the `vllm` study (64 files); `ollama` (70) is the
       local-first counterpart.
-    - Taxonomy row: E1 · mastery L1 in `notes/taxonomy.md`.
     """)
     return
 
