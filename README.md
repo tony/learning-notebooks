@@ -105,9 +105,39 @@ provides dev tooling (marimo CLI, ruff, ty).
   (`toolchain/`, `systems/`, `data/`, `ml/`, …) with one directory per library
   and numbered `NNN_topic.py` notebooks. The cross-corpus index is
   `notes/taxonomy.md`.
-- `notes/` — templates and planning: `notebook_template.py`,
-  `NOTEBOOK_TEMPLATE.md` (how to author), `study_plan.md` (what to study,
-  where the source clones live).
+- `notes/` — templates, planning, and the curriculum manifest:
+  `notebook_template.py`, `NOTEBOOK_TEMPLATE.md` (how to author),
+  `study_plan.md` (what to study), and `curriculum.toml` (the authored track
+  overlay). `taxonomy.md`, `catalog.jsonl`, and `coverage.md` are generated
+  from the manifest + notebooks.
+
+## Curriculum Index
+
+The taxonomy table is derived, not hand-edited: notebooks carry their own
+metadata, `notes/curriculum.toml` holds the editorial overlay (tracks,
+mastery, status), and CI fails when any generated file drifts from its
+sources. After editing either source, regenerate:
+
+```bash
+just sync
+```
+
+Ranked full-text search across all notebook prose — FTS5 with stemming and
+bm25, so `batching` finds "batch":
+
+```bash
+just find "continuous batching"
+```
+
+Structured queries via the committed catalog — e.g. every seed-status
+notebook:
+
+```bash
+jq -r 'select(.status == "seed") | .path' notes/catalog.jsonl
+```
+
+Rollups and gap lists live in the generated `notes/coverage.md`; the
+interactive surface is `notebooks/toolchain/curriculum/001_index.py`.
 
 ## Create a Notebook
 
