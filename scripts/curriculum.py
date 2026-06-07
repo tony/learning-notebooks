@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 import re
 import sys
 from dataclasses import dataclass, field
@@ -30,6 +31,8 @@ MANIFEST = REPO_ROOT / "notes" / "curriculum.toml"
 TAXONOMY = REPO_ROOT / "notes" / "taxonomy.md"
 HEAD = REPO_ROOT / "notes" / "taxonomy.head.md"
 FOOT = REPO_ROOT / "notes" / "taxonomy.foot.md"
+CATALOG = REPO_ROOT / "notes" / "catalog.jsonl"
+COVERAGE = REPO_ROOT / "notes" / "coverage.md"
 CI_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
 BANNER = (
@@ -220,9 +223,139 @@ def render_taxonomy() -> str:
     return "\n".join([BANNER, "", head, "", *rows, "", foot, ""])
 
 
+def claims(tracks: list[Track]) -> dict[str, list[Track]]:
+    """Map each claimed notebook path to the tracks that list it."""
+    claimed: dict[str, list[Track]] = {}
+    for track in tracks:
+        for nb in track.notebooks:
+            claimed.setdefault(nb["path"], []).append(track)
+    return claimed
+
+
+def _primary_track(notebook: Notebook, owners: list[Track]) -> Track | None:
+    """Pick the notebook's primary track: its docstring tag, else first claimer."""
+    for track in owners:
+        if track.id == notebook.track:
+            return track
+    return owners[0] if owners else None
+
+
+def render_catalog() -> str:
+    """Render notes/catalog.jsonl — one merged record per notebook, for jq/DuckDB."""
+    notebooks, tracks = index()
+    claimed = claims(tracks)
+    lines = []
+    for nb in notebooks:
+        owners = claimed.get(nb.path, [])
+        primary = _primary_track(nb, owners)
+        record = {
+            "path": nb.path,
+            "domain": nb.domain,
+            "library": nb.library,
+            "seq": nb.seq,
+            "title": nb.title,
+            "summary": nb.summary,
+            "track": nb.track,
+            "rung": nb.rung,
+            "tracks": [t.id for t in owners],
+            "status": primary.status if primary else None,
+            "mastery": primary.mastery if primary else None,
+            "packages": nb.packages,
+            "requires_python": nb.requires_python,
+            "headings": nb.headings,
+            "has_tests": nb.has_tests,
+            "upstream_url": nb.upstream_url,
+            "clone_path": nb.clone_path,
+        }
+        lines.append(json.dumps(record, ensure_ascii=False))
+    return "\n".join(lines) + "\n"
+
+
+def _count_table(header: tuple[str, str], counts: dict[str, int]) -> list[str]:
+    """Render a two-column markdown count table."""
+    rows = [f"| {header[0]} | {header[1]} |", "|---|---|"]
+    rows.extend(f"| {key} | {count} |" for key, count in counts.items())
+    return rows
+
+
+def render_coverage() -> str:
+    """Render notes/coverage.md — rollups and gap lists over the merged model."""
+    notebooks, tracks = index()
+    ladder = load_ladder()
+    ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
+
+    rung_counts = {
+        f"{rung} — {label}": sum(1 for nb in notebooks if nb.rung == rung)
+        for rung, label in ladder.items()
+    }
+    untagged = sorted(nb.path for nb in notebooks if nb.rung is None)
+    if untagged:
+        rung_counts["untagged"] = len(untagged)
+
+    status_counts: dict[str, int] = {}
+    for track in sorted(tracks, key=lambda t: t.status):
+        status_counts[track.status] = status_counts.get(track.status, 0) + 1
+
+    domain_counts: dict[str, int] = {}
+    for nb in notebooks:
+        domain_counts[nb.domain] = domain_counts.get(nb.domain, 0) + 1
+    domain_counts = dict(sorted(domain_counts.items()))
+
+    def gap(items: list[str]) -> list[str]:
+        return [f"  - `{item}`" for item in items] if items else ["  - none"]
+
+    no_repo_notebook = sorted(f"{t.id} ({t.status})" for t in tracks if not t.notebooks)
+    no_clone = sorted(nb.path for nb in notebooks if nb.clone_path is None)
+    no_upstream = sorted(nb.path for nb in notebooks if nb.upstream_url is None)
+    no_smoke = sorted(nb.path for nb in notebooks if nb.path not in ci_text)
+    no_tests = sorted(nb.path for nb in notebooks if not nb.has_tests)
+
+    lines = [
+        BANNER,
+        "",
+        "# Curriculum coverage",
+        "",
+        "Rollups and gaps derived from the notebooks and `notes/curriculum.toml`.",
+        "Regenerate with `just sync`; CI fails when this file is stale.",
+        "",
+        "## Notebooks by rung",
+        "",
+        *_count_table(("Rung", "Notebooks"), rung_counts),
+        "",
+        "## Tracks by status",
+        "",
+        *_count_table(("Status", "Tracks"), status_counts),
+        "",
+        "## Notebooks by domain",
+        "",
+        *_count_table(("Domain", "Notebooks"), domain_counts),
+        "",
+        "## Gaps",
+        "",
+        "- Tracks with no notebook in this repo (sibling-repo or study-only rows):",
+        *gap(no_repo_notebook),
+        "- Notebooks without a `Local clone` pointer (no local clone exists):",
+        *gap(no_clone),
+        "- Notebooks without an upstream link:",
+        *gap(no_upstream),
+        "- Notebooks without a `(Track, Rung)` docstring tag:",
+        *gap(untagged),
+        "- Notebooks missing from the CI smoke list:",
+        *gap(no_smoke),
+        "- Notebooks without `test_*` cells (aspirational, not gated):",
+        *gap(no_tests),
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def render(write: bool = True) -> dict[Path, str]:
     """Render every generated artifact; write them unless dry-running."""
-    artifacts = {TAXONOMY: render_taxonomy()}
+    artifacts = {
+        TAXONOMY: render_taxonomy(),
+        CATALOG: render_catalog(),
+        COVERAGE: render_coverage(),
+    }
     if write:
         for path, content in artifacts.items():
             path.write_text(content, encoding="utf-8")
@@ -236,22 +369,23 @@ def check_drift() -> int:
     errors: list[str] = []
     warnings: list[str] = []
 
-    claimed: dict[str, list[str]] = {}
-    for track in tracks:
-        for nb in track.notebooks:
-            claimed.setdefault(nb["path"], []).append(track.id)
-            if not (REPO_ROOT / nb["path"]).exists():
-                errors.append(f"{track.id}: claims missing file {nb['path']}")
+    claimed = claims(tracks)
+    errors.extend(
+        f"{track.id}: claims missing file {entry['path']}"
+        for track in tracks
+        for entry in track.notebooks
+        if not (REPO_ROOT / entry["path"]).exists()
+    )
 
     # Rename-hazard parity: a `git mv` or an unclaimed new notebook fails here.
     for nb in notebooks:
         owners = claimed.get(nb.path, [])
         if not owners:
             errors.append(f"unclaimed notebook (no [[track]] lists it): {nb.path}")
-        elif nb.track is not None and nb.track not in owners:
+        elif nb.track is not None and nb.track not in [t.id for t in owners]:
             warnings.append(
                 f"{nb.path}: docstring tag ({nb.track}) is not a claiming track "
-                f"({', '.join(owners)})"
+                f"({', '.join(t.id for t in owners)})"
             )
         if nb.track is None:
             warnings.append(f"{nb.path}: no (Track, Rung) docstring tag")
@@ -288,7 +422,10 @@ def main() -> int:
     """CLI: render (write generated files) or check (the CI drift gate)."""
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("render", help="regenerate notes/taxonomy.md from the sources")
+    sub.add_parser(
+        "render",
+        help="regenerate notes/{taxonomy.md,catalog.jsonl,coverage.md} from the sources",
+    )
     sub.add_parser("check", help="exit nonzero on drift between sources and renders")
     args = parser.parse_args()
     if args.command == "render":
