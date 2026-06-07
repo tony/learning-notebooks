@@ -32,6 +32,23 @@ How to create a new study notebook from `notes/notebook_template.py`.
 5. If the notebook is lightweight (no GPU, no model downloads, deps install in
    seconds), add it to the smoke-run list in `.github/workflows/ci.yml`.
 
+## Recipes
+
+Working demonstrations of all of these live in `notebooks/marimo/001_basics.py`.
+
+- **Gate expensive work** — `run = mo.ui.run_button(...)` in one cell;
+  `mo.stop(not run.value, mo.md("…"))` at the top of the gated cell. Headless
+  runs leave the cell gated, which is what makes heavy notebooks CI-safe.
+- **Cache by tier** — `@mo.cache` (in-memory) for cheap memoization,
+  `@mo.lru_cache(maxsize=…)` when memory-bounded, `with mo.persistent_cache("name"):`
+  for model downloads/training (disk, survives restarts, gitignored `__marimo__/`).
+- **Reusable + testable code** — move shared imports into a setup cell
+  (`with app.setup:`), define single-function cells so they serialize as
+  `@app.function` (importable from other modules).
+- **Tests inside the notebook** — name a cell `test_<thing>` with only asserts;
+  `uv run --with pytest pytest notebooks/<library>/NNN_<topic>.py` collects it,
+  and CI smoke-runs execute the asserts too.
+
 ## Quality Gates
 
 Before committing:
@@ -41,5 +58,9 @@ uv run notebooks/<library>/NNN_<topic>.py   # headless run exits 0
 uv run ruff check .
 uv run ruff format .
 uv run ty check
+uv run marimo check --strict notebooks/ notes/notebook_template.py
 git grep '/home/' -- notebooks/             # must be empty (no local paths)
 ```
+
+(`marimo check --fix` is handy but only point it at `.py` notebooks, with the
+notebook's own deps available — see the caution in `AGENTS.md`.)

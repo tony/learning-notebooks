@@ -10,7 +10,7 @@
 import marimo
 
 __generated_with = "0.23.8"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="LIBRARY: TOPIC")
 
 
 @app.cell(hide_code=True)
@@ -44,6 +44,13 @@ def _():
 @app.cell
 def _():
     # Study code goes here. The last expression in a cell is its output.
+    #
+    # Recipe — gate expensive work (CI-safe: the gated cell stays stopped headlessly):
+    #   run = mo.ui.run_button(label="Train")        # cell A: the gate
+    #   mo.stop(not run.value, mo.md("Click *Train*"))  # cell B: stops until clicked
+    #   with mo.persistent_cache("train"):           # disk cache in gitignored __marimo__/
+    #       model = expensive_training()
+    # More recipes: notes/NOTEBOOK_TEMPLATE.md; exemplar: notebooks/marimo/001_basics.py.
     1 + 1
     return
 
