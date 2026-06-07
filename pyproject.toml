@@ -63,7 +63,7 @@ convention = "numpy"
 ]
 
 [tool.ty.src]
-include = ["notebooks", "notes"]
+include = ["notebooks", "notes", "scripts"]
 
 [tool.ty.rules]
 # Notebook dependencies live in per-notebook sandbox environments (PEP 723),
