@@ -20,6 +20,7 @@ import argparse
 import ast
 import json
 import re
+import sqlite3
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -363,6 +364,141 @@ def render(write: bool = True) -> dict[Path, str]:
     return artifacts
 
 
+_SCHEMA = """
+CREATE TABLE notebook (
+  path        TEXT PRIMARY KEY,
+  domain      TEXT, library TEXT, seq INTEGER,
+  title       TEXT, summary TEXT,
+  track       TEXT, rung TEXT,
+  status      TEXT, mastery TEXT,
+  upstream_url TEXT, clone_path TEXT,
+  packages    TEXT,  -- JSON array, PEP 503-normalized
+  tracks      TEXT,  -- JSON array: every claiming track id (M:N)
+  headings    TEXT,  -- JSON array
+  has_tests   INTEGER, requires_python TEXT
+);
+CREATE TABLE track (
+  id          TEXT PRIMARY KEY,
+  domain      TEXT, topic TEXT, mastery TEXT, status TEXT,
+  notebooks   TEXT,  -- JSON array of paths (M:N)
+  arch_links  TEXT, arch_missing TEXT, sibling TEXT  -- JSON arrays
+);
+CREATE INDEX track_status ON track(status);
+CREATE INDEX track_domain ON track(domain);
+CREATE INDEX notebook_rung ON notebook(rung);
+CREATE VIRTUAL TABLE notebook_fts USING fts5(
+  path UNINDEXED, body, tokenize='porter unicode61', prefix='2 3'
+);
+"""
+
+
+def _notebook_body(path: Path) -> str:
+    """Return a notebook's authored text for FTS: docstring + every md/string cell.
+
+    Runtime outputs are never in the ``.py`` file, so they are never indexed.
+    """
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    return "\n".join(_string_literals(tree))
+
+
+def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
+    """Build the disposable SQLite/FTS5 index from sources.
+
+    Always rebuilt from the notebooks + manifest — the index is never the
+    store, so there is no migration story. On disk it must only ever land at
+    the gitignored ``.marimo-index.db``.
+    """
+    notebooks, tracks = index()
+    claimed = claims(tracks)
+    conn = sqlite3.connect(db_path)
+    conn.executescript(_SCHEMA)
+    for nb in notebooks:
+        owners = claimed.get(nb.path, [])
+        primary = _primary_track(nb, owners)
+        conn.execute(
+            "INSERT INTO notebook VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                nb.path,
+                nb.domain,
+                nb.library,
+                nb.seq,
+                nb.title,
+                nb.summary,
+                nb.track,
+                nb.rung,
+                primary.status if primary else None,
+                primary.mastery if primary else None,
+                nb.upstream_url,
+                nb.clone_path,
+                json.dumps(nb.packages),
+                json.dumps([t.id for t in owners]),
+                json.dumps(nb.headings),
+                int(nb.has_tests),
+                nb.requires_python,
+            ),
+        )
+        conn.execute(
+            "INSERT INTO notebook_fts VALUES (?,?)",
+            (nb.path, _notebook_body(REPO_ROOT / nb.path)),
+        )
+    for t in tracks:
+        conn.execute(
+            "INSERT INTO track VALUES (?,?,?,?,?,?,?,?,?)",
+            (
+                t.id,
+                t.domain,
+                t.topic,
+                t.mastery,
+                t.status,
+                json.dumps([nb["path"] for nb in t.notebooks]),
+                json.dumps(t.architecture),
+                json.dumps(t.architecture_missing),
+                json.dumps(t.sibling_curricula),
+            ),
+        )
+    conn.commit()
+    return conn
+
+
+def run_query(sql: str) -> int:
+    """Execute one SQL statement against a fresh in-memory index; print TSV."""
+    conn = build_db()
+    cursor = conn.execute(sql)
+    if cursor.description:
+        print("\t".join(col[0] for col in cursor.description))
+    for row in cursor:
+        print("\t".join("" if v is None else str(v) for v in row))
+    return 0
+
+
+def run_find(term: str) -> int:
+    """Ranked full-text search (bm25) with snippets over notebook text."""
+    conn = build_db()
+    rows = conn.execute(
+        "SELECT path, bm25(notebook_fts) AS score,"
+        " snippet(notebook_fts, 1, '[', ']', '...', 12)"
+        " FROM notebook_fts WHERE notebook_fts MATCH ?"
+        " ORDER BY bm25(notebook_fts)",
+        (term,),
+    ).fetchall()
+    for path, score, snippet in rows:
+        print(f"{score:7.2f}  {path}")
+        print(f"         {' '.join(snippet.split())}")
+    if not rows:
+        print(f"no FTS matches for {term!r} (rg may still find literal text)")
+    return 0
+
+
+def write_sqlite(output: str) -> int:
+    """Write the index to a gitignored on-disk cache for repeated queries."""
+    target = Path(output)
+    if target.exists():
+        target.unlink()
+    build_db(str(target)).close()
+    print(f"wrote {output} (gitignored, disposable — rebuild any time)")
+    return 0
+
+
 def check_drift() -> int:
     """Drift gate: nonzero when sources disagree or a render is stale."""
     notebooks, tracks = index()
@@ -427,10 +563,22 @@ def main() -> int:
         help="regenerate notes/{taxonomy.md,catalog.jsonl,coverage.md} from the sources",
     )
     sub.add_parser("check", help="exit nonzero on drift between sources and renders")
+    query = sub.add_parser("query", help="SQL over the in-memory index (TSV output)")
+    query.add_argument("sql")
+    find = sub.add_parser("find", help="ranked FTS5 search (bm25 + snippets)")
+    find.add_argument("term")
+    sqlite_cmd = sub.add_parser("sqlite", help="write the index to a gitignored file")
+    sqlite_cmd.add_argument("--output", default=".marimo-index.db")
     args = parser.parse_args()
     if args.command == "render":
         render()
         return 0
+    if args.command == "query":
+        return run_query(args.sql)
+    if args.command == "find":
+        return run_find(args.term)
+    if args.command == "sqlite":
+        return write_sqlite(args.output)
     return check_drift()
 
 
