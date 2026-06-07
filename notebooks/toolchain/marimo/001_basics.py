@@ -806,7 +806,7 @@ def _():
     become pytest tests:
 
     ```bash
-    uv run --with pytest pytest notebooks/marimo/001_basics.py
+    uv run --with pytest pytest notebooks/toolchain/marimo/001_basics.py
     ```
 
     (One wrinkle: `001_basics` isn't a valid identifier, so regular

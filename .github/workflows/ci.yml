@@ -43,7 +43,7 @@ jobs:
       - name: Smoke-run light notebooks
         run: |
           uv run notes/notebook_template.py
-          uv run notebooks/marimo/001_basics.py
-          uv run notebooks/pandas/001_dataframes.py
-          uv run notebooks/ibis/001_duckdb_sql.py
-          uv run notebooks/rich/001_console_rendering.py
+          uv run notebooks/toolchain/marimo/001_basics.py
+          uv run notebooks/data/pandas/001_dataframes.py
+          uv run notebooks/data/ibis/001_duckdb_sql.py
+          uv run notebooks/systems/rich/001_console_rendering.py

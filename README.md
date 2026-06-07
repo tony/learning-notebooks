@@ -13,14 +13,14 @@ git-friendly, and each one self-contained.
 
 ```bash
 # Open any notebook in its own isolated environment (zero install)
-uvx marimo edit --sandbox notebooks/pandas/001_dataframes.py
+uvx marimo edit --sandbox notebooks/data/pandas/001_dataframes.py
 
 # Or, with dev tooling installed:
 uv sync
-uv run marimo edit --sandbox notebooks/pandas/001_dataframes.py
+uv run marimo edit --sandbox notebooks/data/pandas/001_dataframes.py
 
 # Run a notebook headlessly as a script
-uv run notebooks/pandas/001_dataframes.py
+uv run notebooks/data/pandas/001_dataframes.py
 ```
 
 ## How It Works
@@ -46,8 +46,10 @@ provides dev tooling (marimo CLI, ruff, ty).
 
 ## Layout
 
-- `notebooks/` — the curriculum: one directory per library, numbered
-  `NNN_topic.py` notebooks.
+- `notebooks/<domain>/<library>/` — the curriculum, grouped by taxonomy domain
+  (`toolchain/`, `systems/`, `data/`, `ml/`, …) with one directory per library
+  and numbered `NNN_topic.py` notebooks. The cross-corpus index is
+  `notes/taxonomy.md`.
 - `notes/` — templates and planning: `notebook_template.py`,
   `NOTEBOOK_TEMPLATE.md` (how to author), `study_plan.md` (what to study,
   where the source clones live).
@@ -55,9 +57,9 @@ provides dev tooling (marimo CLI, ruff, ty).
 ## Create a Notebook
 
 ```bash
-mkdir -p notebooks/<library>
-cp notes/notebook_template.py notebooks/<library>/001_<topic>.py
-uv run marimo edit --sandbox notebooks/<library>/001_<topic>.py
+mkdir -p notebooks/<domain>/<library>
+cp notes/notebook_template.py notebooks/<domain>/<library>/001_<topic>.py
+uv run marimo edit --sandbox notebooks/<domain>/<library>/001_<topic>.py
 ```
 
 See `notes/NOTEBOOK_TEMPLATE.md` for authoring rules and quality gates, and

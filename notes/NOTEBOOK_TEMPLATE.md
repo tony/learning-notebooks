@@ -4,11 +4,12 @@ How to create a new study notebook from `notes/notebook_template.py`.
 
 ## Steps
 
-1. Copy the template into the right library directory:
+1. Copy the template into the right domain + library directory (domains:
+   `toolchain/`, `systems/`, `data/`, `ml/`, … — see `notes/taxonomy.md`):
 
    ```bash
-   mkdir -p notebooks/<library>
-   cp notes/notebook_template.py notebooks/<library>/NNN_<topic>.py
+   mkdir -p notebooks/<domain>/<library>
+   cp notes/notebook_template.py notebooks/<domain>/<library>/NNN_<topic>.py
    ```
 
    Use the next free number (`001_`, `002_`, …) and a snake_case topic
@@ -34,7 +35,7 @@ How to create a new study notebook from `notes/notebook_template.py`.
 
 ## Recipes
 
-Working demonstrations of all of these live in `notebooks/marimo/001_basics.py`.
+Working demonstrations of all of these live in `notebooks/toolchain/marimo/001_basics.py`.
 
 - **Gate expensive work** — `run = mo.ui.run_button(...)` in one cell;
   `mo.stop(not run.value, mo.md("…"))` at the top of the gated cell. Headless

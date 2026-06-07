@@ -50,7 +50,7 @@ def _():
     #   mo.stop(not run.value, mo.md("Click *Train*"))  # cell B: stops until clicked
     #   with mo.persistent_cache("train"):           # disk cache in gitignored __marimo__/
     #       model = expensive_training()
-    # More recipes: notes/NOTEBOOK_TEMPLATE.md; exemplar: notebooks/marimo/001_basics.py.
+    # More recipes: notes/NOTEBOOK_TEMPLATE.md; exemplar: notebooks/toolchain/marimo/001_basics.py.
     1 + 1
     return
 
