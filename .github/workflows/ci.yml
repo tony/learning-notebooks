@@ -62,4 +62,5 @@ jobs:
           uv run notebooks/enterprise/kafka/001_event_patterns.py
           uv run notebooks/enterprise/airflow/001_dag_from_scratch.py
           uv run notebooks/enterprise/locust/001_load_modeling.py
+          uv run notebooks/enterprise/presidio/001_pii_governance.py
           uv run notebooks/ml/torch/001_autograd.py
