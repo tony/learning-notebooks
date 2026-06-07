@@ -50,6 +50,7 @@ jobs:
         run: |
           uv run notes/notebook_template.py
           uv run notebooks/toolchain/marimo/001_basics.py
+          uv run notebooks/toolchain/curriculum/001_index.py
           uv run notebooks/systems/cpython/001_bytecode_dis.py
           uv run notebooks/data/pandas/001_dataframes.py
           uv run notebooks/data/ibis/001_duckdb_sql.py

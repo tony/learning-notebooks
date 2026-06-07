@@ -32,6 +32,7 @@ mastery = "L2"
 status = "existing"
 notebooks = [
   { path = "notebooks/toolchain/marimo/001_basics.py" },
+  { path = "notebooks/toolchain/curriculum/001_index.py", label = "curriculum index" },
 ]
 architecture = ["marimo", "uv", "ruff", "pytest"]
 packages = "marimo, uv, ruff, ty, pytest, rich"

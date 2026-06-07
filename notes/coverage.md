@@ -11,7 +11,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
 |---|---|
 | L1 — fundamentals | 6 |
 | L2 — self-sufficiency | 12 |
-| L3 — reproducible & synergy | 1 |
+| L3 — reproducible & synergy | 2 |
 | L4 — enterprise | 3 |
 
 ## Tracks by status
@@ -31,7 +31,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
 | enterprise | 4 |
 | ml | 4 |
 | systems | 4 |
-| toolchain | 1 |
+| toolchain | 2 |
 
 ## Gaps
 
