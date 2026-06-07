@@ -49,7 +49,7 @@ never a dependency. License unclear → `study-only` until verified.
 | E | E3 | Productionizing & observability (API → tracing → cost) | [fastapi endpoint seed](../notebooks/ai_serving/fastapi/001_model_endpoint.py) | (missing: fastapi) | fastapi [MIT], litestar [MIT], opentelemetry [Apache-2.0], pydantic [MIT] | permissive | L2 | seed |
 | F | F1 | Integration & messaging — operational (outbox → pub/sub → CDC) | [event-patterns seed](../notebooks/enterprise/kafka/001_event_patterns.py) | `architecture/{kafka,pulsar,sqlalchemy}` | Kafka [Apache-2.0], Pulsar [Apache-2.0], stdlib sqlite3 [PSF] | permissive | L4 | seed |
 | F | F2 | Workflow & orchestration (DAGs → retries → idempotency) | [DAG-scratch seed](../notebooks/enterprise/airflow/001_dag_from_scratch.py) | `architecture/{airflow,dask,ray}` | airflow [Apache-2.0], prefect [Apache-2.0], stdlib graphlib [PSF] | permissive | L1 | seed |
-| F | F3 | Reliability, load & performance (load models → percentiles → SLOs) | — | `architecture/{locust,jmeter,vegeta,hyperfine}` | locust [MIT], hyperfine [MIT/Apache-2.0], stdlib random/statistics [PSF] | permissive | L4 | needs notebook |
+| F | F3 | Reliability, load & performance (load models → percentiles → SLOs) | [load-modeling seed](../notebooks/enterprise/locust/001_load_modeling.py) | `architecture/{locust,jmeter,vegeta,hyperfine}` | locust [MIT], hyperfine [MIT/Apache-2.0], stdlib random/statistics [PSF] | permissive | L4 | seed |
 | F | F4 | Security, privacy & governance (PII → redaction → audit) | — | `architecture/{presidio,opensearch}` | presidio [MIT], stdlib re/hashlib [PSF] | permissive | L4 | needs notebook |
 
 Notes:
