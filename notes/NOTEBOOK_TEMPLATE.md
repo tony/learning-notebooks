@@ -30,7 +30,18 @@ How to create a new study notebook from `notes/notebook_template.py`.
 4. Write the study cells. Remember the marimo rules in `AGENTS.md`
    (DAG rule, last expression = output, no magics, cache expensive work).
 
-5. If the notebook is lightweight (no GPU, no model downloads, deps install in
+5. Give every teaching section a markdown heading (`##`, deeper levels as
+   needed) — marimo's Outline panel builds its navigation from headings in
+   rendered markdown cells. Two rules:
+   - Headings must live in *plain* `mo.md` output; anything inside
+     `mo.accordion` / `mo.ui.tabs` / `mo.carousel` is excluded from the
+     outline.
+   - Heading text names the idea (`## Strides and views`), not filler
+     (`## Overview`).
+   Every `@app.function` / `@app.class_definition` carries a docstring —
+   the Documentation panel shows it on hover via jedi.
+
+6. If the notebook is lightweight (no GPU, no model downloads, deps install in
    seconds), add it to the smoke-run list in `.github/workflows/ci.yml`.
 
 ## Recipes

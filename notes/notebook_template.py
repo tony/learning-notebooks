@@ -41,6 +41,17 @@ def _():
     return (mo,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Study
+
+    Rename this heading per teaching section — marimo's Outline panel
+    navigates by markdown headings (keep them out of accordions/tabs).
+    """)
+    return
+
+
 @app.cell
 def _():
     # Study code goes here. The last expression in a cell is its output.
