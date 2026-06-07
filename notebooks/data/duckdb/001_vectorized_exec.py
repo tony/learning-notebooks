@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""duckdb — vectorized execution: relations, EXPLAIN, and the physical plan."""
+"""duckdb — vectorized execution: relations, EXPLAIN, and the physical plan (B2, L2)."""
 
 import marimo
 
@@ -32,6 +32,8 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/duckdb/duckdb>
+    - Local clone (relative): `../../c++/duckdb` — `src/execution/` (the
+      operators behind the EXPLAIN plans below)
     - Architecture corpus: the `duckdb` study (138 files) maps the vectorized
       engine (DataChunks, pipelines, the morsel-driven scheduler).
     - Taxonomy row: B2 in `notes/taxonomy.md`.

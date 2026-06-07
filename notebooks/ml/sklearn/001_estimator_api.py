@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""scikit-learn — the estimator API: fit/predict, pipelines, and the contract."""
+"""scikit-learn — the estimator API: fit/predict, pipelines, and the contract (C1, L2)."""
 
 import marimo
 

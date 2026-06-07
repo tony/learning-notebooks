@@ -6,7 +6,7 @@
 # ]
 # ///
 
-"""polars — lazy frames: build a query plan, inspect it, then collect."""
+"""polars — lazy frames: build a query plan, inspect it, then collect (B1, L2)."""
 
 import marimo
 
@@ -32,6 +32,8 @@ def _(mo):
     ## Source reading
 
     - Upstream: <https://github.com/pola-rs/polars>
+    - Local clone (relative): `../../rust-python/polars` — `crates/polars-plan/`
+      (the logical plan this notebook prints)
     - Architecture corpus: the `polars` study maps the Rust query engine.
     - Taxonomy row: B1/B2 in `notes/taxonomy.md`.
     """)

@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""torch — autograd (md-first seed): the walkthrough to run locally with torch installed."""
+"""torch — autograd (md-first seed): the walkthrough to run locally with torch installed (C2, L1)."""
 
 import marimo
 

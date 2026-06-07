@@ -6,12 +6,12 @@
 # ]
 # ///
 
-"""pandas — DataFrames: construction, dtypes, selection, and groupby."""
+"""pandas — DataFrames: construction, dtypes, selection, and groupby (B1, L2)."""
 
 import marimo
 
 __generated_with = "0.23.8"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="pandas: DataFrames")
 
 
 @app.cell(hide_code=True)

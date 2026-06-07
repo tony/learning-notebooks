@@ -9,7 +9,7 @@
 # ]
 # ///
 
-"""pyarrow — zero-copy synergy: one Arrow table shared by polars, pandas, and duckdb (L3)."""
+"""pyarrow — zero-copy synergy: one Arrow table shared by polars, pandas, and duckdb (B3, L3)."""
 
 import marimo
 

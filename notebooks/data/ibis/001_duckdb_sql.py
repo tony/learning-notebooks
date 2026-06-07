@@ -6,12 +6,12 @@
 # ]
 # ///
 
-"""ibis — DuckDB backend: expressions, lazy evaluation, and SQL interop."""
+"""ibis — DuckDB backend: expressions, lazy evaluation, and SQL interop (B2, L2)."""
 
 import marimo
 
 __generated_with = "0.23.8"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="ibis: expressions on DuckDB")
 
 
 @app.cell(hide_code=True)

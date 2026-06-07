@@ -5,7 +5,7 @@
 # ]
 # ///
 
-"""marimo — basics: a stdlib-only tour of marimo's bells and whistles."""
+"""marimo — basics: a stdlib-only tour of marimo's bells and whistles (Toolchain, L2)."""
 
 import marimo
 

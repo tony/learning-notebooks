@@ -6,12 +6,12 @@
 # ]
 # ///
 
-"""rich — console rendering: renderables, tables, and the console protocol."""
+"""rich — console rendering: renderables, tables, and the console protocol (A5, L2)."""
 
 import marimo
 
 __generated_with = "0.23.8"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="rich: console rendering")
 
 
 @app.cell(hide_code=True)
