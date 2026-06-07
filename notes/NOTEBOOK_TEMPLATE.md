@@ -8,7 +8,7 @@ How to create a new study notebook from `notes/notebook_template.py`.
    `toolchain/`, `systems/`, `data/`, `ml/`, … — see `notes/taxonomy.md`):
 
    ```bash
-   mkdir -p notebooks/<domain>/<library>
+   mkdir -p notebooks/<domain>/<library>; \
    cp notes/notebook_template.py notebooks/<domain>/<library>/NNN_<topic>.py
    ```
 
@@ -19,7 +19,7 @@ How to create a new study notebook from `notes/notebook_template.py`.
    - Set `dependencies` to what the notebook needs (keep `marimo` in the list).
    - Adjust `requires-python` only if a dependency demands it.
    - Tip: opening with `marimo edit --sandbox` manages this block for you, and
-     `uv add --script notebooks/<library>/NNN_<topic>.py <package>` works from the CLI.
+     `uv add --script notebooks/<domain>/<library>/NNN_<topic>.py <package>` works from the CLI.
 
 3. Replace the placeholders:
    - Module docstring: `LIBRARY — TOPIC: summary`.
@@ -47,21 +47,20 @@ Working demonstrations of all of these live in `notebooks/toolchain/marimo/001_b
   (`with app.setup:`), define single-function cells so they serialize as
   `@app.function` (importable from other modules).
 - **Tests inside the notebook** — name a cell `test_<thing>` with only asserts;
-  `uv run --with pytest pytest notebooks/<library>/NNN_<topic>.py` collects it,
+  `uv run --with pytest pytest notebooks/<domain>/<library>/NNN_<topic>.py` collects it,
   and CI smoke-runs execute the asserts too.
 
 ## Quality Gates
 
-Before committing:
+Before committing (gates 2–5 are also one command: `just check`):
 
-```bash
-uv run notebooks/<library>/NNN_<topic>.py   # headless run exits 0
-uv run ruff check .
-uv run ruff format .
-uv run ty check
-uv run marimo check --strict notebooks/ notes/notebook_template.py
-git grep '/home/' -- notebooks/             # must be empty (no local paths)
-```
+1. Headless run exits 0: `uv run notebooks/<domain>/<library>/NNN_<topic>.py`
+2. `uv run ruff check .`
+3. `uv run ruff format .`
+4. `uv run ty check`
+5. `uv run marimo check --strict notebooks/ notes/notebook_template.py` and
+   `uv run scripts/check_licenses.py`
+6. No local paths or PII — must print nothing: `git grep '/home/' -- notebooks/`
 
 (`marimo check --fix` is handy but only point it at `.py` notebooks, with the
 notebook's own deps available — see the caution in `AGENTS.md`.)

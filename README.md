@@ -18,10 +18,15 @@ URL instead of hijacking your browser:
 uvx marimo edit --headless notebooks/
 ```
 
-Open a single notebook in its own isolated environment, or run it headlessly:
+Open a single notebook in its own isolated environment:
 
 ```bash
 uvx marimo edit --sandbox --headless notebooks/data/pandas/001_dataframes.py
+```
+
+Run a notebook headlessly as a script:
+
+```bash
 uv run notebooks/data/pandas/001_dataframes.py
 ```
 
@@ -33,14 +38,14 @@ uv run notebooks/data/pandas/001_dataframes.py
 is a thin wrapper over the plain commands above. Type `just` by itself to list
 the quick commands:
 
-```bash
-just gallery                                    # the gallery, as above
-just edit notebooks/data/polars/001_lazy_frames.py   # editor; prints URL, NO browser
-just open notebooks/data/polars/001_lazy_frames.py   # editor + browser
-just pick                                       # fuzzy-pick a notebook (fzf)
-just new ml statsmodels linear_models           # scaffold from the template
-just check                                      # all quality gates
-```
+| Command | What it does |
+|---|---|
+| `just gallery` | the gallery, as above |
+| `just edit notebooks/data/polars/001_lazy_frames.py` | editor; prints URL, no browser |
+| `just open notebooks/data/polars/001_lazy_frames.py` | editor + browser |
+| `just pick` | fuzzy-pick a notebook (fzf) |
+| `just new ml statsmodels linear_models` | scaffold from the template |
+| `just check` | all quality gates |
 
 Notebook arguments are real paths, so your shell tab-completes them by domain
 (`just edit notebooks/data/<TAB>`) with zero setup. Optional recipe-name
@@ -79,9 +84,12 @@ provides dev tooling (marimo CLI, ruff, ty).
 
 ## Create a Notebook
 
+One chained command — scaffold from the template, then open it (or use
+`just new <domain> <library> <topic>`):
+
 ```bash
-mkdir -p notebooks/<domain>/<library>
-cp notes/notebook_template.py notebooks/<domain>/<library>/001_<topic>.py
+mkdir -p notebooks/<domain>/<library>; \
+cp notes/notebook_template.py notebooks/<domain>/<library>/001_<topic>.py; \
 uv run marimo edit --sandbox notebooks/<domain>/<library>/001_<topic>.py
 ```
 
@@ -91,8 +99,10 @@ expensive cells).
 
 ## Development
 
+Run the quality gates (or just `just check`):
+
 ```bash
-uv run ruff check .
-uv run ruff format .
+uv run ruff check .; \
+uv run ruff format .; \
 uv run ty check
 ```
