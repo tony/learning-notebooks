@@ -49,6 +49,14 @@ def _():
     return Panel, Table, Text, mo
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Renderables: the console protocol in action
+    """)
+    return
+
+
 @app.cell
 def _(Table):
     table = Table(title="Render protocol members")
@@ -58,6 +66,14 @@ def _(Table):
     table.add_row("__rich_measure__", "reports width requirements")
     table.add_row("_repr_mimebundle_", "notebook integration (JupyterMixin)")
     table
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Panels and styled text
+    """)
     return
 
 

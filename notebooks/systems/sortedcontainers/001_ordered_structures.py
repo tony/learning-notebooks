@@ -60,6 +60,8 @@ def _(SortedList, mo):
     _window = list(readings.irange(8, 23))
     mo.md(
         f"""
+    ## SortedList
+
     `SortedList` keeps order on every mutation: `{list(readings)}`.
 
     - `readings.bisect_left(20)` → index `{readings.bisect_left(20)}`
@@ -75,6 +77,8 @@ def _(SortedDict, mo):
     _next_up = deadlines.peekitem(0)
     mo.md(
         f"""
+    ## SortedDict
+
     `SortedDict` iterates keys in order — `{list(deadlines)}` — so the nearest
     deadline is always `peekitem(0)` = `{_next_up}`. Range queries, order
     statistics, and nearest-neighbor lookups come free from the same index.

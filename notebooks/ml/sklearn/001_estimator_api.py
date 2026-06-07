@@ -65,6 +65,8 @@ def _(features, labels, mo, moon_clf):
     _lr = moon_clf.named_steps["logisticregression"]
     mo.md(
         f"""
+    ## fit, predict, and the trailing underscore
+
     `fit` returned the pipeline itself and stashed learned state in
     trailing-underscore attributes — that suffix *is* the "I have been
     fitted" convention:
@@ -76,6 +78,14 @@ def _(features, labels, mo, moon_clf):
       `{labels[:5].tolist()}`
     """
     )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Pipelines and get_params
+    """)
     return
 
 

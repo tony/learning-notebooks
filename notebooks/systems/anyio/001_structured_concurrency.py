@@ -64,6 +64,8 @@ async def _(anyio, mo):
 
     mo.md(
         f"""
+    ## Task groups
+
     A **task group** starts tasks concurrently and joins them all at the
     `async with` exit — completion order `{_arrivals}` differs from start
     order, but nothing escapes the block.
@@ -81,6 +83,8 @@ async def _(anyio, mo):
         _progress.append("never reached")
     mo.md(
         f"""
+    ## Cancellation scopes
+
     **Cancellation is a scope**: `move_on_after(0.05)` cancelled the
     1-second sleep — `cancelled_caught` = `{_scope.cancelled_caught}`,
     progress = `{_progress}`. No flags, no `Task.cancel()` bookkeeping;

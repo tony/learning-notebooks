@@ -67,6 +67,14 @@ def _():
     return database, dim, queries, query_ids
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The exact baseline
+    """)
+    return
+
+
 @app.cell
 def _(database, dim, queries):
     flat = faiss.IndexFlatL2(dim)
@@ -82,6 +90,14 @@ def _():
     nprobe = mo.ui.slider(1, 128, value=8, label="nprobe (IVF cells probed per query)")
     nprobe
     return (nprobe,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## IVF and the nprobe dial
+    """)
+    return
 
 
 @app.cell

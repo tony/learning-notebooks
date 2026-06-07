@@ -115,6 +115,14 @@ def _():
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The code object
+    """)
+    return
+
+
 @app.cell
 def _():
     _code = weighted_sum.__code__
@@ -136,6 +144,14 @@ def _():
         ],
         gap=0.5,
     )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Loop vs comprehension, statically
+    """)
     return
 
 

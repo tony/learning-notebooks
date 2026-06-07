@@ -111,6 +111,14 @@ def _():
     return (n_merges,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The merge loop, step by step
+    """)
+    return
+
+
 @app.cell
 def _(n_merges):
     merges = bpe_train(corpus_words(), n_merges.value)
