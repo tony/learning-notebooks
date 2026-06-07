@@ -47,6 +47,14 @@ def _():
     return ibis, mo
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Build an expression tree
+    """)
+    return
+
+
 @app.cell
 def _(ibis):
     penguins = ibis.memtable(
@@ -65,6 +73,14 @@ def _(penguins):
     # that DuckDB executes only when the value is rendered.
     heavy = penguins.filter(penguins.body_mass_g > 3600)
     heavy.group_by("species").agg(avg_mass=heavy.body_mass_g.mean())
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The compiled SQL
+    """)
     return
 
 

@@ -45,6 +45,14 @@ def _():
     return mo, pd
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Construct a DataFrame
+    """)
+    return
+
+
 @app.cell
 def _(pd):
     penguins = pd.DataFrame(
@@ -66,6 +74,14 @@ def _(penguins):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Selection and groupby
+    """)
+    return
+
+
 @app.cell
 def _(penguins):
     # Label-based selection: .loc[rows, columns].
@@ -77,6 +93,14 @@ def _(penguins):
 def _(penguins):
     # Split-apply-combine: mean body mass per species.
     penguins.groupby("species")["body_mass_g"].mean()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The interactive table
+    """)
     return
 
 
