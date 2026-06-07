@@ -311,6 +311,7 @@ tracks = ["toolchain/reproducible-notebooks"]
 name = "curriculum"
 upstream = "https://www.sqlite.org/fts5.html"
 tracks = ["toolchain/reproducible-notebooks"]
+architecture = "sqlite"
 
 [[project]]
 name = "cpython"
@@ -362,16 +363,19 @@ tracks = ["data/query-engines"]
 name = "pyarrow"
 upstream = "https://github.com/apache/arrow"
 tracks = ["data/distributed", "data/storage-formats"]
+architecture = "arrow"
 
 [[project]]
 name = "sklearn"
 upstream = "https://github.com/scikit-learn/scikit-learn"
 tracks = ["ml/classical"]
+architecture = "scikit-learn"
 
 [[project]]
 name = "torch"
 upstream = "https://github.com/pytorch/pytorch"
 tracks = ["ml/deep-learning"]
+architecture = "pytorch"
 
 [[project]]
 name = "tokenizers"

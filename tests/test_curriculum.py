@@ -137,3 +137,26 @@ def test_parse_notebook_extracts_library_and_upstream():
     assert nb.library == "marimo"
     assert nb.upstream_url == "https://github.com/marimo-team/marimo"
     assert not hasattr(nb, "clone_path")
+
+
+# --- the committed source map is portable and shape-valid -----------------------
+
+
+def test_committed_source_map_passes_shape_validation(repo):
+    _, _, projects = repo
+    assert curriculum.source_map_errors(projects) == []
+
+
+def test_source_map_records_are_pinned_portable_urls():
+    """Every committed row is a version-pinned github blob URL — no local paths."""
+    import json
+
+    lines = curriculum.SOURCES.read_text(encoding="utf-8").splitlines()
+    records = [json.loads(line) for line in lines if line.strip()]
+    assert records, "expected a committed source map"
+    names = {p.name for p in curriculum.load_projects()}
+    for rec in records:
+        assert rec["project"] in names
+        assert rec["url"].startswith("https://github.com/") and "/blob/" in rec["url"]
+        assert f"/blob/{rec['tag']}/" in rec["url"]  # the URL is pinned to its tag
+        assert "/home/" not in rec["url"]

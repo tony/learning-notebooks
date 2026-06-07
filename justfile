@@ -54,6 +54,11 @@ new domain library topic:
 sync:
     uv run scripts/curriculum.py render
 
+# rebuild the portable source map from the architecture corpus (local research)
+[group('curriculum')]
+sources:
+    uv run scripts/curriculum.py sources
+
 # drift gate: fail when generated files or curriculum metadata are stale
 [group('curriculum')]
 drift:
