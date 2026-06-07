@@ -57,6 +57,14 @@ def kv_cache_bytes(
     return 2 * layers * kv_heads * head_dim * 2 * seq_len * batch
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## KV-cache arithmetic
+    """)
+    return
+
+
 @app.cell
 def _():
     seq_len = mo.ui.slider(512, 32_768, step=512, value=4096, label="context length (tokens)")
@@ -115,6 +123,14 @@ def simulate_batching(n_requests: int = 64, batch_slots: int = 8, seed: int = 11
         "static_steps": static_steps,
         "continuous_steps": continuous_steps,
     }
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Continuous batching
+    """)
+    return
 
 
 @app.cell

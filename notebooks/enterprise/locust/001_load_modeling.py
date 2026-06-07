@@ -94,6 +94,14 @@ def simulate_queue(
     }
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The simulation
+    """)
+    return
+
+
 @app.cell
 def _():
     arrival = mo.ui.slider(20, 139, step=1, value=60, label="arrival rate λ (req/s)")
@@ -119,6 +127,14 @@ def _(arrival, servers):
     return (sim,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Little's law
+    """)
+    return
+
+
 @app.cell
 def _(sim):
     _lw = sim["lam"] * sim["W"]
@@ -132,6 +148,14 @@ def _(sim):
         ),
         kind="success",
     )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Saturation
+    """)
     return
 
 

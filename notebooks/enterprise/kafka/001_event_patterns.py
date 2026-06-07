@@ -115,6 +115,14 @@ def consume_topic(db: "sqlite3.Connection") -> dict[str, int]:
     return {"processed": processed, "skipped": skipped}
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Five orders, one crashed relay
+    """)
+    return
+
+
 @app.cell
 def _():
     bus = sqlite3.connect(":memory:")
@@ -171,6 +179,8 @@ def _(bus, stats):
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
+    ## Exactly-once effects
+
     Ten deliveries, five shipments — **exactly-once *effect* on top of
     at-least-once *delivery***. That sentence is most of event-driven
     architecture; everything else is throughput.

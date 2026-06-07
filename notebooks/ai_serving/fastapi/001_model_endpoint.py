@@ -77,6 +77,14 @@ def _():
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The endpoint
+    """)
+    return
+
+
 @app.cell
 def _():
     api = FastAPI(title="stub-scorer")
@@ -116,6 +124,8 @@ def _(client):
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
+    ## Validation for free
+
     The 422 above cost zero lines of our code — the request model *is* the
     validation. That contract-first habit is most of what separates a
     service from a script with a port.
@@ -139,6 +149,14 @@ def _(client, live_text):
         ),
         kind="success" if _resp["label"] == "pos" else "neutral",
     )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Latency, in-process
+    """)
     return
 
 

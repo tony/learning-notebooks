@@ -134,6 +134,14 @@ def build_demo() -> tuple[dict[str, set[str]], dict, list[str]]:
     return dag, {name: task(name) for name in dag}, effects
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Run it twice
+    """)
+    return
+
+
 @app.cell
 def _():
     sched = MiniScheduler()
@@ -141,6 +149,14 @@ def _():
     sched.run(dag, tasks)
     sched.run(dag, tasks)  # second run: the ledger makes it a no-op
     return effects, sched
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## The run ledger
+    """)
+    return
 
 
 @app.cell

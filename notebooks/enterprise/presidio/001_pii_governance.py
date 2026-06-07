@@ -123,6 +123,14 @@ def sample_log() -> str:
     )
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Detect
+    """)
+    return
+
+
 @app.cell
 def _():
     doc = mo.ui.text_area(value=sample_log(), label="text to scan", rows=5, full_width=True)
@@ -157,6 +165,14 @@ def _(doc):
         gap=0.5,
     )
     return (found,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Redact and audit
+    """)
+    return
 
 
 @app.cell
