@@ -38,14 +38,41 @@ uv run notebooks/data/pandas/001_dataframes.py
 is a thin wrapper over the plain commands above. Type `just` by itself to list
 the quick commands:
 
-| Command | What it does |
-|---|---|
-| `just gallery` | the gallery, as above |
-| `just edit notebooks/data/polars/001_lazy_frames.py` | editor; prints URL, no browser |
-| `just open notebooks/data/polars/001_lazy_frames.py` | editor + browser |
-| `just pick` | fuzzy-pick a notebook (fzf) |
-| `just new ml statsmodels linear_models` | scaffold from the template |
-| `just check` | all quality gates |
+The gallery, as above:
+
+```bash
+just gallery
+```
+
+Editor — prints the URL, no browser:
+
+```bash
+just edit notebooks/data/polars/001_lazy_frames.py
+```
+
+Editor + browser:
+
+```bash
+just open notebooks/data/polars/001_lazy_frames.py
+```
+
+Fuzzy-pick a notebook (fzf):
+
+```bash
+just pick
+```
+
+Scaffold from the template:
+
+```bash
+just new ml statsmodels linear_models
+```
+
+All quality gates:
+
+```bash
+just check
+```
 
 Notebook arguments are real paths, so your shell tab-completes them by domain
 (`just edit notebooks/data/<TAB>`) with zero setup. Optional recipe-name
