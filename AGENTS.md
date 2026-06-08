@@ -104,6 +104,14 @@ uv run marimo check --strict notebooks/ notes/notebook_template.py
   Never author a machine-relative clone path (`../../rust-python/polars`) — it leaks a local
   layout and means nothing downstream; where a clone lives locally is resolved at runtime
   (`$STUDY_ROOT` / vcspull), never committed. No absolute home paths or PII.
+- **Cross-references (opt-in)**: the same source-reading cell may carry a `- Concepts:` line of
+  comma-separated slugs and a `- See also:` line of backticked `notebooks/…py` paths, parsed
+  like `Upstream:` into the index (the `notebook_concept` / `notebook_see_also` / `project_lineage`
+  tables). Every concept slug must be registered in a `[[concept]]` block in `notes/curriculum.toml`
+  (slug + one-line gloss in our own prose + the projects it appears in) and every see-also must name
+  a real notebook — the drift gate fails otherwise. Concept glosses are authored, never lifted from
+  the architecture corpus. Untagged notebooks stay valid; this layer is grown from the notebooks
+  that use it, not required of all.
 - **Plain docstrings, no codes**: the module docstring is human prose — **no `(Track, Rung)`
   tag**. A notebook's course and rung live in `notes/curriculum.toml`: list its path under at
   least one `[[track]].notebooks` entry with a worded `rung`, and ensure its library has a
