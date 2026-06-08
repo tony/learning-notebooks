@@ -64,12 +64,12 @@ sources:
 drift:
     uv run scripts/curriculum.py check
 
-# SQL over the curriculum index (notebook + track tables, JSON arrays, FTS5)
+# SQL over the curriculum index (notebook, track, project, source tables; FTS5)
 [group('curriculum')]
 q sql:
     uv run scripts/curriculum.py query "{{ sql }}"
 
-# ranked full-text search with snippets (FTS5 bm25 over notebook text)
+# ranked full-text search (FTS5 bm25 over notebook text and the source map)
 [group('curriculum')]
 find term:
     uv run scripts/curriculum.py find "{{ term }}"

@@ -160,3 +160,23 @@ def test_source_map_records_are_pinned_portable_urls():
         assert rec["url"].startswith("https://github.com/") and "/blob/" in rec["url"]
         assert f"/blob/{rec['tag']}/" in rec["url"]  # the URL is pinned to its tag
         assert "/home/" not in rec["url"]
+
+
+def test_build_db_loads_the_source_table_offline():
+    """The index reads the committed map — no corpus needed to query it."""
+    conn = curriculum.build_db()
+    (count,) = conn.execute("SELECT COUNT(*) FROM source").fetchone()
+    assert count == len(curriculum.load_sources()) > 0
+    # the project FK is real
+    orphans = conn.execute(
+        "SELECT COUNT(*) FROM source WHERE project NOT IN (SELECT name FROM project)"
+    ).fetchone()[0]
+    assert orphans == 0
+
+
+def test_source_fts_surfaces_pinned_urls():
+    conn = curriculum.build_db()
+    rows = conn.execute(
+        "SELECT url FROM source_fts WHERE source_fts MATCH 'tokenizer' LIMIT 1"
+    ).fetchall()
+    assert rows and rows[0][0].startswith("https://github.com/") and "/blob/" in rows[0][0]

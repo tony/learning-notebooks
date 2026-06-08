@@ -222,6 +222,17 @@ def load_projects() -> list[Project]:
     return [Project(**raw) for raw in data.get("project", [])]
 
 
+def load_sources() -> list[dict[str, str]]:
+    """Read the committed portable source map — no corpus needed, [] if absent."""
+    if not SOURCES.exists():
+        return []
+    return [
+        json.loads(line)
+        for line in SOURCES.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
 def notebook_rungs(tracks: list[Track]) -> dict[str, str]:
     """Map each notebook path to its authored per-notebook rung (word)."""
     rungs: dict[str, str] = {}
@@ -566,12 +577,25 @@ CREATE TABLE project (
   upstream    TEXT, rust_in_python TEXT,
   tracks      TEXT  -- JSON array of track ids (M:N)
 );
+CREATE TABLE source (
+  project   TEXT,    -- FK -> project.name
+  component TEXT, title TEXT,
+  url       TEXT,    -- version-pinned github blob URL (portable, clone-free)
+  tag       TEXT, baseline TEXT
+);
 CREATE INDEX track_status ON track(status);
 CREATE INDEX track_domain ON track(domain);
 CREATE INDEX project_variation ON project(rust_in_python);
 CREATE INDEX notebook_rung ON notebook(rung);
+CREATE INDEX source_project ON source(project);
 CREATE VIRTUAL TABLE notebook_fts USING fts5(
   path UNINDEXED, body, tokenize='porter unicode61', prefix='2 3'
+);
+-- Source titles searched on their own grain: most registered projects have no
+-- notebook, so their source URLs can only surface from a project-keyed index.
+CREATE VIRTUAL TABLE source_fts USING fts5(
+  url UNINDEXED, project UNINDEXED, component UNINDEXED, body,
+  tokenize='porter unicode61', prefix='2 3'
 );
 """
 
@@ -645,6 +669,27 @@ def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
             "INSERT INTO project VALUES (?,?,?,?)",
             (proj.name, proj.upstream, proj.rust_in_python, json.dumps(proj.tracks)),
         )
+    for src in load_sources():
+        conn.execute(
+            "INSERT INTO source VALUES (?,?,?,?,?,?)",
+            (
+                src["project"],
+                src["component"],
+                src["title"],
+                src["url"],
+                src["tag"],
+                src["baseline"],
+            ),
+        )
+        conn.execute(
+            "INSERT INTO source_fts VALUES (?,?,?,?)",
+            (
+                src["url"],
+                src["project"],
+                src["component"],
+                f"{src['project']} {src['component']} {src['title']}",
+            ),
+        )
     conn.commit()
     return conn
 
@@ -661,19 +706,28 @@ def run_query(sql: str) -> int:
 
 
 def run_find(term: str) -> int:
-    """Ranked full-text search (bm25) with snippets over notebook text."""
+    """Ranked full-text search (bm25) over notebook text and the source map."""
     conn = build_db()
-    rows = conn.execute(
+    notebook_rows = conn.execute(
         "SELECT path, bm25(notebook_fts) AS score,"
         " snippet(notebook_fts, 1, '[', ']', '...', 12)"
         " FROM notebook_fts WHERE notebook_fts MATCH ?"
         " ORDER BY bm25(notebook_fts)",
         (term,),
     ).fetchall()
-    for path, score, snippet in rows:
+    for path, score, snippet in notebook_rows:
         print(f"{score:7.2f}  {path}")
         print(f"         {' '.join(snippet.split())}")
-    if not rows:
+    source_rows = conn.execute(
+        "SELECT project, component, url, bm25(source_fts) AS score"
+        " FROM source_fts WHERE source_fts MATCH ?"
+        " ORDER BY bm25(source_fts) LIMIT 10",
+        (term,),
+    ).fetchall()
+    for project, component, url, score in source_rows:
+        print(f"{score:7.2f}  {project} · {component}")
+        print(f"         {url}")
+    if not notebook_rows and not source_rows:
         print(f"no FTS matches for {term!r} (rg may still find literal text)")
     return 0
 
