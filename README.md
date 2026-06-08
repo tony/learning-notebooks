@@ -109,7 +109,8 @@ provides dev tooling (marimo CLI, ruff, ty).
   `notebook_template.py`, `NOTEBOOK_TEMPLATE.md` (how to author),
   `study_plan.md` (what to study), and `curriculum.toml` (the authored track
   overlay). `taxonomy.md`, `catalog.jsonl`, and `coverage.md` are generated
-  from the manifest + notebooks.
+  from the manifest + notebooks; `sources.jsonl` is the portable source map —
+  built locally from the architecture studies, committed as version-pinned URLs.
 
 ## Curriculum Index
 
@@ -142,6 +143,25 @@ SQL over the registry — e.g. every project that ships Rust in a Python wheel:
 
 ```bash
 just q "SELECT name FROM project WHERE rust_in_python = 'compiler-in-python'"
+```
+
+"Where is X implemented in project Y?" answered with no clone and no local
+corpus. `notes/sources.jsonl` carries version-pinned GitHub source URLs — a
+handful per component, derived from architecture studies and committed as
+portable links — so a project's source files are a query away, offline:
+
+```bash
+just q "SELECT component, url FROM source WHERE project = 'vllm'"
+```
+
+`just find` searches these links alongside notebook prose, so a search can
+surface a pinned source URL directly. The map is the one corpus-derived
+artifact that is committed rather than CI-generated: rebuild it locally from
+the studies (a research input, never a runtime dependency) — CI only validates
+its shape, never its freshness:
+
+```bash
+just sources
 ```
 
 Rollups and gap lists live in the generated `notes/coverage.md`; the

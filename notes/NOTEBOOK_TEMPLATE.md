@@ -28,7 +28,10 @@ How to create a new study notebook from `notes/notebook_template.py`.
    - Title cell: what the notebook studies and the questions it answers.
    - Source-reading cell: the upstream GitHub URL and, where useful, the in-repo
      subpath to read (`- In the source: \`src/foo/\``). Never write a
-     machine-relative clone path (`../<repo>`) — it leaks a local layout.
+     machine-relative clone path (`../<repo>`) — it leaks a local layout. To find
+     the files worth citing, `just find <topic>` and `just q "SELECT url FROM
+     source WHERE project = '<library>'"` surface the portable source map's
+     version-pinned URLs.
 
 4. Write the study cells. Remember the marimo rules in `AGENTS.md`
    (DAG rule, last expression = output, no magics, cache expensive work).
