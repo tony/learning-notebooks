@@ -211,6 +211,7 @@ mastery = "fundamentals"
 status = "seed"
 notebooks = [
   { path = "notebooks/ai_serving/vllm/001_serving_concepts.py", label = "serving-sim seed", rung = "fundamentals" },
+  { path = "notebooks/ai_serving/vllm/002_paged_attention.py", label = "paged attention", rung = "fundamentals" },
 ]
 architecture = ["vllm", "ollama", "optimum", "onnx"]
 packages = "vllm [Apache-2.0], ollama [MIT], llama.cpp [MIT], candle [MIT/Apache-2.0]"
