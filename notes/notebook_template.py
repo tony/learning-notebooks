@@ -30,6 +30,8 @@ def _(mo):
 
     - Upstream: <https://github.com/ORG/REPO>
     - In the source: `path/within/the/repo/` (what this notebook studies)
+    - Concepts: optional, comma-separated slugs registered in curriculum.toml `[[concept]]`
+    - See also: optional `notebooks/<domain>/<library>/NNN_topic.py` cross-links
     """)
     return
 

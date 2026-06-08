@@ -32,6 +32,11 @@ How to create a new study notebook from `notes/notebook_template.py`.
      the files worth citing, `just find <topic>` and `just q "SELECT url FROM
      source WHERE project = '<library>'"` surface the portable source map's
      version-pinned URLs.
+   - Cross-references (optional, same cell): a `- Concepts:` line of
+     comma-separated slugs (each registered in `notes/curriculum.toml`
+     `[[concept]]`) and a `- See also:` line of backticked `notebooks/…py`
+     paths. The drift gate checks both; query them with
+     `just q "SELECT path FROM notebook_concept WHERE concept = '<slug>'"`.
 
 4. Write the study cells. Remember the marimo rules in `AGENTS.md`
    (DAG rule, last expression = output, no magics, cache expensive work).

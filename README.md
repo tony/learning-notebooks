@@ -164,6 +164,21 @@ its shape, never its freshness:
 just sources
 ```
 
+Notebooks cross-reference each other through **concepts** — a notebook opts in
+by listing slugs on a `- Concepts:` line in its source-reading cell (the
+registry is `[[concept]]` in `notes/curriculum.toml`). "Which notebooks teach
+zero-copy?" is then one query:
+
+```bash
+just q "SELECT path FROM notebook_concept WHERE concept = 'zero-copy'"
+```
+
+Project **lineage** is queryable the same way — e.g. what builds on Arrow:
+
+```bash
+just q "SELECT project FROM project_lineage WHERE derives_from = 'pyarrow'"
+```
+
 Rollups and gap lists live in the generated `notes/coverage.md`; the
 interactive surface is `notebooks/toolchain/curriculum/001_index.py`.
 
