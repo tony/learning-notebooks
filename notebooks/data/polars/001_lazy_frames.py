@@ -35,6 +35,9 @@ def _(mo):
     - In the source: `crates/polars-plan/`
       (the logical plan this notebook prints)
     - Architecture corpus: the `polars` study maps the Rust query engine.
+    - Concepts: lazy-evaluation, columnar
+    - See also: `notebooks/data/pyarrow/002_zero_copy_synergy.py` — the Arrow
+      buffers underneath
     """)
     return
 

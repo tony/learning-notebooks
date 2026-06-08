@@ -47,6 +47,7 @@ def _():
       (brute force) vs `faiss/IndexIVFFlat.cpp` (inverted lists);
       `faiss/Clustering.cpp` trains the coarse quantizer
     - Architecture corpus: the `faiss` study (115 files).
+    - Concepts: approximate-nearest-neighbor, recall-speed-tradeoff
     """)
     return
 

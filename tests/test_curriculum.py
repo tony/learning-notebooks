@@ -180,3 +180,68 @@ def test_source_fts_surfaces_pinned_urls():
         "SELECT url FROM source_fts WHERE source_fts MATCH 'tokenizer' LIMIT 1"
     ).fetchall()
     assert rows and rows[0][0].startswith("https://github.com/") and "/blob/" in rows[0][0]
+
+
+# --- the concept + cross-reference layer ---------------------------------------
+
+
+class TestParseCrossRefs:
+    def test_extracts_concepts_and_see_also(self):
+        md = (
+            "## Source reading\n"
+            "    - Upstream: <https://example.com>\n"
+            "    - Concepts: zero-copy, columnar , zero-copy\n"
+            "    - See also: `notebooks/data/polars/001_lazy_frames.py` — note\n"
+        )
+        concepts, see_also = curriculum._parse_cross_refs([md])
+        assert concepts == ["zero-copy", "columnar"]  # deduped, order preserved
+        assert see_also == ["notebooks/data/polars/001_lazy_frames.py"]
+
+    def test_untagged_notebook_parses_to_empty(self):
+        assert curriculum._parse_cross_refs(["just prose, no tags here"]) == ([], [])
+
+
+class TestCrossReferenceErrors:
+    def test_unknown_concept_tag_is_an_error(self):
+        nb = make_notebook("notebooks/data/polars/001_x.py", library="polars")
+        nb.concepts = ["nope"]
+        registry = [curriculum.Concept(id="zero-copy", gloss="g")]
+        errors = curriculum.cross_reference_errors([nb], registry, [])
+        assert len(errors) == 1 and "nope" in errors[0]
+
+    def test_missing_see_also_target_is_an_error(self):
+        nb = make_notebook("notebooks/data/polars/001_x.py", library="polars")
+        nb.see_also = ["notebooks/ghost.py"]
+        assert any("ghost" in e for e in curriculum.cross_reference_errors([nb], [], []))
+
+    def test_unknown_lineage_parent_is_an_error(self):
+        proj = curriculum.Project(name="polars", tracks=[], derives_from=["ghost"])
+        assert any("ghost" in e for e in curriculum.cross_reference_errors([], [], [proj]))
+
+    def test_valid_layer_is_clean(self):
+        nb = make_notebook("notebooks/data/pyarrow/002_x.py", library="pyarrow")
+        nb.concepts = ["zero-copy"]
+        nb.see_also = [nb.path]
+        projects = [
+            curriculum.Project(name="polars", tracks=[], derives_from=["pyarrow"]),
+            curriculum.Project(name="pyarrow", tracks=[]),
+        ]
+        registry = [curriculum.Concept(id="zero-copy", gloss="g")]
+        assert curriculum.cross_reference_errors([nb], registry, projects) == []
+
+
+def test_concept_layer_is_queryable_with_fk_integrity():
+    concepts = curriculum.load_concepts()
+    assert len(concepts) >= 10
+    conn = curriculum.build_db()
+    assert conn.execute("SELECT COUNT(*) FROM concept").fetchone()[0] == len(concepts)
+    # every tagged notebook concept resolves to a registered concept
+    orphans = conn.execute(
+        "SELECT COUNT(*) FROM notebook_concept WHERE concept NOT IN (SELECT id FROM concept)"
+    ).fetchone()[0]
+    assert orphans == 0
+    # lineage points at real projects
+    bad_lineage = conn.execute(
+        "SELECT COUNT(*) FROM project_lineage WHERE derives_from NOT IN (SELECT name FROM project)"
+    ).fetchone()[0]
+    assert bad_lineage == 0

@@ -44,6 +44,7 @@ def _():
       block manager that make paged attention real), `vllm/attention/`
     - Architecture corpus: the `vllm` study (64 files); `ollama` (70) is the
       local-first counterpart.
+    - Concepts: kv-cache, paged-attention, continuous-batching
     """)
     return
 

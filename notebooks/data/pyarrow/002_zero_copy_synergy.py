@@ -50,6 +50,9 @@ def _():
       buffer layout every engine here agrees on)
     - Architecture corpus: the `arrow` study (120 files); `duckdb` and
       `polars` studies cover the consuming engines.
+    - Concepts: zero-copy, columnar, vectorized-execution
+    - See also: `notebooks/data/polars/001_lazy_frames.py` — the lazy engine
+      that consumes these buffers
     """)
     return
 

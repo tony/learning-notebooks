@@ -348,6 +348,7 @@ name = "polars"
 upstream = "https://github.com/pola-rs/polars"
 tracks = ["data/dataframes", "systems/rust-in-python"]
 rust_in_python = "rust-core-frontend"
+derives_from = ["pyarrow"]
 
 [[project]]
 name = "ibis"
@@ -521,6 +522,7 @@ name = "daft"
 upstream = "https://github.com/Eventual-Inc/Daft"
 tracks = ["systems/rust-in-python"]
 rust_in_python = "rust-core-frontend"
+derives_from = ["pyarrow"]
 
 [[project]]
 name = "lancedb"
@@ -563,4 +565,80 @@ name = "delta-rs"
 upstream = "https://github.com/delta-io/delta-rs"
 tracks = ["systems/rust-in-python"]
 rust_in_python = "ctypes-capsules"
+
+# --- concept registry -------------------------------------------------------
+# The conformed dimension that joins notebooks, source files, and projects. Each
+# gloss is our own one-line prose (no corpus text); `projects` names registry
+# libraries the concept appears in. A notebook opts in by listing a concept slug
+# on its `- Concepts:` source-reading line; the drift gate checks the slug here.
+
+[[concept]]
+id = "zero-copy"
+gloss = "Share a buffer across a boundary (process, language) without copying it."
+projects = ["pyarrow", "polars", "duckdb", "datafusion-python"]
+
+[[concept]]
+id = "columnar"
+gloss = "Store a table column-major so scans stay cache-friendly and SIMD-able."
+projects = ["pyarrow", "polars", "duckdb"]
+
+[[concept]]
+id = "vectorized-execution"
+gloss = "Process data in batches of rows, not one row at a time, to amortize overhead."
+projects = ["polars", "duckdb", "pyarrow"]
+
+[[concept]]
+id = "lazy-evaluation"
+gloss = "Defer work into a plan you can optimize as a whole before running it."
+projects = ["polars"]
+
+[[concept]]
+id = "predicate-pushdown"
+gloss = "Move row filters down to the scan so less data is ever materialized."
+projects = ["polars", "duckdb"]
+
+[[concept]]
+id = "projection-pushdown"
+gloss = "Read only the columns a query needs, dropping the rest at the source."
+projects = ["polars", "duckdb"]
+
+[[concept]]
+id = "query-optimization"
+gloss = "Rewrite a logical plan through passes (reorder, fuse, prune) before execution."
+projects = ["polars", "duckdb"]
+
+[[concept]]
+id = "approximate-nearest-neighbor"
+gloss = "Trade exactness for speed when searching for the closest vectors."
+projects = ["faiss"]
+
+[[concept]]
+id = "quantization"
+gloss = "Compress vectors (product/scalar quantization) to shrink memory and speed scans."
+projects = ["faiss"]
+
+[[concept]]
+id = "recall-speed-tradeoff"
+gloss = "The ANN dial: more probes raise recall but cost latency."
+projects = ["faiss"]
+
+[[concept]]
+id = "kv-cache"
+gloss = "Reuse each token's attention keys and values across later decode steps."
+projects = ["vllm"]
+
+[[concept]]
+id = "paged-attention"
+gloss = "Page the KV cache like virtual memory so more sequences pack into VRAM."
+projects = ["vllm"]
+
+[[concept]]
+id = "continuous-batching"
+gloss = "Admit and retire requests every decode step instead of per fixed batch."
+projects = ["vllm"]
+
+[[concept]]
+id = "subword-tokenization"
+gloss = "Split text into learned subword units (BPE, wordpiece) below the word level."
+projects = ["tokenizers"]
 

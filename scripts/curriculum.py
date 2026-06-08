@@ -67,6 +67,12 @@ _UPSTREAM_RE = re.compile(r"Upstream: <(?P<url>https://[^>]+)>")
 _HEADING_RE = re.compile(r"^\s*#{1,6} +(?P<text>\S.*)$", re.MULTILINE)
 #: A track id is a readable ``domain/slug``: lowercase, hyphen-separated.
 _SLUG_RE = re.compile(r"^[a-z][a-z0-9-]*/[a-z0-9-]+$")
+#: Cross-reference lines authored in a notebook's source-reading cell, parsed the
+#: same way ``Upstream:`` is — ``- Concepts: a, b, c`` and ``- See also:
+#: `notebooks/…\.py` — note``. Concepts join to the registry; see-also to notebooks.
+_CONCEPTS_RE = re.compile(r"^\s*[-*]\s*Concepts:\s*(?P<body>.+)$", re.MULTILINE)
+_SEE_ALSO_RE = re.compile(r"^\s*[-*]\s*See also:\s*(?P<body>.+)$", re.MULTILINE)
+_SEE_ALSO_PATH_RE = re.compile(r"`(?P<path>notebooks/[\w./-]+\.py)`")
 
 
 @dataclass
@@ -86,6 +92,24 @@ class Notebook:
     headings: list[str]
     has_tests: bool
     upstream_url: str | None
+    #: Cross-references authored in the source-reading cell (both opt-in): the
+    #: concept slugs this notebook teaches, and the notebooks it points readers to.
+    concepts: list[str] = field(default_factory=list)
+    see_also: list[str] = field(default_factory=list)
+
+
+@dataclass
+class Concept:
+    """A teaching concept — the dimension that joins notebooks, sources, projects.
+
+    Authored in curriculum.toml; the gloss is our own one-line prose.
+    """
+
+    id: str
+    gloss: str
+    projects: list[str] = field(default_factory=list)
+    #: An optional canonical implementation — a portable pinned URL from sources.jsonl.
+    source: str | None = None
 
 
 @dataclass
@@ -130,6 +154,8 @@ class Project:
     #: ``name`` (e.g. ``pyarrow`` -> ``arrow``). Omitted when it matches name or
     #: the project has no study; the source-map builder falls back to ``name``.
     architecture: str | None = None
+    #: Lineage edge — the project(s) this one is built on (``polars`` -> ``arrow``).
+    derives_from: list[str] = field(default_factory=list)
 
 
 def _string_literals(tree: ast.Module) -> list[str]:
@@ -178,6 +204,7 @@ def parse_notebook(path: Path) -> Notebook:
         for m in _HEADING_RE.finditer(text)
     ]
     upstream = next((m.group("url") for s in literals for m in [_UPSTREAM_RE.search(s)] if m), None)
+    concepts, see_also = _parse_cross_refs(literals)
 
     return Notebook(
         path=rel,
@@ -193,7 +220,28 @@ def parse_notebook(path: Path) -> Notebook:
         headings=headings,
         has_tests=bool(re.search(r"^def test_", source, re.MULTILINE)),
         upstream_url=upstream,
+        concepts=concepts,
+        see_also=see_also,
     )
+
+
+def _parse_cross_refs(literals: list[str]) -> tuple[list[str], list[str]]:
+    """Extract ``Concepts:`` slugs and ``See also:`` notebook paths from prose.
+
+    Both are opt-in: a notebook with neither line parses to empty lists. Order is
+    preserved and duplicates dropped, so the catalog record is deterministic.
+    """
+    concepts: list[str] = []
+    see_also: list[str] = []
+    for text in literals:
+        for match in _CONCEPTS_RE.finditer(text):
+            concepts.extend(
+                slug for raw in match.group("body").split(",") if (slug := raw.strip().strip("`"))
+            )
+        for match in _SEE_ALSO_RE.finditer(text):
+            body = match.group("body")
+            see_also.extend(m.group("path") for m in _SEE_ALSO_PATH_RE.finditer(body))
+    return list(dict.fromkeys(concepts)), list(dict.fromkeys(see_also))
 
 
 def load_tracks() -> list[Track]:
@@ -220,6 +268,15 @@ def load_projects() -> list[Project]:
     with MANIFEST.open("rb") as f:
         data = tomllib.load(f)
     return [Project(**raw) for raw in data.get("project", [])]
+
+
+def load_concepts() -> list[Concept]:
+    """Load the authored concept registry from notes/curriculum.toml."""
+    import tomllib
+
+    with MANIFEST.open("rb") as f:
+        data = tomllib.load(f)
+    return [Concept(**raw) for raw in data.get("concept", [])]
 
 
 def load_sources() -> list[dict[str, str]]:
@@ -459,6 +516,8 @@ def render_catalog() -> str:
             "headings": nb.headings,
             "has_tests": nb.has_tests,
             "upstream_url": nb.upstream_url,
+            "concepts": nb.concepts,
+            "see_also": nb.see_also,
         }
         lines.append(json.dumps(record, ensure_ascii=False))
     return "\n".join(lines) + "\n"
@@ -583,11 +642,26 @@ CREATE TABLE source (
   url       TEXT,    -- version-pinned github blob URL (portable, clone-free)
   tag       TEXT, baseline TEXT
 );
+CREATE TABLE concept (
+  id        TEXT PRIMARY KEY,  -- readable slug (zero-copy, predicate-pushdown)
+  gloss     TEXT,              -- one-line definition, our own prose
+  projects  TEXT,              -- JSON array of project names the concept appears in
+  source    TEXT               -- optional canonical pinned URL
+);
+-- Conformed-dimension joins: a concept reaches notebooks AND (via project) sources;
+-- see-also and lineage are the cross-reference edges. All keyed for instant lookup.
+CREATE TABLE notebook_concept ( path TEXT, concept TEXT, PRIMARY KEY(path, concept) );
+CREATE TABLE notebook_see_also ( path TEXT, target TEXT, PRIMARY KEY(path, target) );
+CREATE TABLE project_lineage (
+  project TEXT, derives_from TEXT, PRIMARY KEY(project, derives_from)
+);
 CREATE INDEX track_status ON track(status);
 CREATE INDEX track_domain ON track(domain);
 CREATE INDEX project_variation ON project(rust_in_python);
 CREATE INDEX notebook_rung ON notebook(rung);
 CREATE INDEX source_project ON source(project);
+CREATE INDEX notebook_concept_concept ON notebook_concept(concept);
+CREATE INDEX project_lineage_parent ON project_lineage(derives_from);
 CREATE VIRTUAL TABLE notebook_fts USING fts5(
   path UNINDEXED, body, tokenize='porter unicode61', prefix='2 3'
 );
@@ -668,6 +742,22 @@ def build_db(db_path: str = ":memory:") -> sqlite3.Connection:
         conn.execute(
             "INSERT INTO project VALUES (?,?,?,?)",
             (proj.name, proj.upstream, proj.rust_in_python, json.dumps(proj.tracks)),
+        )
+        conn.executemany(
+            "INSERT INTO project_lineage VALUES (?,?)",
+            [(proj.name, parent) for parent in proj.derives_from],
+        )
+    for concept in load_concepts():
+        conn.execute(
+            "INSERT INTO concept VALUES (?,?,?,?)",
+            (concept.id, concept.gloss, json.dumps(concept.projects), concept.source),
+        )
+    for nb in notebooks:
+        conn.executemany(
+            "INSERT INTO notebook_concept VALUES (?,?)", [(nb.path, c) for c in nb.concepts]
+        )
+        conn.executemany(
+            "INSERT INTO notebook_see_also VALUES (?,?)", [(nb.path, t) for t in nb.see_also]
         )
     for src in load_sources():
         conn.execute(
@@ -783,6 +873,39 @@ def project_track_errors(tracks: list[Track], projects: list[Project]) -> list[s
     ]
 
 
+def cross_reference_errors(
+    notebooks: list[Notebook], concepts: list[Concept], projects: list[Project]
+) -> list[str]:
+    """Validate the opt-in cross-reference layer: tags, see-also, and lineage.
+
+    Concept tags must name a registered concept; see-also must point at a real
+    notebook; project lineage must name a real project. Untagged notebooks are
+    fine — the layer is opt-in, so this never forces a notebook to carry it.
+    """
+    concept_ids = {c.id for c in concepts}
+    paths = {nb.path for nb in notebooks}
+    names = {p.name for p in projects}
+    errors = [
+        f"{nb.path}: unknown concept {tag!r} (add it to [[concept]] in curriculum.toml)"
+        for nb in notebooks
+        for tag in nb.concepts
+        if tag not in concept_ids
+    ]
+    errors += [
+        f"{nb.path}: see-also points at missing notebook {target!r}"
+        for nb in notebooks
+        for target in nb.see_also
+        if target not in paths
+    ]
+    errors += [
+        f"project {p.name!r}: derives_from unknown project {parent!r}"
+        for p in projects
+        for parent in p.derives_from
+        if parent not in names
+    ]
+    return errors
+
+
 def check_drift() -> CheckResult:
     """Compute drift findings: errors (gate-failing) and warnings (advisory)."""
     notebooks, tracks = index()
@@ -811,12 +934,21 @@ def check_drift() -> CheckResult:
     errors.extend(library_project_errors(notebooks, projects))
     errors.extend(project_track_errors(tracks, projects))
     errors.extend(source_map_errors(projects))
+    errors.extend(cross_reference_errors(notebooks, load_concepts(), projects))
 
     ci_text = CI_WORKFLOW.read_text(encoding="utf-8")
     warnings.extend(
         f"{nb.path}: not in the ci.yml smoke step (hand-maintained — add it or note why not)"
         for nb in notebooks
         if nb.path not in ci_text
+    )
+
+    project_names = {p.name for p in projects}
+    warnings.extend(
+        f"concept {c.id!r}: lists unknown project {name!r}"
+        for c in load_concepts()
+        for name in c.projects
+        if name not in project_names
     )
 
     for path, content in render(write=False).items():
