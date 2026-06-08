@@ -75,9 +75,14 @@ uv run marimo check --strict notebooks/ notes/notebook_template.py
   the `[ladder]` rungs, `[[track]]` courses with per-notebook rung, and the `[[project]]`
   registry that joins each studied library to its upstream + tracks) are hand-edited;
   `taxonomy.md`, `catalog.jsonl`, and `coverage.md` are **generated** from the manifest +
-  notebooks by `scripts/curriculum.py` — edit the sources, then `just sync`. The narrative
-  around the table is authored in `taxonomy.head.md` / `taxonomy.foot.md`. **Not** study
-  content — do not put notebooks here.
+  notebooks by `scripts/curriculum.py` — edit the sources, then `just sync`. `sources.jsonl`
+  is a **third provenance tier**: the portable source map, built locally from the architecture
+  studies (`just sources`) and committed as version-pinned GitHub URLs. It is corpus-derived
+  but never CI-regenerated — the architecture corpus is a *research input*, not a runtime
+  dependency — so `check` validates the committed file's **shape** (portable blob URLs, known
+  projects, no local paths), never its freshness; do **not** add it to the `render()` drift set.
+  The narrative around the table is authored in `taxonomy.head.md` / `taxonomy.foot.md`.
+  **Not** study content — do not put notebooks here.
 - `.github/workflows/ci.yml`: lint, format, type check, and headless smoke-runs of light
   notebooks.
 
