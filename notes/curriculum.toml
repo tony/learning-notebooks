@@ -106,6 +106,7 @@ notebooks = [
   { path = "notebooks/data/pandas/001_dataframes.py", rung = "self-sufficiency" },
   { path = "notebooks/data/numpy/001_broadcasting_strides.py", label = "numpy seed", rung = "fundamentals" },
   { path = "notebooks/data/polars/001_lazy_frames.py", label = "polars seed", rung = "self-sufficiency" },
+  { path = "notebooks/data/polars/002_query_optimizer.py", label = "polars optimizer", rung = "self-sufficiency" },
 ]
 architecture = ["numpy", "pandas", "polars", "rich"]
 architecture_missing = ["matplotlib", "plotnine", "pydantic"]

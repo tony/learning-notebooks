@@ -238,9 +238,11 @@ def _parse_cross_refs(literals: list[str]) -> tuple[list[str], list[str]]:
             concepts.extend(
                 slug for raw in match.group("body").split(",") if (slug := raw.strip().strip("`"))
             )
-        for match in _SEE_ALSO_RE.finditer(text):
-            body = match.group("body")
-            see_also.extend(m.group("path") for m in _SEE_ALSO_PATH_RE.finditer(body))
+        # A `See also:` marker opens a (possibly multi-line) list — collect every
+        # backticked notebooks/…py path in that cell. No other cell carries such
+        # paths, so this captures the list without over-reaching.
+        if _SEE_ALSO_RE.search(text):
+            see_also.extend(m.group("path") for m in _SEE_ALSO_PATH_RE.finditer(text))
     return list(dict.fromkeys(concepts)), list(dict.fromkeys(see_also))
 
 

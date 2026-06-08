@@ -117,7 +117,7 @@ def test_every_project_points_at_a_real_track(repo):
 
 def test_registry_counts(repo):
     notebooks, tracks, projects = repo
-    assert len(notebooks) == 23
+    assert len(notebooks) == 24
     assert len(tracks) == 22
     assert len(projects) == 46
 
@@ -186,16 +186,21 @@ def test_source_fts_surfaces_pinned_urls():
 
 
 class TestParseCrossRefs:
-    def test_extracts_concepts_and_see_also(self):
+    def test_extracts_concepts_and_a_multiline_see_also(self):
         md = (
             "## Source reading\n"
             "    - Upstream: <https://example.com>\n"
+            "    - In the source: `crates/polars-plan/` (not a see-also target)\n"
             "    - Concepts: zero-copy, columnar , zero-copy\n"
-            "    - See also: `notebooks/data/polars/001_lazy_frames.py` — note\n"
+            "    - See also: `notebooks/data/polars/001_lazy_frames.py` — one;\n"
+            "      `notebooks/data/duckdb/001_vectorized_exec.py` — two\n"
         )
         concepts, see_also = curriculum._parse_cross_refs([md])
         assert concepts == ["zero-copy", "columnar"]  # deduped, order preserved
-        assert see_also == ["notebooks/data/polars/001_lazy_frames.py"]
+        assert see_also == [
+            "notebooks/data/polars/001_lazy_frames.py",
+            "notebooks/data/duckdb/001_vectorized_exec.py",
+        ]
 
     def test_untagged_notebook_parses_to_empty(self):
         assert curriculum._parse_cross_refs(["just prose, no tags here"]) == ([], [])

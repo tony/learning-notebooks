@@ -60,6 +60,7 @@ jobs:
           uv run notebooks/data/ibis/001_duckdb_sql.py
           uv run notebooks/data/numpy/001_broadcasting_strides.py
           uv run notebooks/data/polars/001_lazy_frames.py
+          uv run notebooks/data/polars/002_query_optimizer.py
           uv run notebooks/data/duckdb/001_vectorized_exec.py
           uv run notebooks/data/pyarrow/001_columnar_memory.py
           uv run notebooks/data/pyarrow/002_zero_copy_synergy.py
