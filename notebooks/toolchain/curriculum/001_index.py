@@ -157,6 +157,49 @@ def _(conn, search):
 @app.cell(hide_code=True)
 def _():
     mo.md(r"""
+    ## Source atlas
+
+    "Where is X implemented in project Y?" — answered with no clone and no
+    local corpus. `notes/sources.jsonl` ships version-pinned GitHub URLs
+    derived from the architecture studies; pick a project to see its
+    components and click straight through to the source at the studied tag.
+    """)
+    return
+
+
+@app.cell
+def _(conn):
+    _projects = [
+        _r[0] for _r in conn.execute("SELECT DISTINCT project FROM source ORDER BY project")
+    ]
+    atlas_project = mo.ui.dropdown(
+        _projects,
+        value="vllm" if "vllm" in _projects else (_projects[0] if _projects else None),
+        label="project",
+    )
+    atlas_project
+    return (atlas_project,)
+
+
+@app.cell
+def _(atlas_project, conn):
+    mo.stop(not atlas_project.value, mo.md("*Pick a project to see its component source map.*"))
+    _by_component: dict[str, list[str]] = {}
+    for _component, _title, _url in conn.execute(
+        "SELECT component, title, url FROM source WHERE project = ? ORDER BY component, title",
+        (atlas_project.value,),
+    ):
+        _by_component.setdefault(_component, []).append(f"- [{_title.replace('`', '')}]({_url})")
+    _atlas = "\n\n".join(
+        f"**{_component}**\n\n" + "\n".join(_links) for _component, _links in _by_component.items()
+    )
+    mo.md(_atlas or "*No source links for this project.*")
+    return
+
+
+@app.cell(hide_code=True)
+def _():
+    mo.md(r"""
     ## Coverage
 
     The same rollups `notes/coverage.md` commits, computed live.
@@ -248,6 +291,16 @@ def test_fts_ranks_the_faiss_notebook_for_bm25():
         for _row in _conn.execute("SELECT path FROM notebook_fts WHERE notebook_fts MATCH 'bm25'")
     ]
     assert any("faiss" in _p for _p in _paths), _paths
+    return
+
+
+@app.cell
+def test_source_atlas_pins_clone_free_vllm_urls():
+    _conn = curriculum.build_db()
+    _urls = [_row[0] for _row in _conn.execute("SELECT url FROM source WHERE project = 'vllm'")]
+    assert _urls, "expected committed vllm source links"
+    _prefix = "https://github.com/vllm-project/vllm/blob/"
+    assert all(_u.startswith(_prefix) for _u in _urls), _urls
     return
 
 
