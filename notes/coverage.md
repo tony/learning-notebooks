@@ -10,7 +10,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
 | Rung | Notebooks |
 |---|---|
 | fundamentals — first principles, stdlib-first | 6 |
-| self-sufficiency — drive the real library | 13 |
+| self-sufficiency — drive the real library | 14 |
 | reproducible — compose tools as one system | 2 |
 | production — org-scale patterns | 3 |
 
@@ -29,7 +29,7 @@ Regenerate with `just sync`; CI fails when this file is stale.
 | ai_serving | 2 |
 | data | 8 |
 | enterprise | 4 |
-| ml | 4 |
+| ml | 5 |
 | systems | 4 |
 | toolchain | 2 |
 

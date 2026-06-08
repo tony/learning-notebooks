@@ -186,6 +186,7 @@ status = "seed"
 notebooks = [
   { path = "notebooks/ml/tokenizers/001_bpe_from_scratch.py", label = "BPE-scratch seed", rung = "fundamentals" },
   { path = "notebooks/ml/faiss/001_ann_vector_search.py", label = "faiss ANN seed", rung = "self-sufficiency" },
+  { path = "notebooks/ml/faiss/002_ivf_quantization.py", label = "faiss quantization", rung = "self-sufficiency" },
 ]
 architecture = ["sentence-transformers", "faiss", "chroma"]
 architecture_missing = ["transformers", "tokenizers"]

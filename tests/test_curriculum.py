@@ -117,7 +117,7 @@ def test_every_project_points_at_a_real_track(repo):
 
 def test_registry_counts(repo):
     notebooks, tracks, projects = repo
-    assert len(notebooks) == 24
+    assert len(notebooks) == 25
     assert len(tracks) == 22
     assert len(projects) == 46
 
