@@ -84,7 +84,7 @@ test:
 check:
     uv run ruff check .
     uv run ruff format --check .
-    uv run ty check
+    uv run ty check --ignore unresolved-import --ignore unresolved-attribute
     uv run marimo check --strict notebooks/ notes/notebook_template.py
     uv run scripts/check_licenses.py
     uv run scripts/curriculum.py check

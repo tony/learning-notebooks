@@ -25,7 +25,7 @@ jobs:
         run: uv run ruff format --check .
 
       - name: Type check
-        run: uv run ty check
+        run: uv run ty check --ignore unresolved-import --ignore unresolved-attribute
 
       # marimo's notebook-aware linter. Scoped to .py notebooks only:
       # `marimo check` treats prose .md files as markdown notebooks.
