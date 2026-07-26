@@ -565,7 +565,7 @@ def _():
 @app.cell
 def _(ticker):
     ticker
-    mo.md(f"Last refreshed at **{dt.datetime.now():%H:%M:%S}**.")
+    mo.md(f"Last refreshed at **{dt.datetime.now(tz=dt.UTC).astimezone():%H:%M:%S}**.")
     return
 
 
