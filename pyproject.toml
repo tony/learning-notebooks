@@ -70,15 +70,11 @@ convention = "numpy"
 [tool.ty.src]
 include = ["notebooks", "notes", "scripts"]
 
-[tool.ty.rules]
 # Notebook dependencies live in per-notebook sandbox environments (PEP 723),
-# not in this repo's dev env, so imports like pandas/ibis can't resolve here.
-unresolved-import = "ignore"
-
-# Attribute access on those unresolved modules (e.g. ibis.options) can't be
-# checked either — scope the ignore to study content only.
-[[tool.ty.overrides]]
-include = ["notebooks/**", "notes/**"]
-
-[tool.ty.overrides.rules]
-unresolved-attribute = "ignore"
+# not in this repo's dev env, so imports like pandas/ibis cannot resolve here,
+# and neither can attribute access on them.
+#
+# These two rules are not set here because ty treats every PEP 723 script as
+# its own configuration root: a notebook never reads this table, so settings
+# placed here look effective while suppressing nothing. They are passed on the
+# ty command line instead — see the `check` recipe and the CI type-check step.
