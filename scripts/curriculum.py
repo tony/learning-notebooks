@@ -77,7 +77,40 @@ _SEE_ALSO_PATH_RE = re.compile(r"`(?P<path>notebooks/[\w./-]+\.py)`")
 
 @dataclass
 class Notebook:
-    """Grain A — one record per notebook file, all fields parsed from it."""
+    """Grain A — one record per notebook file, all fields parsed from it.
+
+    Attributes
+    ----------
+    path : str
+        Repository-relative posix path to the notebook.
+    domain : str
+        Domain segment of the path (``notebooks/<domain>/<library>/…``).
+    library : str
+        Library segment of the path, which is also the project name.
+    seq : int
+        Ordering number leading the filename, before the first ``_``.
+    title : str
+        Title declared on the marimo app, falling back to ``summary``.
+    summary : str
+        First line of the module docstring, punctuated with a period.
+    track : str | None
+        Id of the track claiming this notebook, filled in once the
+        taxonomy is joined; ``None`` before that and when unclaimed.
+    rung : str | None
+        Worded rung the track assigns this notebook, from fundamentals
+        through production. Joined alongside ``track``.
+    packages : list[str]
+        Distinct dependency names from the PEP 723 block, sorted.
+    requires_python : str | None
+        ``requires-python`` from the PEP 723 block, or ``None`` when the
+        notebook declares none.
+    headings : list[str]
+        Markdown headings found in the notebook's prose cells, in order.
+    has_tests : bool
+        Whether the notebook defines a ``test_`` function.
+    upstream_url : str | None
+        First upstream source URL cited in the prose, or ``None``.
+    """
 
     path: str
     domain: str
@@ -92,9 +125,11 @@ class Notebook:
     headings: list[str]
     has_tests: bool
     upstream_url: str | None
-    #: Cross-references authored in the source-reading cell (both opt-in): the
-    #: concept slugs this notebook teaches, and the notebooks it points readers to.
+    #: Concept slugs this notebook teaches, authored in the source-reading
+    #: cell. Opt-in, so empty when the notebook cites none.
     concepts: list[str] = field(default_factory=list)
+    #: Notebooks this one points readers to, authored in the same cell.
+    #: Opt-in, so empty when the notebook cites none.
     see_also: list[str] = field(default_factory=list)
 
 
@@ -103,6 +138,15 @@ class Concept:
     """A teaching concept — the dimension that joins notebooks, sources, projects.
 
     Authored in curriculum.toml; the gloss is our own one-line prose.
+
+    Attributes
+    ----------
+    id : str
+        Slug the concept is keyed by and that notebooks cite.
+    gloss : str
+        One-line prose describing what the concept covers.
+    projects : list[str]
+        Names of the projects that exercise the concept.
     """
 
     id: str
@@ -118,6 +162,32 @@ class Track:
 
     ``id`` is a readable ``domain/slug`` (e.g. ``data/dataframes``); the domain
     is derived from it, never authored separately.
+
+    Attributes
+    ----------
+    id : str
+        Readable ``domain/slug`` identifying the track.
+    topic : str
+        Subject the track teaches, in prose.
+    mastery : str
+        How far the track intends to take a reader.
+    status : str
+        Authoring state of the track.
+    notebooks : list[dict[str, str]]
+        Notebook entries the track claims, each carrying at least a path
+        and the rung it sits on.
+    note : str | None
+        Aside about the track's scope or gaps, or ``None``.
+    sibling_curricula : list[str]
+        Other curricula covering adjacent ground.
+    architecture : list[str]
+        Architecture studies backing the track.
+    architecture_missing : list[str]
+        Architecture studies the track wants that do not exist yet.
+    packages : str
+        Packages the track exercises, as authored.
+    license_status : str
+        Licensing note for the material the track draws on.
     """
 
     id: str
@@ -144,6 +214,17 @@ class Project:
 
     ``name`` matches the notebook library directory, so a notebook resolves to
     its project by path (``notebooks/data/polars/…`` → project ``polars``).
+
+    Attributes
+    ----------
+    name : str
+        Project name, matching its notebook library directory.
+    tracks : list[str]
+        Ids of the tracks that study this project.
+    upstream : str | None
+        Upstream repository for the project, or ``None``.
+    rust_in_python : str | None
+        How the project uses Rust from Python, when it does.
     """
 
     name: str
@@ -836,7 +917,21 @@ def write_sqlite(output: str) -> int:
 
 @dataclass
 class CheckResult:
-    """The drift gate's findings, separated from output for unit testing."""
+    """The drift gate's findings, separated from output for unit testing.
+
+    Attributes
+    ----------
+    errors : list[str]
+        Findings that fail the gate.
+    warnings : list[str]
+        Findings worth reporting that do not fail the gate.
+    notebooks : int
+        Notebooks the gate inspected.
+    tracks : int
+        Tracks the gate inspected.
+    projects : int
+        Projects the gate inspected.
+    """
 
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
