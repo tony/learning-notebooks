@@ -537,8 +537,10 @@ def render_taxonomy() -> str:
     """Render the full generated notes/taxonomy.md content."""
     tracks = load_tracks()
     rows = [
-        "| Domain | Track | Topic | Notebook | Architecture study | Packages "
-        "| License status | Mastery | Status |",
+        (
+            "| Domain | Track | Topic | Notebook | Architecture study | Packages "
+            "| License status | Mastery | Status |"
+        ),
         "|---|---|---|---|---|---|---|---|---|",
     ]
     rows.extend(
