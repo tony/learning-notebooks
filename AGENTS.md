@@ -180,6 +180,30 @@ uv run marimo check --strict notebooks/ notes/notebook_template.py
    editing notebook metadata or `notes/curriculum.toml`, regenerate with `just sync` and
    commit the result alongside the change.
 
+## Classes with fields
+
+**Classes with fields** — `NamedTuple`, dataclasses — document every field in
+an `Attributes` section:
+
+```python
+@dataclass
+class Concept:
+    """A teaching concept joining notebooks, sources, and projects.
+
+    Attributes
+    ----------
+    id : str
+        Slug the curriculum file keys the concept by.
+    gloss : str
+        One-line prose describing the concept.
+    """
+```
+
+A type says how a field is shaped, not what it holds. Describing each one
+keeps that meaning next to the code, and anything that renders the class —
+autodoc, a REPL, an editor tooltip — has a description to show instead of a
+bare name.
+
 ## Git Commit Standards
 
 Format commit messages as:
