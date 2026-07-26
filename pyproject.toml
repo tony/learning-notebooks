@@ -58,11 +58,13 @@ convention = "numpy"
   "B018", # "useless expression" — bare expressions are marimo cell outputs
   "D", # docstring rules don't fit generated cell functions
   "E501", # long lines in mo.md() blocks and source-reading URLs
+  "PLR1711", # marimo's codegen closes every cell function with a bare return
 ]
 "notes/notebook_template.py" = [
   "B018",
   "D",
   "E501",
+  "PLR1711",
 ]
 # tests: docstrings on every test add noise; private-symbol access is the point.
 "tests/**/*.py" = [
