@@ -120,11 +120,6 @@ uv run marimo check --strict notebooks/ notes/notebook_template.py
 - **CI-safety**: notebooks with heavy deps (torch, transformers, vllm, diffusers, …) or model
   downloads are *not* added to the CI smoke-run list in `.github/workflows/ci.yml`. Only
   lightweight notebooks go there.
-- **Doc style — code blocks are paste-and-run units**: one command per triple-backtick block,
-  so pasting a block runs exactly one intended action. Don't blur multiple commands annotated
-  by comments into the same block — explanations belong in prose above it. A multi-step
-  sequence may share a block only when explicitly chained with `;` / `; \` (the chain *is*
-  the single action). Command menus are per-command blocks with prose lead-ins, not tables.
 
 ## marimo Gotchas (vs Jupyter)
 
@@ -268,6 +263,42 @@ what:
 - Second change
 EOF
 )"
+```
+
+## Documentation Standards
+
+### Code Blocks
+
+Code blocks are paste-and-run units: pasting one block runs exactly one
+intended action. Doctests and other executed examples are exempt — the test
+suite runs them, nobody pastes them.
+
+- **One command per block.** Multiple steps may share a block only when
+  explicitly chained with `&&`, `;`, or `\` continuations — the chain is
+  then one logical command.
+- **Explanations go in prose above the block**, never as `#` comments inside it.
+- **Command menus are per-command blocks with prose lead-ins**, not tables.
+- **Shell commands use the `console` tag with a `$ ` prefix.** This separates
+  interactive commands from scripts and enables prompt-aware copy.
+- **Split long commands with `\`** — one flag or flag+value pair per indented
+  continuation line, positional arguments last.
+
+Good:
+
+Show the last ten commits as a graph:
+
+```console
+$ git log \
+    --max-count=10 \
+    --graph \
+    --oneline
+```
+
+Bad:
+
+```console
+# Show the last ten commits as a graph
+$ git log --max-count=10 --graph --oneline
 ```
 
 ## AI Slop Prevention
