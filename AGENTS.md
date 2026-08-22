@@ -27,6 +27,9 @@ what was asked for.
 | `tests/` | Unit tests for `scripts/curriculum.py` (stdlib-only). |
 | `.github/workflows/ci.yml` | Lint, format, type check, `marimo check`, license and drift gates, unit tests, notebook smoke-runs. |
 
+Notebooks for any taxonomy domain are born here; a track graduates to a
+`learning-<track>` sibling repo only if it outgrows this one.
+
 ## Which policy applies
 
 - Documentation, user-facing text, commit messages, docstrings, and source
