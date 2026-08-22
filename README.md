@@ -6,79 +6,90 @@ git-friendly, and each one self-contained.
 
 ## Requirements
 
-- [uv](https://github.com/astral-sh/uv) — nothing else. Notebooks bring their
-  own dependencies.
+- [uv](https://github.com/astral-sh/uv) — nothing else. Notebooks bring
+  their own dependencies, and uv provisions the Python interpreter they
+  need.
+- Python 3.13 or newer for the repository's own dev tooling
+  (`requires-python` in `pyproject.toml`). A given notebook may declare a
+  different floor for itself in its own PEP 723 block.
 
-## Quick Start
+## Quick start
 
 Browse every notebook in marimo's directory gallery — zero install, prints a
 URL instead of hijacking your browser:
 
-```bash
-uvx marimo edit --headless notebooks/
+```console
+$ uvx marimo edit --headless notebooks/
 ```
 
 Open a single notebook in its own isolated environment:
 
-```bash
-uvx marimo edit --sandbox --headless notebooks/data/pandas/001_dataframes.py
+```console
+$ uvx marimo edit --sandbox --headless notebooks/data/pandas/001_dataframes.py
 ```
 
 Run a notebook headlessly as a script:
 
-```bash
-uv run notebooks/data/pandas/001_dataframes.py
+```console
+$ uv run notebooks/data/pandas/001_dataframes.py
 ```
 
-(With dev tooling installed — `uv sync` — swap `uvx marimo` for `uv run marimo`.)
+With dev tooling installed (`uv sync`), swap `uvx marimo` for `uv run
+marimo`.
 
 ### Optional: just
 
-[just](https://github.com/casey/just) is an optional convenience — every recipe
-is a thin wrapper over the plain commands above. Type `just` by itself to list
-the quick commands:
+[just](https://github.com/casey/just) is an optional convenience — every
+recipe is a thin wrapper over the plain commands above. Type `just` by
+itself to list the quick commands.
 
 The gallery, as above:
 
-```bash
-just gallery
+```console
+$ just gallery
 ```
 
 Editor — prints the URL, no browser:
 
-```bash
-just edit notebooks/data/polars/001_lazy_frames.py
+```console
+$ just edit notebooks/data/polars/001_lazy_frames.py
 ```
 
-Editor + browser:
+Editor and browser:
 
-```bash
-just open notebooks/data/polars/001_lazy_frames.py
+```console
+$ just open notebooks/data/polars/001_lazy_frames.py
 ```
 
 Fuzzy-pick a notebook (fzf):
 
-```bash
-just pick
+```console
+$ just pick
 ```
 
 Scaffold from the template:
 
-```bash
-just new ml statsmodels linear_models
+```console
+$ just new ml statsmodels linear_models
 ```
 
 All quality gates:
 
-```bash
-just check
+```console
+$ just check
 ```
 
-Notebook arguments are real paths, so your shell tab-completes them by domain
-(`just edit notebooks/data/<TAB>`) with zero setup. Optional recipe-name
-completion: `eval "$(just --completions zsh)"` (also bash/fish/powershell/…).
+Notebook arguments are real paths, so your shell tab-completes them by
+domain (`just edit notebooks/data/<TAB>`) with zero setup. Optional
+recipe-name completion:
 
-## How It Works
+```console
+$ eval "$(just --completions zsh)"
+```
+
+`just --completions` also supports bash, fish, and powershell.
+
+## How it works
 
 Every notebook is a marimo `.py` file carrying its own dependencies in a
 [PEP 723](https://peps.python.org/pep-0723/) inline metadata block:
@@ -94,55 +105,57 @@ Every notebook is a marimo `.py` file carrying its own dependencies in a
 ```
 
 `marimo edit --sandbox` (or plain `uv run`) reads that block and builds an
-ephemeral, isolated environment for just that notebook. There is **no shared
-runtime environment**: a notebook that needs torch and a notebook that needs
-pandas never share a lockfile, and the repo's own `pyproject.toml` only
-provides dev tooling (marimo CLI, ruff, ty).
+ephemeral, isolated environment for just that notebook. There is no shared
+runtime environment: a notebook that needs torch and a notebook that needs
+pandas never share a lockfile, and the repository's own `pyproject.toml`
+only provides dev tooling (marimo CLI, ruff, ty).
 
 ## Layout
 
-- `notebooks/<domain>/<library>/` — the curriculum, grouped by taxonomy domain
-  (`toolchain/`, `systems/`, `data/`, `ml/`, …) with one directory per library
-  and numbered `NNN_topic.py` notebooks. The cross-corpus index is
-  `notes/taxonomy.md`.
+- `notebooks/<domain>/<library>/` — the curriculum, grouped by taxonomy
+  domain (`toolchain/`, `systems/`, `data/`, `ml/`, …) with one directory
+  per library and numbered `NNN_topic.py` notebooks. The cross-corpus index
+  is `notes/taxonomy.md`.
 - `notes/` — templates, planning, and the curriculum manifest:
   `notebook_template.py`, `NOTEBOOK_TEMPLATE.md` (how to author),
-  `study_plan.md` (what to study), and `curriculum.toml` (the authored track
-  overlay). `taxonomy.md`, `catalog.jsonl`, and `coverage.md` are generated
-  from the manifest + notebooks; `sources.jsonl` is the portable source map —
-  built locally from the architecture studies, committed as version-pinned URLs.
+  `study_plan.md` (what to study), and `curriculum.toml` (the authored
+  track overlay). `taxonomy.md`, `catalog.jsonl`, and `coverage.md` are
+  generated from the manifest and the notebooks; `sources.jsonl` is the
+  portable source map — built locally from architecture studies, committed
+  as version-pinned URLs.
 
-## Curriculum Index
+## Curriculum index
 
-The taxonomy table is derived, not hand-edited: notebooks own their mechanical
-metadata (title, deps, headings, upstream), and `notes/curriculum.toml` holds
-the editorial overlay — readable-named courses (`data/dataframes`, not `B1`),
-the per-notebook rung, and a project registry joining each studied library to
-its upstream and tracks. CI fails when any generated file drifts. After editing
-either source, regenerate:
+The taxonomy table is derived, not hand-edited: notebooks own their
+mechanical metadata (title, deps, headings, upstream), and
+`notes/curriculum.toml` holds the editorial overlay — readable-named
+courses (`data/dataframes`, not `B1`), the per-notebook rung, and a project
+registry joining each studied library to its upstream and tracks. CI fails
+when any generated file drifts. After editing either source, regenerate:
 
-```bash
-just sync
+```console
+$ just sync
 ```
 
 Ranked full-text search across all notebook prose — FTS5 with stemming and
 bm25, so `batching` finds "batch":
 
-```bash
-just find "continuous batching"
+```console
+$ just find "continuous batching"
 ```
 
 Structured queries via the committed catalog — e.g. every seed-status
 notebook:
 
-```bash
-jq -r 'select(.status == "seed") | .path' notes/catalog.jsonl
+```console
+$ jq -r 'select(.status == "seed") | .path' notes/catalog.jsonl
 ```
 
-SQL over the registry — e.g. every project that ships Rust in a Python wheel:
+SQL over the registry — e.g. every project that ships Rust in a Python
+wheel:
 
-```bash
-just q "SELECT name FROM project WHERE rust_in_python = 'compiler-in-python'"
+```console
+$ just q "SELECT name FROM project WHERE rust_in_python = 'compiler-in-python'"
 ```
 
 "Where is X implemented in project Y?" answered with no clone and no local
@@ -150,59 +163,59 @@ corpus. `notes/sources.jsonl` carries version-pinned GitHub source URLs — a
 handful per component, derived from architecture studies and committed as
 portable links — so a project's source files are a query away, offline:
 
-```bash
-just q "SELECT component, url FROM source WHERE project = 'vllm'"
+```console
+$ just q "SELECT component, url FROM source WHERE project = 'vllm'"
 ```
 
 `just find` searches these links alongside notebook prose, so a search can
 surface a pinned source URL directly. The map is the one corpus-derived
-artifact that is committed rather than CI-generated: rebuild it locally from
-the studies (a research input, never a runtime dependency) — CI only validates
-its shape, never its freshness:
+artefact that is committed rather than CI-generated: rebuild it locally
+from the studies (a research input, never a runtime dependency) — CI only
+validates its shape, never its freshness:
 
-```bash
-just sources
+```console
+$ just sources
 ```
 
-Notebooks cross-reference each other through **concepts** — a notebook opts in
+Notebooks cross-reference each other through concepts — a notebook opts in
 by listing slugs on a `- Concepts:` line in its source-reading cell (the
-registry is `[[concept]]` in `notes/curriculum.toml`). "Which notebooks teach
-zero-copy?" is then one query:
+registry is `[[concept]]` in `notes/curriculum.toml`). "Which notebooks
+teach zero-copy?" is then one query:
 
-```bash
-just q "SELECT path FROM notebook_concept WHERE concept = 'zero-copy'"
+```console
+$ just q "SELECT path FROM notebook_concept WHERE concept = 'zero-copy'"
 ```
 
-Project **lineage** is queryable the same way — e.g. what builds on Arrow:
+Project lineage is queryable the same way — e.g. what builds on Arrow:
 
-```bash
-just q "SELECT project FROM project_lineage WHERE derives_from = 'pyarrow'"
+```console
+$ just q "SELECT project FROM project_lineage WHERE derives_from = 'pyarrow'"
 ```
 
 Rollups and gap lists live in the generated `notes/coverage.md`; the
 interactive surface is `notebooks/toolchain/curriculum/001_index.py`.
 
-## Create a Notebook
+## Create a notebook
 
 One chained command — scaffold from the template, then open it (or use
 `just new <domain> <library> <topic>`):
 
-```bash
-mkdir -p notebooks/<domain>/<library>; \
-cp notes/notebook_template.py notebooks/<domain>/<library>/001_<topic>.py; \
-uv run marimo edit --sandbox notebooks/<domain>/<library>/001_<topic>.py
+```console
+$ mkdir -p notebooks/<domain>/<library>; \
+    cp notes/notebook_template.py notebooks/<domain>/<library>/001_<topic>.py; \
+    uv run marimo edit --sandbox notebooks/<domain>/<library>/001_<topic>.py
 ```
 
 See `notes/NOTEBOOK_TEMPLATE.md` for authoring rules and quality gates, and
-`AGENTS.md` for the marimo-vs-Jupyter gotchas (DAG rule, no magics, caching
-expensive cells).
+[notebooks/AGENTS.md](notebooks/AGENTS.md) for the marimo-vs-Jupyter
+gotchas (DAG rule, no magics, caching expensive cells).
 
 ## Development
 
 Run the quality gates (or just `just check`):
 
-```bash
-uv run ruff check .; \
-uv run ruff format .; \
-uv run ty check
+```console
+$ uv run ruff check .; \
+    uv run ruff format .; \
+    uv run ty check
 ```
