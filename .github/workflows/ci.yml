@@ -8,6 +8,11 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    # marimo requires loro, which ships no Python 3.15 wheel and does not build
+    # from source there; lift once https://github.com/loro-dev/loro-py/issues/29
+    # lands.
+    env:
+      UV_PYTHON: "3.14"
     steps:
       - uses: actions/checkout@v7
 
