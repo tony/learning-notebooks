@@ -20,8 +20,9 @@ the **mastery ladder** (fundamentals → self-sufficiency → reproducible → p
 
 ## Backlog (rows that stay `needs notebook` / `seed` after this wave)
 
-- **fundamentals**: micrograd-style autograd (promote `ml/torch/001` from
-  md-first); a B-tree/page layout walk (sqlite `src/btree.c`)
+- **fundamentals**: a B-tree/page layout walk (sqlite `src/btree.c`).
+  Micrograd-style autograd belongs to `../learning-ai` (Lesson 5.2 in its
+  plan, after its hand-derived-gradient lessons), not to a notebook here
 - **self-sufficiency**: matplotlib (figure/axes model), plotnine, pydantic
   (validation core), dask (task graphs), modin, statsmodels, scipy.optimize,
   datasets, qdrant/chroma
