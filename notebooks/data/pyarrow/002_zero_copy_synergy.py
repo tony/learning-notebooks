@@ -246,7 +246,7 @@ def test_one_system(con, pd_arrow, pl_df, price_addr, readings):
     _pa_sum = float(pa.compute.sum(readings["price"]).as_py())
     _pl_sum = float(pl_df["price"].sum())
     _pd_sum = float(pd_arrow["price"].sum())
-    _dd_sum = float(con.sql("SELECT sum(price) FROM readings").fetchone()[0])
+    _dd_sum = float(con.execute("SELECT sum(price) FROM readings").fetchone()[0])
     assert abs(_pa_sum - _pl_sum) < 1e-6
     assert abs(_pa_sum - _pd_sum) < 1e-6
     assert abs(_pa_sum - _dd_sum) < 1e-6
